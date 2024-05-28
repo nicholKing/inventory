@@ -74,7 +74,7 @@
                         </Button>
                      </children>
                   </HBox>
-                    <Label fx:id="menuClose" layoutX="30.0" layoutY="65.0" prefHeight="34.0" prefWidth="101.0" text="MENU" textAlignment="CENTER">
+                    <Label fx:id="menuClose" layoutX="15.0" layoutY="65.0" prefHeight="34.0" prefWidth="101.0" text="MENU" textAlignment="CENTER">
                      <font>
                         <Font size="18.0" />
                      </font>
@@ -86,7 +86,7 @@
                         </ImageView>
                      </graphic>
                   </Label>
-                  <Label fx:id="menu" layoutX="30.0" layoutY="65.0" prefHeight="34.0" prefWidth="101.0" text="MENU" textAlignment="CENTER">
+                  <Label fx:id="menu" layoutX="15.0" layoutY="65.0" prefHeight="34.0" prefWidth="101.0" text="MENU" textAlignment="CENTER">
                      <font>
                         <Font size="18.0" />
                      </font>
