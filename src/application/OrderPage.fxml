@@ -1,0 +1,209 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.Pane?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Font?>
+
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="720.0" prefWidth="1280.0" style="-fx-background-color: E2F9B8;" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="application.OrderController">
+   <children>
+      <BorderPane layoutX="420.0" layoutY="205.0" prefHeight="200.0" prefWidth="200.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+         <top>
+            <AnchorPane prefHeight="80.0" prefWidth="200.0" style="-fx-background-color: WHITE;" BorderPane.alignment="CENTER">
+               <children>
+                  <Pane layoutX="451.0" layoutY="28.0" prefHeight="51.0" prefWidth="1280.0" style="-fx-background-color: BBCE8A;" AnchorPane.bottomAnchor="64.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                     <children>
+                        <Button layoutX="1128.0" layoutY="13.0" mnemonicParsing="false" text="FAQ" />
+                        <Button layoutX="1176.0" layoutY="13.0" mnemonicParsing="false" text="ABOUT US" />
+                      	<Label layoutX="14.0" layoutY="11.0" prefHeight="30.0" prefWidth="287.0" text="Title ">
+                           <font>
+                              <Font size="25.0" />
+                           </font>
+                        </Label>
+                     </children>
+                  </Pane>
+                  <HBox layoutX="200.0" layoutY="49.0" prefHeight="66.0" prefWidth="1080.0" AnchorPane.leftAnchor="200.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="49.0">
+                     <children>
+                        <Button mnemonicParsing="false" onAction="#homeBtn" prefHeight="38.0" prefWidth="247.0" text="HOME" textAlignment="CENTER">
+                           <font>
+                              <Font size="18.0" />
+                           </font>
+                           <HBox.margin>
+                              <Insets left="15.0" top="15.0" />
+                           </HBox.margin>
+                        </Button>
+                        <Button mnemonicParsing="false" onAction="#orderBtn" prefHeight="38.0" prefWidth="247.0" text="ORDER" textAlignment="CENTER">
+                           <font>
+                              <Font size="18.0" />
+                           </font>
+                           <HBox.margin>
+                              <Insets left="15.0" top="15.0" />
+                           </HBox.margin>
+                        </Button>
+                        <Button mnemonicParsing="false" onAction="#promoBtn" prefHeight="38.0" prefWidth="247.0" text="PROMOTIONS" textAlignment="CENTER">
+                           <font>
+                              <Font size="18.0" />
+                           </font>
+                           <HBox.margin>
+                              <Insets left="15.0" top="15.0" />
+                           </HBox.margin>
+                        </Button>
+                        <Button mnemonicParsing="false" onAction="#signUp" prefHeight="39.0" prefWidth="103.0" text="SIGN UP" textAlignment="CENTER">
+                           <font>
+                              <Font size="18.0" />
+                           </font>
+                           <HBox.margin>
+                              <Insets left="55.0" top="15.0" />
+                           </HBox.margin>
+                        </Button>
+                        <Button mnemonicParsing="false" onAction="#signIn" prefHeight="39.0" prefWidth="103.0" text="SIGN IN" textAlignment="CENTER">
+                           <font>
+                              <Font size="18.0" />
+                           </font>
+                           <HBox.margin>
+                              <Insets left="15.0" top="15.0" />
+                           </HBox.margin>
+                        </Button>
+                     </children>
+                  </HBox>
+                    <Label fx:id="menuClose" layoutX="30.0" layoutY="65.0" prefHeight="34.0" prefWidth="101.0" text="MENU" textAlignment="CENTER">
+                     <font>
+                        <Font size="18.0" />
+                     </font>
+                     <graphic>
+                        <ImageView fitHeight="34.0" fitWidth="41.0" pickOnBounds="true" preserveRatio="true">
+                           <image>
+                              <Image url="@../pictures/menu.png" />
+                           </image>
+                        </ImageView>
+                     </graphic>
+                  </Label>
+                  <Label fx:id="menu" layoutX="30.0" layoutY="65.0" prefHeight="34.0" prefWidth="101.0" text="MENU" textAlignment="CENTER">
+                     <font>
+                        <Font size="18.0" />
+                     </font>
+                     <graphic>
+                        <ImageView fitHeight="34.0" fitWidth="41.0" pickOnBounds="true" preserveRatio="true">
+                           <image>
+                              <Image url="@../pictures/menu.png" />
+                           </image>
+                        </ImageView>
+                     </graphic>
+                  </Label>
+               </children>
+            </AnchorPane>
+         </top>
+         <left>
+            <AnchorPane fx:id="slider" prefHeight="200.0" prefWidth="200.0" style="-fx-background-color: BBCE8A;" BorderPane.alignment="CENTER">
+               <children>
+                  <VBox layoutX="35.0" layoutY="183.0" prefHeight="556.0" prefWidth="200.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0">
+                     <children>
+                        <Button mnemonicParsing="false" prefHeight="77.0" prefWidth="200.0" style="-fx-background-color: BBCE8A;" text="View Cart">
+                           <font>
+                              <Font name="Arial" size="22.0" />
+                           </font>
+                        </Button>
+                        <Button mnemonicParsing="false" prefHeight="77.0" prefWidth="200.0" style="-fx-background-color: BBCE8A;" text="View Seats">
+                           <font>
+                              <Font name="Arial" size="22.0" />
+                           </font>
+                        </Button>
+                        <Button alignment="CENTER" contentDisplay="CENTER" mnemonicParsing="false" prefHeight="77.0" prefWidth="200.0" style="-fx-background-color: BBCE8A;" text="Points and Rewards" textAlignment="CENTER" wrapText="true">
+                           <font>
+                              <Font name="Arial" size="22.0" />
+                           </font>
+                        </Button>
+                        <Button mnemonicParsing="false" prefHeight="77.0" prefWidth="200.0" style="-fx-background-color: BBCE8A;" text="Account Details">
+                           <font>
+                              <Font name="Arial" size="22.0" />
+                           </font>
+                        </Button>
+                        <Button fx:id="logoutBtn" mnemonicParsing="false" onAction="#logout" prefHeight="77.0" prefWidth="200.0" style="-fx-background-color: BBCE8A;" text="Logout">
+                           <font>
+                              <Font name="Arial" size="22.0" />
+                           </font>
+                           <VBox.margin>
+                              <Insets top="115.0" />
+                           </VBox.margin>
+                        </Button>
+                     </children>
+                  </VBox>
+               </children>
+            </AnchorPane>
+         </left>
+         <center>
+            <AnchorPane prefHeight="605.0" prefWidth="850.0" style="-fx-background-color: E2F9B8;" BorderPane.alignment="CENTER">
+               <children>
+                  <TextField layoutX="33.0" layoutY="27.0" promptText="Search for items" />
+                  <Button fx:id="bestSellersBtn" contentDisplay="TOP" layoutX="107.0" layoutY="244.0" mnemonicParsing="false" prefHeight="34.0" prefWidth="150.0" style="-fx-background-color: F0ABA8;" text="Best Sellers" />
+                  <Label fx:id="headerLabel" alignment="CENTER" contentDisplay="CENTER" layoutX="313.0" layoutY="14.0" prefHeight="49.0" prefWidth="377.0" text="DEALS" textAlignment="CENTER">
+                     <font>
+                        <Font size="33.0" />
+                     </font>
+                  </Label>
+                  <ImageView fx:id="image1" fitHeight="150.0" fitWidth="200.0" layoutX="113.0" layoutY="82.0" onMouseClicked="#showBestSellers" pickOnBounds="true" preserveRatio="true">
+                     <image>
+                        <Image url="@../../../../Downloads/burger.png" />
+                     </image>
+                  </ImageView>
+                  <Button fx:id="newProductsBtn" contentDisplay="TOP" layoutX="320.0" layoutY="244.0" mnemonicParsing="false" prefHeight="34.0" prefWidth="150.0" style="-fx-background-color: F0ABA8;" text="New Products" />
+                  <Button fx:id="chickenBtn" contentDisplay="TOP" layoutX="756.0" layoutY="244.0" mnemonicParsing="false" prefHeight="34.0" prefWidth="150.0" style="-fx-background-color: F0ABA8;" text="Chicken" />
+                  <Button fx:id="burgersBtn" contentDisplay="TOP" layoutX="113.0" layoutY="456.0" mnemonicParsing="false" prefHeight="34.0" prefWidth="150.0" style="-fx-background-color: F0ABA8;" text="Burgers" />
+                  <Button fx:id="friesBtn" contentDisplay="TOP" layoutX="540.0" layoutY="460.0" mnemonicParsing="false" prefHeight="34.0" prefWidth="150.0" style="-fx-background-color: F0ABA8;" text="Fries &amp; Sides" />
+                  <Button fx:id="dessertsBtn" contentDisplay="TOP" layoutX="756.0" layoutY="460.0" mnemonicParsing="false" prefHeight="34.0" prefWidth="150.0" style="-fx-background-color: F0ABA8;" text="Desserts &amp; Beverages" />
+                  <ImageView fx:id="image2" fitHeight="150.0" fitWidth="200.0" layoutX="320.0" layoutY="82.0" pickOnBounds="true" preserveRatio="true">
+                     <image>
+                        <Image url="@../../../../Downloads/burger.png" />
+                     </image>
+                  </ImageView>
+                  <Button fx:id="comboMealsBtn" contentDisplay="TOP" layoutX="541.0" layoutY="244.0" mnemonicParsing="false" prefHeight="34.0" prefWidth="150.0" style="-fx-background-color: F0ABA8;" text="Combo Meals" />
+                  <ImageView fx:id="image3" fitHeight="150.0" fitWidth="200.0" layoutX="540.0" layoutY="82.0" pickOnBounds="true" preserveRatio="true">
+                     <image>
+                        <Image url="@../../../../Downloads/burger.png" />
+                     </image>
+                  </ImageView>
+                  <ImageView fx:id="image4" fitHeight="150.0" fitWidth="200.0" layoutX="756.0" layoutY="82.0" pickOnBounds="true" preserveRatio="true">
+                     <image>
+                        <Image url="@../../../../Downloads/burger.png" />
+                     </image>
+                  </ImageView>
+                  <ImageView fx:id="image5" fitHeight="150.0" fitWidth="200.0" layoutX="114.0" layoutY="297.0" onMouseClicked="#showBurgersBtn" pickOnBounds="true" preserveRatio="true">
+                     <image>
+                        <Image url="@../../../../Downloads/burger.png" />
+                     </image>
+                  </ImageView>
+                  <Button fx:id="pizzaBtn" contentDisplay="TOP" layoutX="320.0" layoutY="460.0" mnemonicParsing="false" prefHeight="34.0" prefWidth="150.0" style="-fx-background-color: F0ABA8;" text="Pizza" />
+                  <ImageView fx:id="image6" fitHeight="150.0" fitWidth="200.0" layoutX="320.0" layoutY="299.0" pickOnBounds="true" preserveRatio="true">
+                     <image>
+                        <Image url="@../../../../Downloads/burger.png" />
+                     </image>
+                  </ImageView>
+                  <ImageView fx:id="image7" fitHeight="150.0" fitWidth="200.0" layoutX="540.0" layoutY="299.0" pickOnBounds="true" preserveRatio="true">
+                     <image>
+                        <Image url="@../../../../Downloads/burger.png" />
+                     </image>
+                  </ImageView>
+                  <ImageView fx:id="image8" fitHeight="150.0" fitWidth="200.0" layoutX="757.0" layoutY="297.0" pickOnBounds="true" preserveRatio="true">
+                     <image>
+                        <Image url="@../../../../Downloads/burger.png" />
+                     </image>
+                  </ImageView>
+                  <ImageView fitHeight="27.0" fitWidth="24.0" layoutX="189.0" layoutY="27.0" onMouseClicked="#searchItem" pickOnBounds="true" preserveRatio="true">
+                     <image>
+                        <Image url="@../pictures/search.png" />
+                     </image>
+                  </ImageView>
+               </children>
+            </AnchorPane>
+         </center>
+      </BorderPane>
+   </children>
+</AnchorPane>
