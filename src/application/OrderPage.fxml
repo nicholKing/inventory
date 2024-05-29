@@ -151,7 +151,7 @@
                   </Label>
                   <ImageView fx:id="image1" fitHeight="150.0" fitWidth="200.0" layoutX="113.0" layoutY="82.0" onMouseClicked="#showBestSellers" pickOnBounds="true" preserveRatio="true">
                      <image>
-                        <Image url="@../../../../Downloads/burger.png" />
+                         <Image url="@../pictures/burger.png" />
                      </image>
                   </ImageView>
                   <Button fx:id="newProductsBtn" contentDisplay="TOP" layoutX="320.0" layoutY="244.0" mnemonicParsing="false" prefHeight="34.0" prefWidth="150.0" style="-fx-background-color: F0ABA8;" text="New Products" />
@@ -167,7 +167,7 @@
                   <Button fx:id="comboMealsBtn" contentDisplay="TOP" layoutX="541.0" layoutY="244.0" mnemonicParsing="false" prefHeight="34.0" prefWidth="150.0" style="-fx-background-color: F0ABA8;" text="Combo Meals" />
                   <ImageView fx:id="image3" fitHeight="150.0" fitWidth="200.0" layoutX="540.0" layoutY="82.0" pickOnBounds="true" preserveRatio="true">
                      <image>
-                        <Image url="@../../../../Downloads/burger.png" />
+                        <Image url="@../pictures/burger.png" />
                      </image>
                   </ImageView>
                   <ImageView fx:id="image4" fitHeight="150.0" fitWidth="200.0" layoutX="756.0" layoutY="82.0" pickOnBounds="true" preserveRatio="true">

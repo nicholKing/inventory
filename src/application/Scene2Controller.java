@@ -27,6 +27,7 @@ import javafx.stage.Stage;
 import javafx.util.Duration;
 
 public class Scene2Controller implements Initializable{
+	
 	@FXML
 	private Label nameLabel;
     @FXML
@@ -40,37 +41,21 @@ public class Scene2Controller implements Initializable{
 	private Scene scene;
 	private Parent root;
 	
+	String name;
+	String username = "";
 	String orderPage = "OrderPage.fxml";
     String homePage = "Scene2.fxml";
     String accPage = "/SideBarItemsCustomer/AccountDetails.fxml";
+    String query = "SELECT name FROM user_tbl WHERE id = ?";
+    
 	boolean hasAccount = false;
+	int id = 0;
 	
 	Connection con;
 	PreparedStatement pst;
 	ResultSet rs;
 	
-	
-	public void Connect() {
-		try {
-			System.out.println("Database connected");
-			Class.forName("com.mysql.jdbc.Driver");
-			con = DriverManager.getConnection("jdbc:mysql://localhost/inventory", "root", "");
-		} catch (SQLException | ClassNotFoundException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-	}
-	
-	public void changeScene(ActionEvent event, String page) throws IOException {
-		FXMLLoader loader = new FXMLLoader(getClass().getResource(page));
-		root = loader.load();
-	
-		
-		stage = (Stage)((Node)event.getSource()).getScene().getWindow();
-		scene = new Scene(root);
-		stage.setScene(scene);
-		stage.show();
-	}
+	//TOP BUTTONS
 	public void homeBtn(ActionEvent event) throws IOException {
 		System.out.println("Home");
 		changeScene(event, homePage);
@@ -82,30 +67,56 @@ public class Scene2Controller implements Initializable{
 	public void promoBtn() {
 		System.out.println("Promo");
 	}
-	
-	public void showRewards() {
+	public void signIn(ActionEvent event) throws IOException, ClassNotFoundException, SQLException {
+		FXMLLoader loader = new FXMLLoader(getClass().getResource("Main.fxml"));
+	    root = loader.load();
 		if(hasAccount) {
-			System.out.println("Points and Rewards!");
+			Alert alert = new Alert(AlertType.CONFIRMATION);
+			alert.setTitle("Logout");
+			alert.setHeaderText("You're about to logout");
+			alert.setContentText("Are you sure you want to logout?");
+			if(alert.showAndWait().get() == ButtonType.OK) {
+				stage = (Stage)((Node)event.getSource()).getScene().getWindow();
+			    scene = new Scene(root);
+			    stage.setScene(scene);
+			    stage.show();
+			}
 		}
 		else {
-			System.out.println("Sorry, you need to register to an account :(");
+	    Scene1Controller loginPage = loader.getController();
+	    loginPage.Connect();
+	    stage = (Stage)((Node)event.getSource()).getScene().getWindow();
+		scene = new Scene(root);
+		stage.setScene(scene);
+		stage.show();
 		}
+	
 	}
-	
-	public void showAccount(ActionEvent event) throws IOException {
+	public void signUp(ActionEvent event) throws IOException, ClassNotFoundException, SQLException {
+		FXMLLoader loader = new FXMLLoader(getClass().getResource("SignUp.fxml"));
+	    root = loader.load();
 		if(hasAccount) {
-			changeScene(event, accPage);
+			Alert alert = new Alert(AlertType.CONFIRMATION);
+			alert.setTitle("Logout");
+			alert.setHeaderText("You're about to logout");
+			alert.setContentText("Are you sure you want to logout?");
+			if(alert.showAndWait().get() == ButtonType.OK) {
+				stage = (Stage)((Node)event.getSource()).getScene().getWindow();
+			    scene = new Scene(root);
+			    stage.setScene(scene);
+			    stage.show();
+			}
 		}
 		else {
-			System.out.println("oyoyoyoy");
-		}
+	
+		SignUpController signUpPage = loader.getController();
+		signUpPage.Connect();
 		
-	}
-	
-	
-	public void setHasAccount(boolean hasAccount) {
-		this.hasAccount = hasAccount;
-		System.out.println(hasAccount);
+		stage = (Stage)((Node)event.getSource()).getScene().getWindow();
+		scene = new Scene(root);
+		stage.setScene(scene);
+		stage.show();
+		}
 	}
 	public void showFAQ() {
 		Alert alert = new Alert(AlertType.INFORMATION);
@@ -114,49 +125,51 @@ public class Scene2Controller implements Initializable{
         alert.show();
 	}
 	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	public void signUp(ActionEvent event) throws IOException {
-		FXMLLoader loader = new FXMLLoader(getClass().getResource("SignUp.fxml"));
-	    root = loader.load();
-		System.out.println("Test");
-		SignUpController signUpPage = loader.getController();
+	//SIDE BUTTONS
+	public void displayName(int id) throws SQLException {
+		String dbName = "";
 		
-		stage = (Stage)((Node)event.getSource()).getScene().getWindow();
-		scene = new Scene(root);
-		stage.setScene(scene);
-		stage.show();
-	}
-	
-	public void signIn(ActionEvent event) throws IOException {
-		FXMLLoader loader = new FXMLLoader(getClass().getResource("Main.fxml"));
-	    root = loader.load();
-		
-	    Scene1Controller loginPage = loader.getController();
-	    
-	    stage = (Stage)((Node)event.getSource()).getScene().getWindow();
-		scene = new Scene(root);
-		stage.setScene(scene);
-		stage.show();
-	
-	}
+		if(hasAccount) {
+			pst = con.prepareStatement(query);
+			pst.setInt(1, id);
+			rs = pst.executeQuery();
+			while(rs.next()) {
+				dbName = rs.getString("name");
+				System.out.println(dbName);
+			}
+			nameLabel.setText(dbName);
+		}else {
+			nameLabel.setText("Guest");
+		}
 
+	}
+	public void showAccount(ActionEvent event) throws IOException {
+		if(hasAccount) {changeScene(event, accPage);}
+		else {System.out.println("Account Details");}
+	}
+	public void showCart(ActionEvent event) throws IOException {
+		if(hasAccount) {changeScene(event, accPage);}
+		else {System.out.println("Show Cart");}
+	}
+	public void showTable(ActionEvent event) throws IOException {
+		if(hasAccount) {changeScene(event, accPage);}
+		else {System.out.println("Show Table");}
+	}
+	public void showRewards(ActionEvent event) throws IOException {
+		if(hasAccount) {changeScene(event, accPage);}
+		else {System.out.println("Points and rewards!");}
+	}
+	public void showRewards() {
+		if(hasAccount) {
+			System.out.println("Points and Rewards!");
+		}
+		else {
+			System.out.println("Sorry, you need to register to an account :(");
+		}
+	}
 	public void logout(ActionEvent event) throws IOException {
 		FXMLLoader loader = new FXMLLoader(getClass().getResource("Main.fxml"));
 	    root = loader.load();
-	    
 		Alert alert = new Alert(AlertType.CONFIRMATION);
 		alert.setTitle("Logout");
 		alert.setHeaderText("You're about to logout");
@@ -171,6 +184,31 @@ public class Scene2Controller implements Initializable{
 	    Scene1Controller loginPage = loader.getController();
 	    
 	  
+	}
+	
+	//HELPER METHODS
+	public void Connect() {
+		try {
+			System.out.println("Database connected");
+			Class.forName("com.mysql.jdbc.Driver");
+			con = DriverManager.getConnection("jdbc:mysql://localhost/inventory", "root", "");
+		} catch (SQLException | ClassNotFoundException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
+	public void changeScene(ActionEvent event, String page) throws IOException {
+		FXMLLoader loader = new FXMLLoader(getClass().getResource(page));
+		root = loader.load();
+
+		stage = (Stage)((Node)event.getSource()).getScene().getWindow();
+		scene = new Scene(root);
+		stage.setScene(scene);
+		stage.show();
+	}
+	public void setHasAccount(boolean hasAccount) {
+		this.hasAccount = hasAccount;
+		System.out.println(hasAccount);
 	}
 	@Override
 	public void initialize(URL arg0, ResourceBundle arg1) {
@@ -214,6 +252,5 @@ public class Scene2Controller implements Initializable{
 			
 		});
 	}
-	
 }
 

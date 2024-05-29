@@ -12,7 +12,7 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="720.0" prefWidth="1280.0" style="-fx-background-color: E2F9B8;" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="application.Scene2Controller">
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="720.0" prefWidth="1280.0" style="-fx-background-color: E2F9B8;" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="application.CashierController">
    <children>
       <BorderPane layoutX="420.0" layoutY="205.0" prefHeight="200.0" prefWidth="200.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
          <top>
@@ -20,9 +20,9 @@
                <children>
                   <Pane layoutX="451.0" layoutY="28.0" prefHeight="51.0" prefWidth="1280.0" style="-fx-background-color: BBCE8A;" AnchorPane.bottomAnchor="64.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
                      <children>
-                        <Button layoutX="1128.0" layoutY="13.0" mnemonicParsing="false" text="FAQ" />
+                        <Button layoutX="1128.0" layoutY="13.0" mnemonicParsing="false" onAction="#showFAQ" text="FAQ" />
                         <Button layoutX="1176.0" layoutY="13.0" mnemonicParsing="false" text="ABOUT US" />
-                        <Label layoutX="14.0" layoutY="11.0" prefHeight="30.0" prefWidth="287.0" text="Admin ">
+                        <Label layoutX="14.0" layoutY="11.0" prefHeight="30.0" prefWidth="287.0" text="Title ">
                            <font>
                               <Font size="25.0" />
                            </font>
@@ -73,7 +73,7 @@
                         </Button>
                      </children>
                   </HBox>
-                  <Label fx:id="menuClose" layoutX="30.0" layoutY="65.0" prefHeight="34.0" prefWidth="101.0" text="MENU" textAlignment="CENTER">
+                     <Label fx:id="menuClose" layoutX="15.0" layoutY="65.0" prefHeight="34.0" prefWidth="101.0" text="MENU" textAlignment="CENTER">
                      <font>
                         <Font size="18.0" />
                      </font>
@@ -85,7 +85,7 @@
                         </ImageView>
                      </graphic>
                   </Label>
-                  <Label fx:id="menu" layoutX="30.0" layoutY="65.0" prefHeight="34.0" prefWidth="101.0" text="MENU" textAlignment="CENTER">
+                   <Label fx:id="menu" layoutX="15.0" layoutY="65.0" prefHeight="34.0" prefWidth="101.0" text="MENU" textAlignment="CENTER">
                      <font>
                         <Font size="18.0" />
                      </font>
@@ -103,24 +103,32 @@
          <left>
             <AnchorPane fx:id="slider" prefHeight="200.0" prefWidth="200.0" style="-fx-background-color: BBCE8A;" BorderPane.alignment="CENTER">
                <children>
-                  <VBox layoutX="35.0" layoutY="183.0" prefHeight="556.0" prefWidth="200.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0">
+                  <VBox layoutX="35.0" layoutY="183.0" prefHeight="609.0" prefWidth="200.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0">
                      <children>
-                        <Button mnemonicParsing="false" prefHeight="77.0" prefWidth="200.0" style="-fx-background-color: BBCE8A;" text="Account Details">
+                        <Label fx:id="nameLabel" prefHeight="50.0" prefWidth="200.0" text="Guest">
+                           <padding>
+                              <Insets left="15.0" />
+                           </padding>
+                           <font>
+                              <Font size="24.0" />
+                           </font>
+                        </Label>
+                        <Button mnemonicParsing="false" onAction="#showAccount" prefHeight="77.0" prefWidth="200.0" style="-fx-background-color: BBCE8A;" text="Account">
                            <font>
                               <Font name="Arial" size="22.0" />
                            </font>
                         </Button>
-                        <Button mnemonicParsing="false" prefHeight="77.0" prefWidth="200.0" style="-fx-background-color: BBCE8A;" text="Order History">
+                        <Button mnemonicParsing="false" onAction="#showTables" prefHeight="77.0" prefWidth="200.0" style="-fx-background-color: BBCE8A;" text="Table">
                            <font>
                               <Font name="Arial" size="22.0" />
                            </font>
                         </Button>
-                        <Button mnemonicParsing="false" prefHeight="77.0" prefWidth="200.0" style="-fx-background-color: BBCE8A;" text="Stocks">
+                        <Button alignment="CENTER" contentDisplay="CENTER" mnemonicParsing="false" onAction="#showStocks" prefHeight="77.0" prefWidth="200.0" style="-fx-background-color: BBCE8A;" text="Stocks" textAlignment="CENTER" wrapText="true">
                            <font>
                               <Font name="Arial" size="22.0" />
                            </font>
                         </Button>
-                        <Button mnemonicParsing="false" prefHeight="77.0" prefWidth="200.0" style="-fx-background-color: BBCE8A;" text="Report">
+                        <Button mnemonicParsing="false" onAction="#showReport" prefHeight="77.0" prefWidth="200.0" style="-fx-background-color: BBCE8A;" text="Report">
                            <font>
                               <Font name="Arial" size="22.0" />
                            </font>

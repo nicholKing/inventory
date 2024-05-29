@@ -52,15 +52,20 @@ public class OrderController implements Initializable{
     private Stage stage;
 	private Scene scene;
 	private Parent root;
-	public void changeScene(ActionEvent event, String page) throws IOException {
-		FXMLLoader loader = new FXMLLoader(getClass().getResource(page));
-		root = loader.load();
+    
+	//CENTER BUTTONS
+    public void searchItem(MouseEvent event) throws IOException {
+    	System.out.println("Searching...");
+    }
+    public void showBestSellers(MouseEvent event) throws IOException {
+    	headerLabel.setText("Best Sellers");
+    	dessertsBtn.setVisible(false);
+    }
+    public void showBurgersBtn() {
+    	System.out.println("Burger");
+    }
 	
-		stage = (Stage)((Node)event.getSource()).getScene().getWindow();
-		scene = new Scene(root);
-		stage.setScene(scene);
-		stage.show();
-	}
+	//TOP BUTTONS
 	public void homeBtn(ActionEvent event) throws IOException {
 		changeScene(event, "Scene2.fxml");
 	}
@@ -70,12 +75,59 @@ public class OrderController implements Initializable{
 	public void promoBtn() {
 		System.out.println("Promo");
 	}
+	public void signUp(ActionEvent event) throws IOException {
+			FXMLLoader loader = new FXMLLoader(getClass().getResource("SignUp.fxml"));
+		    root = loader.load();
+			System.out.println("Test");
+			SignUpController signUpPage = loader.getController();
+			
+			stage = (Stage)((Node)event.getSource()).getScene().getWindow();
+			scene = new Scene(root);
+			stage.setScene(scene);
+			stage.show();
+		}
+	public void signIn(ActionEvent event) throws IOException {
+			FXMLLoader loader = new FXMLLoader(getClass().getResource("Main.fxml"));
+		    root = loader.load();
+			
+		    Scene1Controller loginPage = loader.getController();
+		    
+		    stage = (Stage)((Node)event.getSource()).getScene().getWindow();
+			scene = new Scene(root);
+			stage.setScene(scene);
+			stage.show();
+		
+		}
+	    
+	//SIDE BUTTONS
+	public void logout(ActionEvent event) throws IOException {
+		FXMLLoader loader = new FXMLLoader(getClass().getResource("Main.fxml"));
+		root = loader.load();
+		    
+		Alert alert = new Alert(AlertType.CONFIRMATION);
+		alert.setTitle("Logout");
+		alert.setHeaderText("You're about to logout");
+		alert.setContentText("Are you sure you want to logout?");
+			
+		if(alert.showAndWait().get() == ButtonType.OK) {
+			stage = (Stage)((Node)event.getSource()).getScene().getWindow();
+			scene = new Scene(root);
+			stage.setScene(scene);
+			stage.show();
+		}
+		Scene1Controller loginPage = loader.getController();
+		}
+	//HELPER METHODS
+	public void changeScene(ActionEvent event, String page) throws IOException {
+		FXMLLoader loader = new FXMLLoader(getClass().getResource(page));
+		root = loader.load();
 	
-    public void selectOrder() {
-    	System.out.println("test");
-    	
-    }
-    @Override
+		stage = (Stage)((Node)event.getSource()).getScene().getWindow();
+		scene = new Scene(root);
+		stage.setScene(scene);
+		stage.show();
+	}
+	@Override
 	public void initialize(URL arg0, ResourceBundle arg1) {
 		// TODO Auto-generated method stub
     	
@@ -93,8 +145,7 @@ public class OrderController implements Initializable{
 				menu.setVisible(false);
 				menuClose.setVisible(true);
 			});
-			
-			
+		
 		});
 		
 		menuClose.setOnMouseClicked(event -> {
@@ -144,61 +195,5 @@ public class OrderController implements Initializable{
     		System.out.println("Hi");
     	});
 	}
-    
-    public void searchItem(MouseEvent event) throws IOException {
-    	System.out.println("Searching...");
-    }
-
-    public void showBestSellers(MouseEvent event) throws IOException {
-    	headerLabel.setText("Best Sellers");
-    	dessertsBtn.setVisible(false);
-    }
-    public void showBurgersBtn() {
-    	System.out.println("Burger");
-    }
-	public void logout(ActionEvent event) throws IOException {
-		FXMLLoader loader = new FXMLLoader(getClass().getResource("Main.fxml"));
-	    root = loader.load();
-	    
-		Alert alert = new Alert(AlertType.CONFIRMATION);
-		alert.setTitle("Logout");
-		alert.setHeaderText("You're about to logout");
-		alert.setContentText("Are you sure you want to logout?");
-		
-		if(alert.showAndWait().get() == ButtonType.OK) {
-			stage = (Stage)((Node)event.getSource()).getScene().getWindow();
-		    scene = new Scene(root);
-		    stage.setScene(scene);
-		    stage.show();
-		}
-	    Scene1Controller loginPage = loader.getController();
-	    
-	  
-	}
-    
-    public void signUp(ActionEvent event) throws IOException {
-		FXMLLoader loader = new FXMLLoader(getClass().getResource("SignUp.fxml"));
-	    root = loader.load();
-		System.out.println("Test");
-		SignUpController signUpPage = loader.getController();
-		
-		stage = (Stage)((Node)event.getSource()).getScene().getWindow();
-		scene = new Scene(root);
-		stage.setScene(scene);
-		stage.show();
-	}
 	
-	public void signIn(ActionEvent event) throws IOException {
-		FXMLLoader loader = new FXMLLoader(getClass().getResource("Main.fxml"));
-	    root = loader.load();
-		
-	    Scene1Controller loginPage = loader.getController();
-	    
-	    stage = (Stage)((Node)event.getSource()).getScene().getWindow();
-		scene = new Scene(root);
-		stage.setScene(scene);
-		stage.show();
-	
-	}
-    
 }

@@ -7,6 +7,5 @@ module SampleJavaFX {
 	requires javafx.graphics;
 	requires mysql.connector.java;
 	requires java.sql;
-	exports SideBarItemsCustomer to javafx.fxml;
 	opens SideBarItemsCustomer to javafx.fxml;  // Opening the package to javafx.fxml
 }

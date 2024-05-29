@@ -55,18 +55,7 @@ public class SignUpController {
 	private Parent root;
 	
 	Connection con;
-	PreparedStatement pst;
-	ResultSet rs;
 	
-	public void Connect() {
-		try {
-			Class.forName("com.mysql.jdbc.Driver");
-			con = DriverManager.getConnection("jdbc:mysql://localhost/inventory", "root", "");
-		} catch (SQLException | ClassNotFoundException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-	}
 	public void signUp(ActionEvent event) throws IOException{
 			
 			checkNameField();
@@ -83,22 +72,22 @@ public class SignUpController {
 			}
 			
 	}
+	
+	//CHECKER METHODS
 	public void checkNameField() {
+		PreparedStatement pst;
+		ResultSet rs;
 		name = nameField.getText();
 		
-		//IF THE USERNAME IS EMPTY
 		if(name.isEmpty()) showAlert("Please enter a name", AlertType.ERROR); 
 		
 		else {
 			try {
 				pst = con.prepareStatement("SELECT * FROM user_tbl");
 				rs = pst.executeQuery();
-				System.out.println("Checking the database of name");
-				System.out.println(rs.next());
 				while(rs.next()) {
 					String dbName = rs.getString("name");
 					if((name.equals(dbName))) {
-						System.out.println("Name already exists!");
 						showAlert("Name already exists", AlertType.ERROR);
 						hasCorrectName = false;
 						newName = false;
@@ -115,7 +104,6 @@ public class SignUpController {
 				}
 				newName = false;
 			} catch (SQLException e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
 		}
@@ -124,14 +112,12 @@ public class SignUpController {
 	}
 	public void checkUsernameField() {
 		
+		PreparedStatement pst;
+		ResultSet rs;
 		username = usernameField.getText();
 		
-		//IF THE USERNAME IS EMPTY
 		if(username.isEmpty()) {showAlert("Please enter a username", AlertType.ERROR);}
-		
-		//IF THE USERNAME IS SHORT
 		else if(username.length() < 8) {showAlert("Username must be atleast 8 characters", AlertType.ERROR); return;}
-		
 		else {
 			try {
 				pst = con.prepareStatement("SELECT * FROM user_tbl");
@@ -156,27 +142,18 @@ public class SignUpController {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
-			
 		}
 	}
-	
-
 	public void checkPasswordField() {
 		password = passwordValue();
-		
-		//IF THE PASSWORD IS EMPTY
-		if(password.length() == 0) showAlert("Please enter your password", AlertType.ERROR); 
-		
-		//IF THE PASSWORD IS SHORT
-		else if(password.length() < 8) showAlert("Password must be atleast 8 characters", AlertType.ERROR);
-		
-		else {
-			hasCorrectPassword = true;
-		}
+		if(password.length() == 0) {showAlert("Please enter your password", AlertType.ERROR);}
+		else if(password.length() < 8) {showAlert("Password must be atleast 8 characters", AlertType.ERROR);}
+		else {hasCorrectPassword = true;}
 		return;
 	}
-	
 	public void registerAccount(ActionEvent event) throws IOException {
+		PreparedStatement pst;
+		ResultSet rs;
 		String newName = name;
 		String newUsername = username;
 		String newPassword = password;
@@ -199,20 +176,24 @@ public class SignUpController {
 		changeScene(event);
 	}
 	
+	//HELPER METHODS
+	public void Connect() throws ClassNotFoundException, SQLException {
+		Class.forName("com.mysql.jdbc.Driver");
+		con = DriverManager.getConnection("jdbc:mysql://localhost/inventory", "root", "");
+	}
 	public void changeScene(ActionEvent event) throws IOException {
 		FXMLLoader loader = new FXMLLoader(getClass().getResource("Main.fxml"));
 		root = loader.load();
 		
 		Scene1Controller loginPage = loader.getController();
+		loginPage.setName(name);
 		
 		stage = (Stage)((Node)event.getSource()).getScene().getWindow();
 		scene = new Scene(root);
 		stage.setScene(scene);
 		stage.show();
 	}
-	
 	private void showAlert(String contentText, AlertType alertType) {
-
         Alert alert = new Alert(alertType);
         alert.setHeaderText("");
         alert.setContentText(contentText);
@@ -230,6 +211,8 @@ public class SignUpController {
             }
         }, 1 * 1000);
     }
+	
+	//SHOW PASSWORD METHODS
 	public void togglevisiblePassword(ActionEvent event) {
 	    if (pass_toggle.isSelected()) {
 	        pass_text.setText(pass_hidden.getText());

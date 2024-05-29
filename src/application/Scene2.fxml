@@ -103,24 +103,32 @@
          <left>
             <AnchorPane fx:id="slider" prefHeight="200.0" prefWidth="200.0" style="-fx-background-color: BBCE8A;" BorderPane.alignment="CENTER">
                <children>
-                  <VBox layoutX="35.0" layoutY="183.0" prefHeight="556.0" prefWidth="200.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0">
+                  <VBox layoutX="35.0" layoutY="183.0" prefHeight="609.0" prefWidth="200.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0">
                      <children>
-                        <Button mnemonicParsing="false" prefHeight="77.0" prefWidth="200.0" style="-fx-background-color: BBCE8A;" text="View Cart">
+                        <Label fx:id="nameLabel" prefHeight="50.0" prefWidth="200.0" text="Guest">
+                           <padding>
+                              <Insets left="15.0" />
+                           </padding>
+                           <font>
+                              <Font size="24.0" />
+                           </font>
+                        </Label>
+                        <Button mnemonicParsing="false" onAction="#showAccount" prefHeight="77.0" prefWidth="200.0" style="-fx-background-color: BBCE8A;" text="Account">
                            <font>
                               <Font name="Arial" size="22.0" />
                            </font>
                         </Button>
-                        <Button mnemonicParsing="false" prefHeight="77.0" prefWidth="200.0" style="-fx-background-color: BBCE8A;" text="View Seats">
+                        <Button mnemonicParsing="false" onAction="#showCart" prefHeight="77.0" prefWidth="200.0" style="-fx-background-color: BBCE8A;" text="My Cart">
                            <font>
                               <Font name="Arial" size="22.0" />
                            </font>
                         </Button>
-                        <Button alignment="CENTER" contentDisplay="CENTER" mnemonicParsing="false" onAction="#showRewards" prefHeight="77.0" prefWidth="200.0" style="-fx-background-color: BBCE8A;" text="Points and Rewards" textAlignment="CENTER" wrapText="true">
+                        <Button alignment="CENTER" contentDisplay="CENTER" mnemonicParsing="false" onAction="#showTable" prefHeight="77.0" prefWidth="200.0" style="-fx-background-color: BBCE8A;" text="View Seats" textAlignment="CENTER" wrapText="true">
                            <font>
                               <Font name="Arial" size="22.0" />
                            </font>
                         </Button>
-                        <Button mnemonicParsing="false" onAction="#showAccount" prefHeight="77.0" prefWidth="200.0" style="-fx-background-color: BBCE8A;" text="Account Details">
+                        <Button mnemonicParsing="false" onAction="#showRewards" prefHeight="77.0" prefWidth="200.0" style="-fx-background-color: BBCE8A;" text="Rewards">
                            <font>
                               <Font name="Arial" size="22.0" />
                            </font>

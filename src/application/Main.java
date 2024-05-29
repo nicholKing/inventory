@@ -17,7 +17,7 @@ public class Main extends Application {
     @Override
     public void start(Stage stage) {
         try {
-            showLoginForm(stage);
+            showHomePage(stage);
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -33,7 +33,7 @@ public class Main extends Application {
         }
     }
 
-    public void showLoginForm(Stage stage) throws IOException {
+    public void showHomePage(Stage stage) throws IOException {
         FXMLLoader loader = new FXMLLoader(getClass().getResource("Scene2.fxml"));
         AnchorPane loginLayout = loader.load();
 
