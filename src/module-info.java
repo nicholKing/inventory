@@ -7,5 +7,6 @@ module SampleJavaFX {
 	requires javafx.graphics;
 	requires mysql.connector.java;
 	requires java.sql;
+	opens pictures;
 	
 }

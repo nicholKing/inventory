@@ -147,7 +147,7 @@ public class SideBarItemsController implements Initializable{
 	
 	}
 	public void showRewards(ActionEvent event) throws IOException, SQLException {
-			if(hasAccount) {changeScene(event, accPage);}
+			if(hasAccount) {changeScene(event, rewardsPage);}
 			else {showAlert("Login or register to unlock exciting rewards!", AlertType.INFORMATION);}
 	}
 	

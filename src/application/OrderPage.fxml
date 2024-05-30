@@ -3,6 +3,7 @@
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TextField?>
 <?import javafx.scene.image.Image?>
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.AnchorPane?>
@@ -95,7 +96,7 @@
          <left>
             <AnchorPane fx:id="slider" prefHeight="200.0" prefWidth="200.0" style="-fx-background-color: BBCE8A;" BorderPane.alignment="CENTER">
                <children>
-                  <VBox layoutX="35.0" layoutY="183.0" prefHeight="609.0" prefWidth="200.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0">
+                  <VBox layoutX="35.0" layoutY="183.0" prefHeight="609.0" prefWidth="49.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0">
                      <children>
                         <Label fx:id="nameLabel" prefHeight="50.0" prefWidth="200.0" text="Guest">
                            <padding>
@@ -139,21 +140,120 @@
             </AnchorPane>
          </left>
          <center>
-            <AnchorPane prefHeight="605.0" prefWidth="850.0" style="-fx-background-color: E2F9B8;" BorderPane.alignment="CENTER">
+            <AnchorPane prefHeight="609.0" prefWidth="1196.0" style="-fx-background-color: E2F9B8;" BorderPane.alignment="CENTER">
                <children>
-                  <Button fx:id="chickenBtn" layoutX="124.0" layoutY="131.0" mnemonicParsing="false" text="Chicken" />
-                  <Button fx:id="pizzaBtn" layoutX="444.0" layoutY="233.0" mnemonicParsing="false" text="Pizza" />
-                  <Button fx:id="burgersBtn" layoutX="355.0" layoutY="119.0" mnemonicParsing="false" text="Burgers" />
-                  <Button fx:id="friesBtn" layoutX="242.0" layoutY="270.0" mnemonicParsing="false" text="Fries" />
-                  <Button fx:id="bestSellersBtn" layoutX="216.0" layoutY="144.0" mnemonicParsing="false" text="Best Sellers" />
-                  <Button fx:id="comboMealsBtn" layoutX="424.0" layoutY="157.0" mnemonicParsing="false" text="Combo Meals" />
-                  <Button fx:id="newProductsBtn" layoutX="325.0" layoutY="233.0" mnemonicParsing="false" text="New Products" />
-                  <Button fx:id="dessertsBtn" layoutX="135.0" layoutY="245.0" mnemonicParsing="false" text="Desserts" />
-                  <Label fx:id="headerLabel" alignment="CENTER" layoutX="436.0" layoutY="29.0" prefHeight="51.0" prefWidth="131.0" text="Deals" textAlignment="CENTER">
+                  <Button fx:id="btn4" layoutX="770.0" layoutY="233.0" mnemonicParsing="false" prefHeight="39.0" prefWidth="135.0" text="Chicken" textAlignment="CENTER" wrapText="true">
+                     <font>
+                        <Font size="18.0" />
+                     </font></Button>
+                  <Button fx:id="btn7" layoutX="541.0" layoutY="478.0" mnemonicParsing="false" prefHeight="39.0" prefWidth="132.0" text="Pizza" textAlignment="CENTER" wrapText="true">
+                     <font>
+                        <Font size="18.0" />
+                     </font></Button>
+                  <Button fx:id="btn6" layoutX="306.0" layoutY="478.0" mnemonicParsing="false" prefHeight="39.0" prefWidth="136.0" text="Burgers" textAlignment="CENTER" wrapText="true">
+                     <font>
+                        <Font size="18.0" />
+                     </font></Button>
+                  <Button fx:id="btn5" layoutX="104.0" layoutY="478.0" mnemonicParsing="false" prefHeight="39.0" prefWidth="139.0" text="Fries" textAlignment="CENTER" wrapText="true">
+                     <font>
+                        <Font size="18.0" />
+                     </font></Button>
+                  <Button fx:id="btn1" layoutX="99.0" layoutY="233.0" mnemonicParsing="false" prefHeight="39.0" prefWidth="139.0" text="Best Sellers" textAlignment="CENTER" wrapText="true">
+                     <font>
+                        <Font size="18.0" />
+                     </font></Button>
+                  <Button fx:id="btn3" layoutX="546.0" layoutY="233.0" mnemonicParsing="false" text="Combo Meals" textAlignment="CENTER" wrapText="true">
+                     <font>
+                        <Font size="18.0" />
+                     </font></Button>
+                  <Button fx:id="btn2" layoutX="313.0" layoutY="233.0" mnemonicParsing="false" text="New Products" textAlignment="CENTER" wrapText="true">
+                     <font>
+                        <Font size="18.0" />
+                     </font></Button>
+                  <Button fx:id="btn8" layoutX="733.0" layoutY="478.0" mnemonicParsing="false" text="Desserts &amp; Beverages" textAlignment="CENTER" wrapText="true">
+                     <font>
+                        <Font size="18.0" />
+                     </font></Button>
+                  <Label fx:id="headerLabel" alignment="CENTER" layoutX="353.0" layoutY="11.0" prefHeight="59.0" prefWidth="360.0" text="Deals" textAlignment="CENTER">
                      <font>
                         <Font size="41.0" />
                      </font>
                   </Label>
+                  <ImageView fx:id="img1" fitHeight="150.0" fitWidth="200.0" layoutX="94.0" layoutY="73.0" pickOnBounds="true" preserveRatio="true">
+                     <image>
+                        <Image url="@../pictures/burger.png" />
+                     </image>
+                  </ImageView>
+                  <ImageView fx:id="img2" fitHeight="150.0" fitWidth="200.0" layoutX="300.0" layoutY="73.0" pickOnBounds="true" preserveRatio="true">
+                     <image>
+                        <Image url="@../pictures/burger.png" />
+                     </image>
+                  </ImageView>
+                  <ImageView fx:id="img3" fitHeight="150.0" fitWidth="200.0" layoutX="538.0" layoutY="73.0" pickOnBounds="true" preserveRatio="true">
+                     <image>
+                        <Image url="@../pictures/burger.png" />
+                     </image>
+                  </ImageView>
+                  <ImageView fx:id="img4" fitHeight="150.0" fitWidth="200.0" layoutX="763.0" layoutY="65.0" pickOnBounds="true" preserveRatio="true">
+                     <image>
+                        <Image url="@../pictures/burger.png" />
+                     </image>
+                  </ImageView>
+                  <ImageView fx:id="img5" fitHeight="150.0" fitWidth="200.0" layoutX="99.0" layoutY="316.0" pickOnBounds="true" preserveRatio="true">
+                     <image>
+                        <Image url="@../pictures/burger.png" />
+                     </image>
+                  </ImageView>
+                  <ImageView fx:id="img6" fitHeight="150.0" fitWidth="200.0" layoutX="299.0" layoutY="316.0" pickOnBounds="true" preserveRatio="true">
+                     <image>
+                        <Image url="@../pictures/burger.png" />
+                     </image>
+                  </ImageView>
+                  <ImageView fx:id="img7" fitHeight="150.0" fitWidth="200.0" layoutX="532.0" layoutY="316.0" pickOnBounds="true" preserveRatio="true">
+                     <image>
+                        <Image url="@../pictures/burger.png" />
+                     </image>
+                  </ImageView>
+                  <ImageView fx:id="img8" fitHeight="150.0" fitWidth="200.0" layoutX="762.0" layoutY="316.0" pickOnBounds="true" preserveRatio="true">
+                     <image>
+                        <Image url="@../pictures/burger.png" />
+                     </image>
+                  </ImageView>
+                  <Button fx:id="viewCartBtn" layoutX="882.0" layoutY="546.0" mnemonicParsing="false" prefHeight="39.0" prefWidth="148.0" style="-fx-background-color: F95738;" text="View Cart" textFill="WHITE">
+                     <font>
+                        <Font size="18.0" />
+                     </font></Button>
+                  <Button fx:id="backBtn" layoutX="25.0" layoutY="21.0" mnemonicParsing="false" style="-fx-background-color: E2F9B8;" text="Back">
+                     <graphic>
+                        <ImageView fitHeight="31.0" fitWidth="29.0" pickOnBounds="true" preserveRatio="true">
+                           <image>
+                              <Image url="@../pictures/arrow.png" />
+                           </image>
+                        </ImageView>
+                     </graphic>
+                     <font>
+                        <Font size="16.0" />
+                     </font>
+                  </Button>
+                  <TextField fx:id="qty" alignment="CENTER" editable="false" layoutX="596.0" layoutY="546.0" prefHeight="40.0" prefWidth="67.0" promptText="0">
+                     <font>
+                        <Font size="19.0" />
+                     </font></TextField>
+                  <Button fx:id="addToCartBtn" layoutX="721.0" layoutY="547.0" mnemonicParsing="false" prefHeight="39.0" prefWidth="148.0" style="-fx-background-color: F7F7F9;" text="Add to Cart">
+                     <font>
+                        <Font size="18.0" />
+                     </font>
+                  </Button>
+                  <ImageView fx:id="plusBtn" fitHeight="34.0" fitWidth="27.0" layoutX="675.0" layoutY="552.0" pickOnBounds="true" preserveRatio="true">
+                     <image>
+                        <Image url="@../pictures/plus.png" />
+                     </image>
+                  </ImageView>
+                  <ImageView fx:id="minusBtn" fitHeight="34.0" fitWidth="27.0" layoutX="556.0" layoutY="553.0" pickOnBounds="true" preserveRatio="true">
+                     <image>
+                        <Image url="@../pictures/minus.png" />
+                     </image>
+                  </ImageView>
                </children></AnchorPane>
          </center>
       </BorderPane>
