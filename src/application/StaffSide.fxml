@@ -47,20 +47,12 @@
                               <Insets left="15.0" top="15.0" />
                            </HBox.margin>
                         </Button>
-                        <Button mnemonicParsing="false" onAction="#promoBtn" prefHeight="38.0" prefWidth="247.0" text="PROMOTIONS" textAlignment="CENTER">
-                           <font>
-                              <Font size="18.0" />
-                           </font>
-                           <HBox.margin>
-                              <Insets left="15.0" top="15.0" />
-                           </HBox.margin>
-                        </Button>
                         <Button mnemonicParsing="false" onAction="#signUp" prefHeight="39.0" prefWidth="103.0" text="SIGN UP" textAlignment="CENTER">
                            <font>
                               <Font size="18.0" />
                            </font>
                            <HBox.margin>
-                              <Insets left="55.0" top="15.0" />
+                              <Insets left="300.0" top="15.0" />
                            </HBox.margin>
                         </Button>
                         <Button mnemonicParsing="false" onAction="#signIn" prefHeight="39.0" prefWidth="103.0" text="SIGN IN" textAlignment="CENTER">

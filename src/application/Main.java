@@ -34,10 +34,10 @@ public class Main extends Application {
     }
 
     public void showHomePage(Stage stage) throws IOException {
-        FXMLLoader loader = new FXMLLoader(getClass().getResource("Scene2.fxml"));
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("HomePage.fxml"));
         AnchorPane loginLayout = loader.load();
 
-        Scene2Controller homePage = loader.getController();
+        HomeController homePage = loader.getController();
 
         primaryStage = new Stage();
         primaryStage.setTitle("User Login");

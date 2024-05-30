@@ -12,7 +12,7 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="720.0" prefWidth="1280.0" style="-fx-background-color: E2F9B8;" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="application.OrderController">
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="720.0" prefWidth="1280.0" style="-fx-background-color: E2F9B8;" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="application.SideBarItemsController">
    <children>
       <BorderPane layoutX="420.0" layoutY="205.0" prefHeight="200.0" prefWidth="200.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
          <top>
@@ -141,17 +141,9 @@
          <center>
             <AnchorPane prefHeight="605.0" prefWidth="850.0" style="-fx-background-color: E2F9B8;" BorderPane.alignment="CENTER">
                <children>
-                  <Button fx:id="chickenBtn" layoutX="124.0" layoutY="131.0" mnemonicParsing="false" text="Chicken" />
-                  <Button fx:id="pizzaBtn" layoutX="444.0" layoutY="233.0" mnemonicParsing="false" text="Pizza" />
-                  <Button fx:id="burgersBtn" layoutX="355.0" layoutY="119.0" mnemonicParsing="false" text="Burgers" />
-                  <Button fx:id="friesBtn" layoutX="242.0" layoutY="270.0" mnemonicParsing="false" text="Fries" />
-                  <Button fx:id="bestSellersBtn" layoutX="216.0" layoutY="144.0" mnemonicParsing="false" text="Best Sellers" />
-                  <Button fx:id="comboMealsBtn" layoutX="424.0" layoutY="157.0" mnemonicParsing="false" text="Combo Meals" />
-                  <Button fx:id="newProductsBtn" layoutX="325.0" layoutY="233.0" mnemonicParsing="false" text="New Products" />
-                  <Button fx:id="dessertsBtn" layoutX="135.0" layoutY="245.0" mnemonicParsing="false" text="Desserts" />
-                  <Label fx:id="headerLabel" alignment="CENTER" layoutX="436.0" layoutY="29.0" prefHeight="51.0" prefWidth="131.0" text="Deals" textAlignment="CENTER">
+                  <Label alignment="CENTER" layoutX="470.0" layoutY="22.0" prefHeight="58.0" prefWidth="140.0" text="My Cart" textAlignment="CENTER">
                      <font>
-                        <Font size="41.0" />
+                        <Font size="36.0" />
                      </font>
                   </Label>
                </children></AnchorPane>

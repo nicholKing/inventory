@@ -144,8 +144,10 @@ public class Scene1Controller {
         Alert alert = new Alert(alertType);
         alert.setHeaderText("");
         alert.setContentText(contentText);
+        Scene scenes = alert.getDialogPane().getScene();
+        scenes.getStylesheets().add(getClass().getResource("alert.css").toExternalForm());
         alert.show();
-  
+        
         Timer timer = new Timer();
         timer.schedule(new TimerTask() {
             @Override
@@ -177,7 +179,7 @@ public class Scene1Controller {
 			page = "StaffSide.fxml";
 		}
 		else {
-			page = "Scene2.fxml";
+			page = "HomePage.fxml";
 		}
 		
 		FXMLLoader loader = new FXMLLoader(getClass().getResource(page));
@@ -200,7 +202,7 @@ public class Scene1Controller {
 			cashierPage.displayName(id);
 		}
 		else {
-			Scene2Controller homePage = loader.getController();
+			HomeController homePage = loader.getController();
 			pst = con.prepareStatement(query);
 			pst.setString(1, username);
 			rs = pst.executeQuery();
