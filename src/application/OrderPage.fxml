@@ -142,39 +142,39 @@
          <center>
             <AnchorPane prefHeight="609.0" prefWidth="1196.0" style="-fx-background-color: E2F9B8;" BorderPane.alignment="CENTER">
                <children>
-                  <Button fx:id="btn4" layoutX="770.0" layoutY="233.0" mnemonicParsing="false" prefHeight="39.0" prefWidth="135.0" text="Chicken" textAlignment="CENTER" wrapText="true">
+                  <Button fx:id="btn4" layoutX="770.0" layoutY="251.0" mnemonicParsing="false" prefHeight="39.0" prefWidth="135.0" text="Chicken" textAlignment="CENTER" wrapText="true">
                      <font>
                         <Font size="18.0" />
                      </font></Button>
-                  <Button fx:id="btn7" layoutX="541.0" layoutY="478.0" mnemonicParsing="false" prefHeight="39.0" prefWidth="132.0" text="Pizza" textAlignment="CENTER" wrapText="true">
+                  <Button fx:id="btn7" layoutX="536.0" layoutY="488.0" mnemonicParsing="false" prefHeight="39.0" prefWidth="132.0" text="Pizza" textAlignment="CENTER" wrapText="true">
                      <font>
                         <Font size="18.0" />
                      </font></Button>
-                  <Button fx:id="btn6" layoutX="306.0" layoutY="478.0" mnemonicParsing="false" prefHeight="39.0" prefWidth="136.0" text="Burgers" textAlignment="CENTER" wrapText="true">
+                  <Button fx:id="btn6" layoutX="301.0" layoutY="488.0" mnemonicParsing="false" prefHeight="39.0" prefWidth="136.0" text="Burgers" textAlignment="CENTER" wrapText="true">
                      <font>
                         <Font size="18.0" />
                      </font></Button>
-                  <Button fx:id="btn5" layoutX="104.0" layoutY="478.0" mnemonicParsing="false" prefHeight="39.0" prefWidth="139.0" text="Fries" textAlignment="CENTER" wrapText="true">
+                  <Button fx:id="btn5" layoutX="99.0" layoutY="488.0" mnemonicParsing="false" prefHeight="39.0" prefWidth="139.0" text="Fries" textAlignment="CENTER" wrapText="true">
                      <font>
                         <Font size="18.0" />
                      </font></Button>
-                  <Button fx:id="btn1" layoutX="99.0" layoutY="233.0" mnemonicParsing="false" prefHeight="39.0" prefWidth="139.0" text="Best Sellers" textAlignment="CENTER" wrapText="true">
+                  <Button fx:id="btn1" layoutX="99.0" layoutY="251.0" mnemonicParsing="false" prefHeight="39.0" prefWidth="139.0" text="Best Sellers" textAlignment="CENTER" wrapText="true">
                      <font>
                         <Font size="18.0" />
                      </font></Button>
-                  <Button fx:id="btn3" layoutX="546.0" layoutY="233.0" mnemonicParsing="false" text="Combo Meals" textAlignment="CENTER" wrapText="true">
+                  <Button fx:id="btn3" layoutX="546.0" layoutY="251.0" mnemonicParsing="false" text="Combo Meals" textAlignment="CENTER" wrapText="true">
                      <font>
                         <Font size="18.0" />
                      </font></Button>
-                  <Button fx:id="btn2" layoutX="313.0" layoutY="233.0" mnemonicParsing="false" text="New Products" textAlignment="CENTER" wrapText="true">
+                  <Button fx:id="btn2" layoutX="313.0" layoutY="251.0" mnemonicParsing="false" text="New Products" textAlignment="CENTER" wrapText="true">
                      <font>
                         <Font size="18.0" />
                      </font></Button>
-                  <Button fx:id="btn8" layoutX="733.0" layoutY="478.0" mnemonicParsing="false" text="Desserts &amp; Beverages" textAlignment="CENTER" wrapText="true">
+                  <Button fx:id="btn8" layoutX="733.0" layoutY="486.0" mnemonicParsing="false" text="Desserts &amp; Beverages" textAlignment="CENTER" wrapText="true">
                      <font>
                         <Font size="18.0" />
                      </font></Button>
-                  <Label fx:id="headerLabel" alignment="CENTER" layoutX="353.0" layoutY="11.0" prefHeight="59.0" prefWidth="360.0" text="Deals" textAlignment="CENTER">
+                  <Label fx:id="headerLabel" alignment="CENTER" layoutX="294.0" layoutY="11.0" prefHeight="59.0" prefWidth="505.0" text="Deals" textAlignment="CENTER">
                      <font>
                         <Font size="41.0" />
                      </font>
@@ -194,7 +194,7 @@
                         <Image url="@../pictures/burger.png" />
                      </image>
                   </ImageView>
-                  <ImageView fx:id="img4" fitHeight="150.0" fitWidth="200.0" layoutX="763.0" layoutY="65.0" pickOnBounds="true" preserveRatio="true">
+                  <ImageView fx:id="img4" fitHeight="150.0" fitWidth="200.0" layoutX="763.0" layoutY="73.0" pickOnBounds="true" preserveRatio="true">
                      <image>
                         <Image url="@../pictures/burger.png" />
                      </image>
@@ -235,7 +235,7 @@
                         <Font size="16.0" />
                      </font>
                   </Button>
-                  <TextField fx:id="qty" alignment="CENTER" editable="false" layoutX="596.0" layoutY="546.0" prefHeight="40.0" prefWidth="67.0" promptText="0">
+                  <TextField fx:id="qtyTextField" alignment="CENTER" editable="false" layoutX="596.0" layoutY="546.0" prefHeight="40.0" prefWidth="67.0" promptText="0">
                      <font>
                         <Font size="19.0" />
                      </font></TextField>
@@ -254,6 +254,14 @@
                         <Image url="@../pictures/minus.png" />
                      </image>
                   </ImageView>
+                  <Label fx:id="priceLabel1" layoutX="97.0" layoutY="229.0" text="priceLabel1" />
+                  <Label fx:id="priceLabel2" layoutX="300.0" layoutY="230.0" text="priceLabel2" />
+                  <Label fx:id="priceLabel3" layoutX="537.0" layoutY="229.0" text="priceLabel3" />
+                  <Label fx:id="priceLabel4" layoutX="764.0" layoutY="230.0" text="priceLabel4" />
+                  <Label fx:id="priceLabel5" layoutX="99.0" layoutY="469.0" text="priceLabel5" />
+                  <Label fx:id="priceLabel6" layoutX="301.0" layoutY="470.0" text="priceLabel6" />
+                  <Label fx:id="priceLabel7" layoutX="529.0" layoutY="469.0" text="priceLabel7" />
+                  <Label fx:id="priceLabel8" layoutX="765.0" layoutY="469.0" text="priceLabel8" />
                </children></AnchorPane>
          </center>
       </BorderPane>

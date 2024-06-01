@@ -7,10 +7,14 @@ import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
 import java.util.ResourceBundle;
 import java.util.Timer;
 import java.util.TimerTask;
-
+import application.OrderData;
+import javafx.animation.PauseTransition;
 import javafx.animation.TranslateTransition;
 import javafx.application.Platform;
 import javafx.event.ActionEvent;
@@ -24,7 +28,10 @@ import javafx.scene.control.Alert;
 import javafx.scene.control.ButtonType;
 import javafx.scene.control.Label;
 import javafx.scene.control.Alert.AlertType;
+import javafx.scene.control.Button;
 import javafx.scene.layout.AnchorPane;
+import javafx.scene.layout.HBox;
+import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import javafx.util.Duration;
 
@@ -38,10 +45,13 @@ public class SideBarItemsController implements Initializable{
     private Label menuClose;
     @FXML
     private Label menu;
-
+    @FXML
+    private VBox orderLayout;
+    
 	private Stage stage;
 	private Scene scene;
 	private Parent root;
+	
 	
 	String name;
 	String username = "";
@@ -139,8 +149,19 @@ public class SideBarItemsController implements Initializable{
 			else {showAlert("Login or register to edit your information.", AlertType.INFORMATION);}
 	}
 	public void showCart(ActionEvent event) throws IOException, SQLException {
-			
-			changeScene(event,cartPage);
+		FXMLLoader loader = new FXMLLoader(getClass().getResource("MyCart.fxml"));
+		root = loader.load();
+
+		stage = (Stage)((Node)event.getSource()).getScene().getWindow();
+		scene = new Scene(root);
+		stage.setScene(scene);
+		stage.show();
+		SideBarItemsController cartPage = loader.getController();
+		this.setHasAccount(hasAccount);
+		this.setName(dbName);
+		this.displayName();
+		System.out.println(orderList);
+		this.setOrders(orderList);
 	}
 	public void showTable(ActionEvent event) throws IOException, SQLException {
 			changeScene(event, tablePage);
@@ -201,6 +222,8 @@ public class SideBarItemsController implements Initializable{
 			}
 			else {
 				SideBarItemsController sideBarItems = loader.getController();
+				this.setOrderList(orderList);
+				System.out.println(orderList);
 				sideBarItems.setHasAccount(hasAccount);
 				sideBarItems.setName(dbName);
 				sideBarItems.displayName();
@@ -208,12 +231,52 @@ public class SideBarItemsController implements Initializable{
 			
 			
 	}
+	
+	List<OrderData> orderList = new ArrayList<>();
+	OrderData orderData = new OrderData();
+	
 	public void setHasAccount(boolean hasAccount) {
 			this.hasAccount = hasAccount;
 	}
 	public void setName(String dbName) {
 		this.dbName = dbName;
-		System.out.println(hasAccount);
+	}
+	public void setOrders(List<OrderData> orderList) {
+		this.orderList = orderList;
+		getTotalPrice();
+		displayOrders();
+	}
+	int totalPrice = 0;
+	public int getTotalPrice() {
+       
+        for (OrderData order : orderList) {
+        	 totalPrice += order.getPrice(order.getFoodName()) * Integer.parseInt(order.getQty());
+        }
+        System.out.println("Total Price: " + totalPrice);
+        return totalPrice;
+    }
+	
+	private List<OrderData> sortOrders() {
+		int value;
+		
+		for (int i = 1; i < orderList.size(); i++) {
+		    OrderData currentOrder = orderList.get(i);
+		    String foodName = currentOrder.getFoodName();
+
+		    if (foodName.equals(orderList.get(i - 1).getFoodName())) {
+		      // Combine quantities with the previous order
+		      OrderData previousOrder = orderList.get(i - 1);
+		      value = Integer.parseInt(previousOrder.getQty()) + Integer.parseInt(currentOrder.getQty());
+		      previousOrder.setQty(String.valueOf(value));
+
+		      // Remove the duplicate order
+		      orderList.remove(i);
+		      i--; // Decrement i to avoid skipping elements
+		    }
+		  }
+		  return orderList;
+
+	   
 	}
 	private void showAlert(String contentText, AlertType alertType) {
 
@@ -235,10 +298,28 @@ public class SideBarItemsController implements Initializable{
         }, 1 * 1000);
     }
 	
-		@Override
+	
+	private void displayOrders() {
+		sortOrders();
+        // Display each order in the orderList
+        for (OrderData order : orderList) {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("OrderItem.fxml"));
+
+            try {
+                HBox hBox = loader.load();
+                OrderDataController orderDataController = loader.getController();
+                orderDataController.setData(order);
+                orderLayout.getChildren().add(hBox);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+    }
+	@Override
 	public void initialize(URL arg0, ResourceBundle arg1) {
-			
+		  
 			Connect();
+			
 			// TODO Auto-generated method stub
 			slider.setTranslateX(-200);
 			menu.setOnMouseClicked(event -> {
@@ -277,4 +358,23 @@ public class SideBarItemsController implements Initializable{
 				
 			});
 	}
+	public void backBtn(ActionEvent event) throws IOException, SQLException {
+		FXMLLoader loader = new FXMLLoader(getClass().getResource("OrderPage.fxml"));
+		root = loader.load();
+
+		stage = (Stage)((Node)event.getSource()).getScene().getWindow();
+		scene = new Scene(root);
+		stage.setScene(scene);
+		stage.show();
+		OrderController orderPage = loader.getController();
+		orderPage.setHasAccount(hasAccount);
+		orderPage.setName(dbName);
+		orderPage.displayName();
+		System.out.println(orderList);
+		orderPage.setOrders(orderList);
+	}
+	public void setOrderList(List<OrderData> orderList) {
+		this.orderList = orderList;
+	}
+	
 }

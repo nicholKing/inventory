@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.Pane?>
+<?import javafx.scene.text.Font?>
+
+<HBox alignment="CENTER_LEFT" prefHeight="81.0" prefWidth="1064.0" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="application.OrderDataController">
+   <children>
+      <Pane prefHeight="81.0" prefWidth="316.0">
+         <children>
+            <Label fx:id="foodLabel" alignment="CENTER" layoutX="-4.0" layoutY="2.0" prefHeight="81.0" prefWidth="324.0" text="foodLabel">
+               <font>
+                  <Font size="20.0" />
+               </font>
+            </Label>
+         </children>
+      </Pane>
+      <Pane prefHeight="200.0" prefWidth="200.0">
+         <children>
+            <Label fx:id="qtyLabel" alignment="CENTER" layoutX="38.0" layoutY="15.0" prefHeight="51.0" prefWidth="125.0" text="qtyLabel" textAlignment="CENTER">
+               <font>
+                  <Font size="20.0" />
+               </font>
+            </Label>
+         </children>
+         <HBox.margin>
+            <Insets left="90.0" />
+         </HBox.margin>
+         <opaqueInsets>
+            <Insets />
+         </opaqueInsets>
+      </Pane>
+      <Pane prefHeight="200.0" prefWidth="200.0">
+         <children>
+            <Label fx:id="priceLabel" alignment="CENTER" layoutX="43.0" layoutY="15.0" prefHeight="51.0" prefWidth="114.0" text="priceLabel">
+               <font>
+                  <Font size="20.0" />
+               </font>
+            </Label>
+         </children>
+         <HBox.margin>
+            <Insets left="160.0" />
+         </HBox.margin>
+      </Pane>
+   </children>
+   <padding>
+      <Insets left="30.0" />
+   </padding>
+</HBox>
