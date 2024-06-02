@@ -5,28 +5,46 @@
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.PasswordField?>
 <?import javafx.scene.control.TextField?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="720.0" prefWidth="1280.0" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="application.Scene1Controller">
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="720.0" prefWidth="1280.0" style="-fx-background-color: E8D8C4;" stylesheets="@application.css" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="application.Scene1Controller">
    <children>
-      <Label alignment="CENTER" layoutX="182.0" layoutY="14.0" prefHeight="93.0" prefWidth="255.0" text="Welcome" textAlignment="CENTER">
-         <font>
-            <Font size="36.0" />
-         </font></Label>
-      <Button layoutX="205.0" layoutY="312.0" mnemonicParsing="false" onAction="#signUp" prefHeight="47.0" prefWidth="187.0" text="Signup">
+      <ImageView fitHeight="388.0" fitWidth="370.0" layoutX="323.0" layoutY="174.0" pickOnBounds="true" preserveRatio="true">
+         <image>
+            <Image url="@../pictures/theposher.png" />
+         </image>
+      </ImageView>
+      <Button fx:id="signUpBtn" layoutX="801.0" layoutY="409.0" mnemonicParsing="false" onAction="#signUp" prefHeight="20.0" prefWidth="66.0" text="Sign up">
          <font>
             <Font size="15.0" />
          </font></Button>
-      <Button layoutX="205.0" layoutY="256.0" mnemonicParsing="false" onAction="#login" prefHeight="47.0" prefWidth="187.0" text="Sign In">
+      <Button fx:id="signInBtn" layoutX="678.0" layoutY="447.0" mnemonicParsing="false" onAction="#login" prefHeight="47.0" prefWidth="187.0" styleClass="comic-button" text="Sign In">
          <font>
             <Font size="15.0" />
          </font>
       </Button>
-      <TextField fx:id="usernameField" layoutX="207.0" layoutY="125.0" prefHeight="47.0" prefWidth="187.0" promptText="Username" />
-      <CheckBox fx:id="pass_toggle" layoutX="287.0" layoutY="229.0" mnemonicParsing="false" onAction="#togglevisiblePassword" prefHeight="11.0" prefWidth="112.0" text="Show password" />
-      <TextField fx:id="pass_text" layoutX="207.0" layoutY="180.0" prefHeight="40.0" prefWidth="187.0" promptText="Password" />
-      <PasswordField fx:id="pass_hidden" layoutX="207.0" layoutY="180.0" prefHeight="40.0" prefWidth="187.0" promptText="Password" />
-      <Button fx:id="orderGuest" layoutX="243.0" layoutY="378.0" mnemonicParsing="false" onAction="#changeScene" prefHeight="17.0" prefWidth="112.0" text="Order as guest" />
+      <TextField fx:id="usernameField" layoutX="678.0" layoutY="291.0" prefHeight="40.0" prefWidth="187.0" promptText="Username" styleClass="textField" />
+      <CheckBox fx:id="pass_toggle" layoutX="714.0" layoutY="387.0" mnemonicParsing="false" onAction="#togglevisiblePassword" prefHeight="11.0" prefWidth="112.0" styleClass="text" text="Show password" />
+      <TextField fx:id="pass_text" layoutX="678.0" layoutY="339.0" prefHeight="40.0" prefWidth="187.0" promptText="Password" styleClass="textField" />
+      <PasswordField fx:id="pass_hidden" layoutX="678.0" layoutY="339.0" prefHeight="40.0" prefWidth="187.0" promptText="Password" styleClass="textField" />
+      <Button id="guestBtn" fx:id="orderGuest" layoutX="714.0" layoutY="519.0" mnemonicParsing="false" onAction="#changeScene" prefHeight="17.0" prefWidth="112.0" styleClass="text" text="Order as guest" />
+      <Label id="create" alignment="CENTER" contentDisplay="CENTER" layoutX="586.0" layoutY="202.0" prefHeight="64.0" prefWidth="370.0" styleClass="text" text="Welcome Back" textAlignment="CENTER">
+         <font>
+            <Font size="17.0" />
+         </font>
+      </Label>
+      <Label layoutX="664.0" layoutY="258.0" prefHeight="20.0" prefWidth="216.0" style="-fx-font-size: 14;" styleClass="text" text="Enter your credentials to login">
+         <font>
+            <Font size="10.0" />
+         </font>
+      </Label>
+      <Label layoutX="678.0" layoutY="415.0" prefHeight="15.0" prefWidth="127.0" style="-fx-font-style: italic; -fx-text-fill: #561C24;" text=" Don't have an account?">
+         <font>
+            <Font size="10.0" />
+         </font>
+      </Label>
    </children>
 </AnchorPane>

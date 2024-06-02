@@ -1,26 +1,64 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import java.lang.String?>
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.CheckBox?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.PasswordField?>
 <?import javafx.scene.control.TextField?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="720.0" prefWidth="1280.0" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="application.SignUpController">
+<AnchorPane id="paneSignup" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="720.0" prefWidth="1280.0" stylesheets="@application.css" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="application.SignUpController">
    <children>
-      <Label alignment="CENTER" contentDisplay="CENTER" layoutX="549.0" layoutY="178.0" prefHeight="50.0" prefWidth="200.0" text="Create Account" textAlignment="CENTER">
+      <ImageView fitHeight="390.0" fitWidth="370.0" layoutX="327.0" layoutY="128.0" pickOnBounds="true" preserveRatio="true">
+         <image>
+            <Image url="@../pictures/theposher2.png" />
+         </image>
+      </ImageView>
+      <Label id="create" alignment="CENTER" contentDisplay="CENTER" layoutX="583.0" layoutY="181.0" prefHeight="64.0" prefWidth="370.0" styleClass="text2" text="Welcome" textAlignment="CENTER">
          <font>
-            <Font size="24.0" />
+            <Font size="17.0" />
          </font>
       </Label>
-      <TextField fx:id="usernameField" layoutX="573.0" layoutY="303.0" promptText="Username" />
-      <TextField fx:id="pass_text" layoutX="573.0" layoutY="338.0" promptText="Password" />
-      <PasswordField fx:id="pass_hidden" layoutX="573.0" layoutY="338.0" promptText="Password" />
-      <Button fx:id="signInBtn" layoutX="578.0" layoutY="443.0" mnemonicParsing="false" onAction="#changeScene" prefHeight="43.0" prefWidth="139.0" text="Sign In" />
-      <Button layoutX="578.0" layoutY="386.0" mnemonicParsing="false" onAction="#signUp" prefHeight="43.0" prefWidth="139.0" text="Sign Up" />
-      <TextField fx:id="nameField" layoutX="574.0" layoutY="268.0" promptText="Name" />
-      <CheckBox fx:id="pass_toggle" layoutX="734.0" layoutY="342.0" mnemonicParsing="false" onAction="#togglevisiblePassword" text="Show Password" />
+      <TextField fx:id="usernameField" layoutX="673.0" layoutY="297.0" promptText="Username">
+         <styleClass>
+            <String fx:value="textField" />
+            <String fx:value="tf2" />
+         </styleClass></TextField>
+      <TextField fx:id="pass_text" layoutX="673.0" layoutY="333.0" promptText="Password">
+         <styleClass>
+            <String fx:value="textField" />
+            <String fx:value="tf2" />
+         </styleClass></TextField>
+      <PasswordField fx:id="pass_hidden" layoutX="673.0" layoutY="333.0" promptText="Password">
+         <styleClass>
+            <String fx:value="textField" />
+            <String fx:value="tf2" />
+         </styleClass></PasswordField>
+      <Button fx:id="signInBtn" layoutX="806.0" layoutY="396.0" mnemonicParsing="false" onAction="#changeScene" prefHeight="18.0" prefWidth="60.0" text="Sign In" />
+      <Button layoutX="697.0" layoutY="432.0" mnemonicParsing="false" onAction="#signUp" prefHeight="43.0" prefWidth="139.0" text="Sign Up">
+         <styleClass>
+            <String fx:value="comic-button" />
+            <String fx:value="cb2" />
+         </styleClass></Button>
+      <TextField fx:id="nameField" layoutX="674.0" layoutY="261.0" promptText="Name">
+         <styleClass>
+            <String fx:value="textField" />
+            <String fx:value="tf2" />
+         </styleClass></TextField>
+      <CheckBox fx:id="pass_toggle" layoutX="712.0" layoutY="374.0" mnemonicParsing="false" onAction="#togglevisiblePassword" styleClass="text2" text="Show Password" />
+      <Label layoutX="673.0" layoutY="401.0" style="-fx-font-style: italic;" styleClass="text2" text="Already have an account?">
+         <font>
+            <Font size="10.0" />
+         </font>
+      </Label>
+      <Label layoutX="709.0" layoutY="236.0" styleClass="text2" text="Create your account">
+         <font>
+            <Font size="10.0" />
+         </font>
+      </Label>
    </children>
 </AnchorPane>
