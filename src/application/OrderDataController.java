@@ -1,11 +1,11 @@
 package application;
 
-
 import java.net.URL;
 import java.util.ResourceBundle;
 
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 
 public class OrderDataController implements Initializable {
@@ -19,6 +19,9 @@ public class OrderDataController implements Initializable {
     @FXML
     private Label qtyLabel;
     
+    @FXML
+    private Button deleteBtn;
+   
     int price;
     public void setData(OrderData orderData) {
     	foodLabel.setText(orderData.getFoodName());
@@ -27,11 +30,13 @@ public class OrderDataController implements Initializable {
     	priceLabel.setText(String.valueOf(price));
     	
     }
- 
+    
+    public Button getButton() {
+    	return deleteBtn;
+    }
+    
 	@Override
-	
 	public void initialize(URL arg0, ResourceBundle arg1) {
-		// TODO Auto-generated method stub
 		
 	}
 

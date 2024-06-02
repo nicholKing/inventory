@@ -154,11 +154,6 @@
                         <Font size="16.0" />
                      </font>
                   </Button>
-                  <Button fx:id="removeBtn" layoutX="49.0" layoutY="550.0" mnemonicParsing="false" prefHeight="39.0" prefWidth="148.0" style="-fx-background-color: F7F7F9;" text="Remove">
-                     <font>
-                        <Font size="18.0" />
-                     </font>
-                  </Button>
                   <HBox layoutY="1.0" prefHeight="538.0" prefWidth="1081.0">
                      <children>
                         <ScrollPane pannable="true" prefHeight="538.0" prefWidth="1083.0">
@@ -211,11 +206,16 @@
                         <Font size="16.0" />
                      </font>
                   </Button>
-                  <Button fx:id="viewCartBtn" layoutX="922.0" layoutY="550.0" mnemonicParsing="false" prefHeight="39.0" prefWidth="121.0" style="-fx-background-color: F95738;" text="Confirm" textFill="WHITE">
+                  <Button fx:id="confirmBtn" layoutX="922.0" layoutY="550.0" mnemonicParsing="false" prefHeight="39.0" prefWidth="121.0" style="-fx-background-color: F95738;" text="Confirm" textFill="WHITE">
                      <font>
                         <Font size="18.0" />
                      </font>
                   </Button>
+                  <Label fx:id="totalPriceLabel" layoutX="755.0" layoutY="556.0" prefHeight="27.0" prefWidth="158.0" text="Total Price:">
+                     <font>
+                        <Font size="18.0" />
+                     </font>
+                  </Label>
                </children></AnchorPane>
          </center>
       </BorderPane>

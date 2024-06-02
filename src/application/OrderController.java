@@ -72,7 +72,6 @@ public class OrderController implements Initializable{
     private ImageView img7;
     @FXML
     private ImageView img8;
-    
     @FXML
     private ImageView plusBtn;
     @FXML
@@ -131,6 +130,7 @@ public class OrderController implements Initializable{
     boolean isSideBtn = false;
     boolean isOrderBtn = false;
     boolean isCartBtn = false;
+    boolean isTableBtn = false;
     
     boolean isBestSellers = false;
     boolean isComboMeals = false;
@@ -156,17 +156,13 @@ public class OrderController implements Initializable{
 		changeScene(event, homePage);
 	}
 	public void orderBtn(ActionEvent event) throws IOException, SQLException {
-		setOrders(orderList);
+		this.setOrders(orderList);
 		isOrderBtn = true;
 		changeScene(event, orderPage);
-	}
-	public void promoBtn() {
-		System.out.println("Promo");
 	}
 	public void signUp(ActionEvent event) throws IOException {
 			FXMLLoader loader = new FXMLLoader(getClass().getResource("SignUp.fxml"));
 		    root = loader.load();
-			System.out.println("Test");
 			SignUpController signUpPage = loader.getController();
 			
 			stage = (Stage)((Node)event.getSource()).getScene().getWindow();
@@ -203,13 +199,13 @@ public class OrderController implements Initializable{
 		else {showAlert("Login or register to edit your information", AlertType.INFORMATION);}
 	}
 	public void showCart(ActionEvent event) throws IOException, SQLException {
-		this.setOrders(orderList);
 		isCartBtn = true;
 		changeScene(event, "MyCart.fxml");
 	}
 	public void showTable(ActionEvent event) throws IOException, SQLException {
+		isTableBtn = true;
 		changeScene(event, "TablePage.fxml");
-	}
+		}
 
 	public void showRewards(ActionEvent event) throws IOException, SQLException {
 		if(hasAccount) {
@@ -243,205 +239,196 @@ public class OrderController implements Initializable{
 		btn1.setText("Salmon Symphony");
 		btn2.setText("Eternal Flame Pasta");
 		btn3.setText("Chicken Parmesan");
-		btn1.setPrefHeight(60);
-		btn2.setPrefHeight(60);
-		btn3.setPrefHeight(60);
+		priceLabel1.setText("₱ 269"); 
+		priceLabel2.setText("₱ 259");
+		priceLabel3.setText("₱ 259");
+		
+		btn1.setPrefWidth(150);
+		btn2.setPrefWidth(150);
+		btn3.setPrefWidth(150);
+		
 		btn1.setFont(new Font(15));
 		btn2.setFont(new Font(15));
 		btn3.setFont(new Font(15));
-		btn2.setLayoutX(310);
-		btn4.setVisible(false);
-		btn5.setVisible(false);
-		btn6.setVisible(false);
-		btn7.setVisible(false);
-		btn8.setVisible(false);
-		img1.setImage(image);img2.setImage(image);img3.setImage(image);img4.setVisible(false);img5.setVisible(false);img6.setVisible(false);img7.setVisible(false);img8.setVisible(false);
-		priceLabel1.setText("₱ 169"); 
-		priceLabel2.setText("₱ 159");
-		priceLabel3.setText("₱ 149");
+		
+		img1.setImage(image);
+		img2.setImage(image);
+		img3.setImage(image);
+		
+		btn4.setVisible(false);btn5.setVisible(false);btn6.setVisible(false);btn7.setVisible(false);btn8.setVisible(false);
+		img4.setVisible(false);img5.setVisible(false);img6.setVisible(false);img7.setVisible(false);img8.setVisible(false);
 		priceLabel4.setVisible(false);priceLabel5.setVisible(false);priceLabel6.setVisible(false);priceLabel7.setVisible(false);priceLabel8.setVisible(false);
 		
 	}
 	public void showNewProducts() {
-		btn1.setText("Sizzling Sisig");
-		btn2.setText("Cordon Bleu");
-		btn3.setText("Palabok");
-		btn4.setText("Carbonara");
-		btn1.setPrefHeight(60);
-		btn2.setPrefHeight(60);
-		btn3.setPrefHeight(60);
-		btn4.setPrefHeight(60);
-		btn1.setFont(new Font(15));
-		btn2.setFont(new Font(15));
-		btn3.setFont(new Font(15));
-		btn4.setFont(new Font(15));
-		btn2.setLayoutX(310);
-		btn5.setVisible(false);
-		btn6.setVisible(false);
-		btn7.setVisible(false);
-		btn8.setVisible(false);
+		btn1.setText("Cordon Bleu");
+		btn2.setText("Sizzling Sisig");
+		btn3.setText("Carbonara");
+		btn4.setText("Palabok");
+		priceLabel1.setText("₱ 259");
+		priceLabel2.setText("₱ 239"); 
+		priceLabel3.setText("₱ 159");
+		priceLabel4.setText("₱ 159");
+		
 		img1.setImage(image);
 		img2.setImage(image);
 		img3.setImage(image);
 		img4.setImage(image);
-		img5.setVisible(false);
-		img6.setVisible(false);
-		img7.setVisible(false);
-		img8.setVisible(false);
+		
+		btn5.setVisible(false);btn6.setVisible(false);btn7.setVisible(false);btn8.setVisible(false);
+		img5.setVisible(false);img6.setVisible(false);img7.setVisible(false);img8.setVisible(false);
+		priceLabel5.setVisible(false);priceLabel6.setVisible(false);priceLabel7.setVisible(false);priceLabel8.setVisible(false);
 	}
 	public void showComboMeals() {
 		btn1.setText("Classic Stack & Fries");
 		btn2.setText("BBQ Fest");
 		btn3.setText("Slice & Salad Supreme");
-		btn1.setPrefHeight(60);
-		btn2.setPrefHeight(60);
-		btn3.setPrefHeight(60);
-		btn1.setFont(new Font(15));
-		btn2.setFont(new Font(15));
-		btn3.setFont(new Font(15));
-		btn2.setLayoutX(310);
-		btn4.setVisible(false);
-		btn5.setVisible(false);
-		btn6.setVisible(false);
-		btn7.setVisible(false);
-		btn8.setVisible(false);
+		
+		priceLabel1.setText("₱ 199");
+		priceLabel2.setText("₱ 299"); 
+		priceLabel3.setText("₱ 259");
+		
 		img1.setImage(image);
 		img2.setImage(image);
 		img3.setImage(image);
-		img4.setVisible(false);
-		img5.setVisible(false);
-		img6.setVisible(false);
-		img7.setVisible(false);
-		img8.setVisible(false);
+		
+		btn4.setVisible(false);btn5.setVisible(false);btn6.setVisible(false);btn7.setVisible(false);btn8.setVisible(false);
+		img4.setVisible(false);img5.setVisible(false);img6.setVisible(false);img7.setVisible(false);img8.setVisible(false);
+		priceLabel4.setVisible(false);priceLabel5.setVisible(false);priceLabel6.setVisible(false);priceLabel7.setVisible(false);priceLabel8.setVisible(false);
 	}
 	public void showChicken() {
 		btn1.setText("BBQ Bonanza Breast");
 		btn2.setText("Cheesy Chicken");
 		btn3.setText("Crispy Parmesan");
-		btn1.setPrefHeight(60);
-		btn2.setPrefHeight(60);
-		btn3.setPrefHeight(60);
+		
+		priceLabel1.setText("₱ 219");
+		priceLabel2.setText("₱ 219"); 
+		priceLabel3.setText("₱ 219");
+		
+		btn1.setPrefWidth(170);
+		btn2.setPrefWidth(170);
+		btn3.setPrefWidth(170);
+
 		btn1.setFont(new Font(15));
 		btn2.setFont(new Font(15));
 		btn3.setFont(new Font(15));
-		btn2.setLayoutX(310);
-		btn4.setVisible(false);
-		btn5.setVisible(false);
-		btn6.setVisible(false);
-		btn7.setVisible(false);
-		btn8.setVisible(false);
+		
 		img1.setImage(image);
 		img2.setImage(image);
 		img3.setImage(image);
-		img4.setVisible(false);
-		img5.setVisible(false);
-		img6.setVisible(false);
-		img7.setVisible(false);
-		img8.setVisible(false);
+		
+		btn4.setVisible(false);btn5.setVisible(false);btn6.setVisible(false);btn7.setVisible(false);btn8.setVisible(false);
+		img4.setVisible(false);img5.setVisible(false);img6.setVisible(false);img7.setVisible(false);img8.setVisible(false);
+		priceLabel4.setVisible(false);priceLabel5.setVisible(false);priceLabel6.setVisible(false);priceLabel7.setVisible(false);priceLabel8.setVisible(false);
 	}
 	public void showFries() {
-		btn1.setText("Cheese");
-		btn2.setText("Sour & Cream");
-		btn3.setText("BBQ");
-		btn1.setPrefHeight(60);
-		btn2.setPrefHeight(60);
-		btn3.setPrefHeight(60);
+		btn1.setText("Cheese Fries");
+		btn2.setText("Sour & Cream Fries");
+		btn3.setText("BBQ Fries");
+		
+		priceLabel1.setText("₱ 99");
+		priceLabel2.setText("₱ 99"); 
+		priceLabel3.setText("₱ 99");
+		
+		btn1.setPrefWidth(150);
+		btn2.setPrefWidth(150);
+		btn3.setPrefWidth(150);
+		
 		btn1.setFont(new Font(15));
 		btn2.setFont(new Font(15));
 		btn3.setFont(new Font(15));
-		btn2.setLayoutX(310);
-		btn4.setVisible(false);
-		btn5.setVisible(false);
-		btn6.setVisible(false);
-		btn7.setVisible(false);
-		btn8.setVisible(false);
+		
 		img1.setImage(image);
 		img2.setImage(image);
 		img3.setImage(image);
-		img4.setVisible(false);
-		img5.setVisible(false);
-		img6.setVisible(false);
-		img7.setVisible(false);
-		img8.setVisible(false);
+	
+		btn4.setVisible(false);btn5.setVisible(false);btn6.setVisible(false);btn7.setVisible(false);btn8.setVisible(false);
+		img4.setVisible(false);img5.setVisible(false);img6.setVisible(false);img7.setVisible(false);img8.setVisible(false);
+		priceLabel4.setVisible(false);priceLabel5.setVisible(false);priceLabel6.setVisible(false);priceLabel7.setVisible(false);priceLabel8.setVisible(false);
 	}
 	public void showBurgers() {
 		btn1.setText("Bite-sized Bliss");
 		btn2.setText("Classic Caliber");
 		btn3.setText("The Patty Palace");
-		btn1.setPrefHeight(60);
-		btn2.setPrefHeight(60);
-		btn3.setPrefHeight(60);
+		priceLabel1.setText("₱ 99");
+		priceLabel2.setText("₱ 139"); 
+		priceLabel3.setText("₱ 199");
+		btn1.setPrefWidth(140);
+		btn2.setPrefWidth(140);
+		btn3.setPrefWidth(140);
 		btn1.setFont(new Font(15));
 		btn2.setFont(new Font(15));
 		btn3.setFont(new Font(15));
-		btn2.setLayoutX(310);
-		btn4.setVisible(false);
-		btn5.setVisible(false);
-		btn6.setVisible(false);
-		btn7.setVisible(false);
-		btn8.setVisible(false);
+		
 		img1.setImage(image);
 		img2.setImage(image);
 		img3.setImage(image);
-		img4.setVisible(false);
-		img5.setVisible(false);
-		img6.setVisible(false);
-		img7.setVisible(false);
-		img8.setVisible(false);
+		
+		btn4.setVisible(false);btn5.setVisible(false);btn6.setVisible(false);btn7.setVisible(false);btn8.setVisible(false);
+		img4.setVisible(false);img5.setVisible(false);img6.setVisible(false);img7.setVisible(false);img8.setVisible(false);
+		priceLabel4.setVisible(false);priceLabel5.setVisible(false);priceLabel6.setVisible(false);priceLabel7.setVisible(false);priceLabel8.setVisible(false);
 	}
 	public void showPizza() {
 		btn1.setText("Solo");
 		btn2.setText("Barkada");
 		btn3.setText("Gigante");
-		btn1.setPrefHeight(60);
-		btn2.setPrefHeight(60);
-		btn3.setPrefHeight(60);
-		btn1.setFont(new Font(15));
-		btn2.setFont(new Font(15));
-		btn3.setFont(new Font(15));
+		priceLabel1.setText("₱ 159");
+		priceLabel2.setText("₱ 359"); 
+		priceLabel3.setText("₱ 759");
+		
 		btn2.setLayoutX(310);
-		btn4.setVisible(false);
-		btn5.setVisible(false);
-		btn6.setVisible(false);
-		btn7.setVisible(false);
-		btn8.setVisible(false);
+		
 		img1.setImage(image);
 		img2.setImage(image);
 		img3.setImage(image);
-		img4.setVisible(false);
-		img5.setVisible(false);
-		img6.setVisible(false);
-		img7.setVisible(false);
-		img8.setVisible(false);
+		
+		btn4.setVisible(false);btn5.setVisible(false);btn6.setVisible(false);btn7.setVisible(false);btn8.setVisible(false);
+		img4.setVisible(false);img5.setVisible(false);img6.setVisible(false);img7.setVisible(false);img8.setVisible(false);
+		priceLabel4.setVisible(false);priceLabel5.setVisible(false);priceLabel6.setVisible(false);priceLabel7.setVisible(false);priceLabel8.setVisible(false);
 	}
 	public void showDesAndBev() {
 		btn1.setText("Strawberry Shortcake");
 		btn2.setText("Banana Bread");
 		btn3.setText("Blueberry Cheesecake");
 		btn4.setText("Brownies");
-		btn1.setPrefHeight(60);
-		btn2.setPrefHeight(60);
-		btn3.setPrefHeight(60);
-		btn4.setPrefHeight(60);
+		btn5.setText("Sunny Squeeze Shack");
+		btn6.setText("Blissful Blend Cafe");
+		btn7.setText("Ice Tea Oasis");
+		
+		priceLabel1.setText("₱ 129");
+		priceLabel2.setText("₱ 89"); 
+		priceLabel3.setText("₱ 129");
+		priceLabel4.setText("₱ 79");
+		priceLabel5.setText("₱ 59");
+		priceLabel6.setText("₱ 59");
+		priceLabel7.setText("₱ 59");
+		
+		btn1.setPrefWidth(180);
+		btn2.setPrefWidth(180);
+		btn3.setPrefWidth(180);
+		btn4.setPrefWidth(180);
+		btn5.setPrefWidth(180);
+		btn6.setPrefWidth(180);
+		btn7.setPrefWidth(180);
+	
 		btn1.setFont(new Font(15));
 		btn2.setFont(new Font(15));
 		btn3.setFont(new Font(15));
 		btn4.setFont(new Font(15));
+		btn5.setFont(new Font(15));
+		btn6.setFont(new Font(15));
+		btn7.setFont(new Font(15));
 		btn2.setLayoutX(310);
-		btn5.setVisible(false);
-		btn6.setVisible(false);
-		btn7.setVisible(false);
-		btn8.setVisible(false);
 		img1.setImage(image);
 		img2.setImage(image);
 		img3.setImage(image);
-		img4.setImage(image);
-		img5.setVisible(false);
-		img6.setVisible(false);
-		img7.setVisible(false);
+		img4.setImage(image);img5.setImage(image);img6.setImage(image);img7.setImage(image);
+		
+		btn8.setVisible(false);
 		img8.setVisible(false);
+		priceLabel8.setVisible(false);
 	}
-	
+
 	//HELPER METHODS
 	public void changeScene(ActionEvent event, String page) throws IOException, SQLException {
 		FXMLLoader loader = new FXMLLoader(getClass().getResource(page));
@@ -453,23 +440,27 @@ public class OrderController implements Initializable{
 		stage.show();
 		if(isHomeBtn) {
 			HomeController homePage = loader.getController();
+			homePage.setOrderList(orderList);
 			homePage.setName(dbName);
 			homePage.displayName(0);
 			homePage.setHasAccount(hasAccount);
 		}
 		else if(isOrderBtn) {
-			OrderController orderPage = loader.getController();
-			orderPage.setOrders(orderList);
-			orderPage.setName(dbName);
-			orderPage.displayName();
-			orderPage.setHasAccount(hasAccount);
+			OrderController orderTab = loader.getController();
+			orderTab.setOrders(orderList);
+			orderTab.setName(dbName);
+			orderTab.displayName();
+			orderTab.setHasAccount(hasAccount);
+		}
+		else if(isTableBtn) {
+			TableReservationController tablePage = loader.getController();
+			tablePage.setHasAccount(hasAccount);
+			tablePage.setName(dbName);
+			tablePage.displayName();
 		}
 		else{
 			SideBarItemsController sideBarPage = loader.getController();
-			if(added) {
-				sideBarPage.setOrders(orderList);
-				added = false;
-			}
+			sideBarPage.setOrders(orderList);
 			sideBarPage.setName(dbName);
 			sideBarPage.displayName();
 			sideBarPage.setHasAccount(hasAccount);
@@ -494,18 +485,15 @@ public class OrderController implements Initializable{
 		}
 		// Update previousClickedBtn for next comparison
 		previousClickedBtn = newClickedBtn;
-		System.out.println(newClickedBtn);
 		qty = String.valueOf(quantity);
 		selected = true;
 		return foodName = newClickedBtn;
 	}
 	
-	
- 
 	@Override
 	public void initialize(URL arg0, ResourceBundle arg1) {
 		setBtnSize();
-		showBtns(false);
+		setDisplay(false);
 		
 		addToCartBtn.setOnAction(event ->{
 			if(selected) {
@@ -518,10 +506,7 @@ public class OrderController implements Initializable{
 				added = true;
 				qtyTextField.setText("0");
 				quantity = 0;
-			}else {
-				showAlert("Please select an item", AlertType.ERROR);
-			}
-			
+			}else {showAlert("Please select an item", AlertType.ERROR);}
 		});
 		
 		plusBtn.setOnMouseClicked(event ->{
@@ -529,15 +514,12 @@ public class OrderController implements Initializable{
 			qtyTextField.setText(String.valueOf(quantity));
 			System.out.println(quantity);
 		});
+		
 		minusBtn.setOnMouseClicked(event ->{
-			
-			if(quantity <= 0) {
-				qtyTextField.setText("0");
-			} 
+			if(quantity <= 0) {qtyTextField.setText("0");} 
 			else {
 				quantity--;
 				qtyTextField.setText(String.valueOf(quantity));
-				System.out.println(qtyTextField.getText());
 			} 
 		});
 		
@@ -549,103 +531,80 @@ public class OrderController implements Initializable{
 		} catch (IOException | SQLException e) {e.printStackTrace();}});
 		btn1.setOnAction(event ->{
 			if(!clicked) {
-				showBtns(true);
+				setDisplay(true);
 				headerLabel.setText(btn1.getText());
 	    		showBestSellers();
 	    		clicked = true;
 			}
-			else {
-				recordButtonClick(btn1);
-			}
+			else {recordButtonClick(btn1);}
 		
     	});
     	
 		btn2.setOnAction(event ->{
 			if(!clicked) {
-				showBtns(true);
+				setDisplay(true);
 				headerLabel.setText(btn2.getText());
 	    		showNewProducts();
 	    		clicked = true;
 			}
-			else {
-				recordButtonClick(btn2);
-			}
-    	});
+			else {recordButtonClick(btn2);}});
     	
 		btn3.setOnAction(event ->{
 			if(!clicked) {
-				showBtns(true);
+				setDisplay(true);
 				headerLabel.setText(btn3.getText());
 	    		showComboMeals();
 	    		clicked = true;
 			}
-			else {
-				recordButtonClick(btn3);
-			}
-    	});
+			else {recordButtonClick(btn3);}});
     	
 		btn4.setOnAction(event ->{
 			if(!clicked) {
-				showBtns(true);
+				setDisplay(true);
 				headerLabel.setText(btn4.getText());
 	    		showChicken();
 	    		clicked = true;
 			}
-			else {
-				recordButtonClick(btn4);
-			}
-    	});
+			else {recordButtonClick(btn4);}});
     	
 		btn5.setOnAction(event ->{
 			if(!clicked) {
-				showBtns(true);
+				setDisplay(true);
 				headerLabel.setText(btn5.getText());
 	    		showFries();
 	    		clicked = true;
 			}
-			else {
-				recordButtonClick(btn5);
-			}
-    	});
+			else {recordButtonClick(btn5);}});
     	
 		btn6.setOnAction(event ->{
 			if(!clicked) {
-				showBtns(true);
+				setDisplay(true);
 				backBtn.setVisible(true);
 				headerLabel.setText(btn6.getText());
 	    		showBurgers();
 	    		clicked = true;
 			}
-			else {
-				recordButtonClick(btn6);
-			}
-    	});
+			else {recordButtonClick(btn6);}});
 		
 		btn7.setOnAction(event ->{
 			if(!clicked) {
-				showBtns(true);
+				setDisplay(true);
 				headerLabel.setText(btn7.getText());
 	    		showPizza();
 	    		clicked = true;
 			}
-			else {
-				recordButtonClick(btn7);
-			}
-    	});
+			else {recordButtonClick(btn7);}});
     	
 		btn8.setOnAction(event ->{
 			if(!clicked) {
-				showBtns(true);
+				setDisplay(true);
 				headerLabel.setText(btn8.getText());
 	    		showDesAndBev();
 	    		clicked = true;
 			}
-			else {
-				recordButtonClick(btn8);
-			}
-    	});
-    	viewCartBtn.setOnAction(event ->{try {showCart(event);} catch (IOException | SQLException e) {e.printStackTrace();}});
-		
+			else {recordButtonClick(btn8);}});
+    	
+		viewCartBtn.setOnAction(event ->{try {showCart(event);} catch (IOException | SQLException e) {e.printStackTrace();}});
 		
 		slider.setTranslateX(-200);
 		menu.setOnMouseClicked(event -> {
@@ -684,14 +643,7 @@ public class OrderController implements Initializable{
 		
 	}
 	
-	public void showBtns(boolean toggle) {
-		qtyTextField.setVisible(toggle);
-		minusBtn.setVisible(toggle);
-		plusBtn.setVisible(toggle);
-		addToCartBtn.setVisible(toggle);
-		viewCartBtn.setVisible(toggle);
-		backBtn.setVisible(toggle);
-	}
+	
 	public void setBtnSize() {
 		btn1.setPrefWidth(140);
 		btn1.setPrefHeight(40);	
@@ -720,6 +672,25 @@ public class OrderController implements Initializable{
 		this.dbName = dbName;
 	}
 	
+	public void showSize() {
+		
+	}
+	public void setDisplay(boolean toggle) {
+		priceLabel1.setVisible(toggle);
+		priceLabel2.setVisible(toggle);
+		priceLabel3.setVisible(toggle);
+		priceLabel4.setVisible(toggle);
+		priceLabel5.setVisible(toggle);
+		priceLabel6.setVisible(toggle);
+		priceLabel7.setVisible(toggle);
+		priceLabel8.setVisible(toggle);
+		qtyTextField.setVisible(toggle);
+		minusBtn.setVisible(toggle);
+		plusBtn.setVisible(toggle);
+		addToCartBtn.setVisible(toggle);
+		viewCartBtn.setVisible(toggle);
+		backBtn.setVisible(toggle);
+	}
 	private void showAlert(String contentText, AlertType alertType) {
 
         Alert alert = new Alert(alertType);
