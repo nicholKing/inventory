@@ -163,7 +163,6 @@ public class CartController implements Initializable{
 			nameLabel.setText(dbName);
 		}
 	public void showAccount(ActionEvent event) throws IOException, SQLException {
-			System.out.println("hasAccount?: " + hasAccount);
 		if(hasAccount) {
 			isAccBtn = true;
 			changeScene(event, accPage);}
@@ -177,7 +176,10 @@ public class CartController implements Initializable{
 			changeScene(event, tablePage);
 	}
 	public void showRewards(ActionEvent event) throws IOException, SQLException {
-			if(hasAccount) {changeScene(event, rewardsPage);}
+			if(hasAccount) {
+				isRewardBtn = true;
+				changeScene(event, rewardsPage);
+				}
 			else {showAlert("Create an account to unlock exciting rewards!", AlertType.INFORMATION);}
 	}
 	public void logout(ActionEvent event) throws IOException {
@@ -286,26 +288,31 @@ public class CartController implements Initializable{
 				homePage.setHasAccount(hasAccount);
 				homePage.setName(dbName);
 				homePage.displayName(0);
-			}else if(isOrderBtn) {
+			}
+			else if(isOrderBtn) {
 				OrderController orderPage = loader.getController();
 				orderPage.setOrders(orderList);
-				orderPage.setHasAccount(hasAccount);
 				orderPage.setName(dbName);
 				orderPage.displayName();
+				orderPage.setHasAccount(hasAccount);
 			}else if(isTableBtn) {
 				TableReservationController tablePage = loader.getController();
-				tablePage.setOrderList(orderList);
 				tablePage.setHasAccount(hasAccount);
 				tablePage.setName(dbName);
 				tablePage.displayName();
 			}else if(isAccBtn) {
 				AccountDetailsController accPage = loader.getController();
-				accPage.setOrderList(orderList);
-				accPage.setHasAccount(hasAccount);
+				accPage.setOrders(orderList);
 				accPage.setName(dbName);
 				accPage.displayName();
-			}
-			else {
+				accPage.setHasAccount(hasAccount);
+			}else if(isRewardBtn) {
+				RewardsController rewardPage = loader.getController();
+				rewardPage.setOrderList(orderList);
+				rewardPage.setHasAccount(hasAccount);
+				rewardPage.setName(dbName);
+				rewardPage.displayName();
+			}else {
 				CartController cartPage = loader.getController();
 				cartPage.setOrders(orderList);
 				cartPage.setHasAccount(hasAccount);
@@ -317,23 +324,26 @@ public class CartController implements Initializable{
 	}
 	private void showAlert(String contentText, AlertType alertType) {
 
-        Alert alert = new Alert(alertType);
-        alert.setHeaderText("");
-        alert.setContentText(contentText);
-        alert.show();
-  
-        Timer timer = new Timer();
-        timer.schedule(new TimerTask() {
-            @Override
-            public void run() {
-            	Platform.runLater(() -> {
-                   alert.close();
-                });
-                
-                timer.cancel(); // Cancel the timer after closing the alert
-            }
-        }, 1 * 1000);
-    }
+		 Alert alert = new Alert(alertType);
+	        alert.setTitle("Notice");
+	        alert.setHeaderText(null);
+	        alert.setContentText(contentText);
+	        Scene scenes = alert.getDialogPane().getScene();
+	        scenes.getStylesheets().add(getClass().getResource("alert.css").toExternalForm());
+	        alert.show();
+	  
+	        Timer timer = new Timer();
+	        timer.schedule(new TimerTask() {
+	            @Override
+	            public void run() {
+	            	Platform.runLater(() -> {
+	                   alert.close();
+	                });
+	                
+	                timer.cancel(); // Cancel the timer after closing the alert
+	            }
+	        }, 2 * 1000);
+	    }
 	
 	//GETTERS AND SETTERS 
 	public void setHasAccount(boolean hasAccount) {

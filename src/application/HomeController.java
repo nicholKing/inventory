@@ -61,7 +61,9 @@ public class HomeController implements Initializable{
 	boolean hasAccount = false;
 	boolean isHomeBtn = false; //reset the condition
 	boolean isOrderBtn = false;
-	boolean isAccountBtn = false;
+	boolean isAccBtn = false;
+	boolean isTableBtn = false;
+	boolean isRewardBtn = false;
 	
 	Connection con;
 	PreparedStatement pst;
@@ -153,7 +155,7 @@ public class HomeController implements Initializable{
 	public void showAccount(ActionEvent event) throws IOException, SQLException {
 		
 			if(hasAccount) {
-				isAccountBtn = true;
+				isAccBtn = true;
 				changeScene(event, accPage);
 				}
 			
@@ -164,11 +166,13 @@ public class HomeController implements Initializable{
 			changeScene(event,cartPage);
 	}
 	public void showTable(ActionEvent event) throws IOException, SQLException {
-			if(hasAccount) {changeScene(event, accPage);}
-			else {System.out.println("Show Table");}
+		isTableBtn = true;
+		changeScene(event, tablePage);
+			
 	}
 	public void showRewards(ActionEvent event) throws IOException, SQLException {
 			if(hasAccount) {
+				isRewardBtn = true;
 				changeScene(event, rewardsPage);
 			}
 			else {
@@ -234,20 +238,29 @@ public class HomeController implements Initializable{
 				orderPage.setName(dbName);
 				orderPage.displayName();
 				orderPage.setHasAccount(hasAccount);
-			}
-			else if(isAccountBtn) {
+			}else if(isTableBtn) {
+				TableReservationController tablePage = loader.getController();
+				tablePage.setHasAccount(hasAccount);
+				tablePage.setName(dbName);
+				tablePage.displayName();
+			}else if(isAccBtn) {
 				AccountDetailsController accPage = loader.getController();
 				accPage.setOrders(orderList);
 				accPage.setName(dbName);
 				accPage.displayName();
 				accPage.setHasAccount(hasAccount);
-			}
-			else {
-				CartController sideBarItems = loader.getController();
-				sideBarItems.setOrders(orderList);
-				sideBarItems.setHasAccount(hasAccount);
-				sideBarItems.setName(dbName);
-				sideBarItems.displayName();
+			}else if(isRewardBtn) {
+				RewardsController rewardPage = loader.getController();
+				rewardPage.setOrderList(orderList);
+				rewardPage.setHasAccount(hasAccount);
+				rewardPage.setName(dbName);
+				rewardPage.displayName();
+			}else {
+				CartController cartPage = loader.getController();
+				cartPage.setOrders(orderList);
+				cartPage.setHasAccount(hasAccount);
+				cartPage.setName(dbName);
+				cartPage.displayName();
 			}
 			
 			
@@ -289,8 +302,7 @@ public class HomeController implements Initializable{
 	public void initialize(URL arg0, ResourceBundle arg1) {
 			
 			Connect();
-			//try {displayName(0);} 
-			//catch (SQLException e) {e.printStackTrace();}
+			
 			slider.setTranslateX(-200);
 			menu.setOnMouseClicked(event -> {
 	            TranslateTransition slide = new TranslateTransition();

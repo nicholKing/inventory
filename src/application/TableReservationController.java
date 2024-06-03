@@ -13,6 +13,7 @@ import java.util.ResourceBundle;
 import java.util.Timer;
 import java.util.TimerTask;
 
+import javafx.animation.TranslateTransition;
 import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -29,6 +30,7 @@ import javafx.scene.control.Alert.AlertType;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
+import javafx.util.Duration;
 
 public class TableReservationController implements Initializable {
 	
@@ -222,32 +224,31 @@ public void signUp(ActionEvent event) throws IOException, ClassNotFoundException
 			homePage.setHasAccount(hasAccount);
 			homePage.setName(dbName);
 			homePage.displayName(0);
-		}else if(isOrderBtn) {
+		}
+		else if(isOrderBtn) {
 			OrderController orderPage = loader.getController();
 			orderPage.setOrders(orderList);
-			orderPage.setHasAccount(hasAccount);
 			orderPage.setName(dbName);
 			orderPage.displayName();
+			orderPage.setHasAccount(hasAccount);
 		}else if(isTableBtn) {
 			TableReservationController tablePage = loader.getController();
-			tablePage.setOrderList(orderList);
 			tablePage.setHasAccount(hasAccount);
 			tablePage.setName(dbName);
 			tablePage.displayName();
 		}else if(isAccBtn) {
 			AccountDetailsController accPage = loader.getController();
-			accPage.setOrderList(orderList);
-			accPage.setHasAccount(hasAccount);
+			accPage.setOrders(orderList);
 			accPage.setName(dbName);
 			accPage.displayName();
+			accPage.setHasAccount(hasAccount);
 		}else if(isRewardBtn) {
-			RewardsController rewardsPage = loader.getController();
-			rewardsPage.setOrderList(orderList);
-			rewardsPage.setHasAccount(hasAccount);
-			rewardsPage.setName(dbName);
-			rewardsPage.displayName();
-		}
-		else {
+			RewardsController rewardPage = loader.getController();
+			rewardPage.setOrderList(orderList);
+			rewardPage.setHasAccount(hasAccount);
+			rewardPage.setName(dbName);
+			rewardPage.displayName();
+		}else {
 			CartController cartPage = loader.getController();
 			cartPage.setOrders(orderList);
 			cartPage.setHasAccount(hasAccount);
@@ -259,27 +260,61 @@ public void signUp(ActionEvent event) throws IOException, ClassNotFoundException
 }
 	private void showAlert(String contentText, AlertType alertType) {
 	
-	    Alert alert = new Alert(alertType);
-	    alert.setHeaderText("");
-	    alert.setContentText(contentText);
-	    alert.show();
-	
-	    Timer timer = new Timer();
-	    timer.schedule(new TimerTask() {
-	        @Override
-	        public void run() {
-	        	Platform.runLater(() -> {
-	               alert.close();
-	            });
-	            
-	            timer.cancel(); // Cancel the timer after closing the alert
-	        }
-	    }, 1 * 1000);
-	}
+		 Alert alert = new Alert(alertType);
+	        alert.setTitle("Notice");
+	        alert.setHeaderText(null);
+	        alert.setContentText(contentText);
+	        Scene scenes = alert.getDialogPane().getScene();
+	        scenes.getStylesheets().add(getClass().getResource("alert.css").toExternalForm());
+	        alert.show();
+	  
+	        Timer timer = new Timer();
+	        timer.schedule(new TimerTask() {
+	            @Override
+	            public void run() {
+	            	Platform.runLater(() -> {
+	                   alert.close();
+	                });
+	                
+	                timer.cancel(); // Cancel the timer after closing the alert
+	            }
+	        }, 2 * 1000);
+	    }
 	@Override
 	public void initialize(URL arg0, ResourceBundle arg1) {
 		// TODO Auto-generated method stub
-		System.out.println("Table Reservation");
+		slider.setTranslateX(-200);
+		menu.setOnMouseClicked(event -> {
+            TranslateTransition slide = new TranslateTransition();
+            slide.setDuration(Duration.seconds(0.4));
+            slide.setNode(slider);
+
+            slide.setToX(0);
+            slide.play();
+
+            slider.setTranslateX(-200);
+
+            slide.setOnFinished((ActionEvent e)-> {
+                menu.setVisible(false);
+                menuClose.setVisible(true);
+            });
+        });
+
+        menuClose.setOnMouseClicked(event -> {
+            TranslateTransition slide = new TranslateTransition();
+            slide.setDuration(Duration.seconds(0.4));
+            slide.setNode(slider);
+
+            slide.setToX(-200);
+            slide.play();
+
+            slider.setTranslateX(0);
+
+            slide.setOnFinished((ActionEvent e)-> {
+                menu.setVisible(true);
+                menuClose.setVisible(false);
+            });
+        });
 	}
 	public void setHasAccount(boolean hasAccount) {
 		this.hasAccount = hasAccount;
