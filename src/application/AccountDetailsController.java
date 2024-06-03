@@ -12,7 +12,7 @@ import java.util.List;
 import java.util.ResourceBundle;
 import java.util.Timer;
 import java.util.TimerTask;
-
+import javafx.animation.TranslateTransition;
 import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -22,16 +22,37 @@ import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
-import javafx.scene.control.Button;
 import javafx.scene.control.ButtonType;
 import javafx.scene.control.Label;
+import javafx.scene.control.TextField;
 import javafx.scene.control.Alert.AlertType;
+import javafx.scene.control.Button;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
+import javafx.util.Duration;
 
-public class TableReservationController implements Initializable {
-	
+public class AccountDetailsController implements Initializable{
+	@FXML
+	private Button editBtn;
+	@FXML
+	private Button saveBtn;
+	@FXML
+    private Button addAddressBtn;
+    @FXML
+    private Button addEmailBtn;
+    @FXML
+    private TextField addressTextField;
+    @FXML
+    private TextField emailField;
+    @FXML
+    private Button logoutBtn;
+    @FXML
+    private TextField nameTextField;
+    @FXML
+    private TextField passwordField;
+    @FXML
+    private TextField usernameTextField;
 	@FXML
 	private Label nameLabel;
     @FXML
@@ -46,7 +67,8 @@ public class TableReservationController implements Initializable {
     private Label totalPriceLabel;
     @FXML
     private VBox vBox;
-  
+    @FXML
+    private Button deleteBtn;
    
 	private Stage stage;
 	private Scene scene;
@@ -67,10 +89,10 @@ public class TableReservationController implements Initializable {
     String dbName;
     
 	boolean hasAccount = false;
+	boolean isEditable = false;
 	boolean isHomeBtn = false;
 	boolean isOrderBtn = false;
 	boolean isTableBtn = false;
-	boolean isAccBtn = false;
 	boolean isRewardBtn = false;
 	
 	Connection con;
@@ -114,7 +136,7 @@ public class TableReservationController implements Initializable {
 		stage.show();
 		}
 	}
-public void signUp(ActionEvent event) throws IOException, ClassNotFoundException, SQLException {
+	public void signUp(ActionEvent event) throws IOException, ClassNotFoundException, SQLException {
 		FXMLLoader loader = new FXMLLoader(getClass().getResource("SignUp.fxml"));
 	    root = loader.load();
 		if(hasAccount) {
@@ -152,11 +174,9 @@ public void signUp(ActionEvent event) throws IOException, ClassNotFoundException
 			nameLabel.setText(dbName);
 		}
 	public void showAccount(ActionEvent event) throws IOException, SQLException {
-		if(hasAccount) {
-			isAccBtn = true;
-			changeScene(event, accPage);
-		}else {
-			showAlert("Login or register to edit your information.", AlertType.INFORMATION);}
+			System.out.println("hasAccount?: " + hasAccount);
+		if(hasAccount) {changeScene(event, accPage);}
+			else {showAlert("Login or register to edit your information.", AlertType.INFORMATION);}
 	}
 	public void showCart(ActionEvent event) throws IOException, SQLException {
 		changeScene(event, cartPage);
@@ -166,10 +186,7 @@ public void signUp(ActionEvent event) throws IOException, ClassNotFoundException
 			changeScene(event, tablePage);
 	}
 	public void showRewards(ActionEvent event) throws IOException, SQLException {
-			if(hasAccount) {
-				isRewardBtn = true;
-				changeScene(event, rewardsPage);
-			}
+			if(hasAccount) {changeScene(event, rewardsPage);}
 			else {showAlert("Create an account to unlock exciting rewards!", AlertType.INFORMATION);}
 	}
 	public void logout(ActionEvent event) throws IOException, ClassNotFoundException, SQLException {
@@ -196,98 +213,179 @@ public void signUp(ActionEvent event) throws IOException, ClassNotFoundException
 		stage.setScene(scene);
 		stage.show();
 		}
-		    
-		}
+	}
+	
+	//ACCOUNT SYSTEM
+	
+	public void editDetails() throws SQLException {
+		
+		
+		
+	}
+	
+	//HELPER METHODS
 	public void Connect() {
-		try {
-			Class.forName("com.mysql.jdbc.Driver");
-			con = DriverManager.getConnection("jdbc:mysql://localhost/inventory", "root", "");
-		} catch (SQLException | ClassNotFoundException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-}
+			try {
+				Class.forName("com.mysql.jdbc.Driver");
+				con = DriverManager.getConnection("jdbc:mysql://localhost/inventory", "root", "");
+			} catch (SQLException | ClassNotFoundException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+	}
 	public void changeScene(ActionEvent event, String page) throws IOException, SQLException {
-		
-		FXMLLoader loader = new FXMLLoader(getClass().getResource(page));
-		root = loader.load();
+			
+			FXMLLoader loader = new FXMLLoader(getClass().getResource(page));
+			root = loader.load();
 
-		stage = (Stage)((Node)event.getSource()).getScene().getWindow();
-		scene = new Scene(root);
-		stage.setScene(scene);
-		stage.show();
-		if(isHomeBtn) {
-			HomeController homePage = loader.getController();
-			homePage.setOrderList(orderList);
-			homePage.setHasAccount(hasAccount);
-			homePage.setName(dbName);
-			homePage.displayName(0);
-		}else if(isOrderBtn) {
-			OrderController orderPage = loader.getController();
-			orderPage.setOrders(orderList);
-			orderPage.setHasAccount(hasAccount);
-			orderPage.setName(dbName);
-			orderPage.displayName();
-		}else if(isTableBtn) {
-			TableReservationController tablePage = loader.getController();
-			tablePage.setOrderList(orderList);
-			tablePage.setHasAccount(hasAccount);
-			tablePage.setName(dbName);
-			tablePage.displayName();
-		}else if(isAccBtn) {
-			AccountDetailsController accPage = loader.getController();
-			accPage.setOrderList(orderList);
-			accPage.setHasAccount(hasAccount);
-			accPage.setName(dbName);
-			accPage.displayName();
-		}else if(isRewardBtn) {
-			RewardsController rewardsPage = loader.getController();
-			rewardsPage.setOrderList(orderList);
-			rewardsPage.setHasAccount(hasAccount);
-			rewardsPage.setName(dbName);
-			rewardsPage.displayName();
-		}
-		else {
-			CartController cartPage = loader.getController();
-			cartPage.setOrders(orderList);
-			cartPage.setHasAccount(hasAccount);
-			cartPage.setName(dbName);
-			cartPage.displayName();
-		}
-		
-		
-}
+			stage = (Stage)((Node)event.getSource()).getScene().getWindow();
+			scene = new Scene(root);
+			stage.setScene(scene);
+			stage.show();
+			if(isHomeBtn) {
+				HomeController homePage = loader.getController();
+				homePage.setOrderList(orderList);
+				homePage.setHasAccount(hasAccount);
+				homePage.setName(dbName);
+				homePage.displayName(0);
+			}else if(isOrderBtn) {
+				OrderController orderPage = loader.getController();
+				orderPage.setOrders(orderList);
+				orderPage.setHasAccount(hasAccount);
+				orderPage.setName(dbName);
+				orderPage.displayName();
+			}else if(isTableBtn) {
+				TableReservationController tablePage = loader.getController();
+				tablePage.setOrderList(orderList);
+				tablePage.setHasAccount(hasAccount);
+				tablePage.setName(dbName);
+				tablePage.displayName();
+			}
+			else {
+				CartController sideBarItems = loader.getController();
+				sideBarItems.setOrders(orderList);
+				sideBarItems.setHasAccount(hasAccount);
+				sideBarItems.setName(dbName);
+				sideBarItems.displayName();
+			}
+			
+			
+	}
 	private void showAlert(String contentText, AlertType alertType) {
+
+        Alert alert = new Alert(alertType);
+        alert.setHeaderText("");
+        alert.setContentText(contentText);
+        alert.show();
+  
+        Timer timer = new Timer();
+        timer.schedule(new TimerTask() {
+            @Override
+            public void run() {
+            	Platform.runLater(() -> {
+                   alert.close();
+                });
+                
+                timer.cancel(); // Cancel the timer after closing the alert
+            }
+        }, 1 * 1000);
+    }
 	
-	    Alert alert = new Alert(alertType);
-	    alert.setHeaderText("");
-	    alert.setContentText(contentText);
-	    alert.show();
-	
-	    Timer timer = new Timer();
-	    timer.schedule(new TimerTask() {
-	        @Override
-	        public void run() {
-	        	Platform.runLater(() -> {
-	               alert.close();
-	            });
-	            
-	            timer.cancel(); // Cancel the timer after closing the alert
-	        }
-	    }, 1 * 1000);
-	}
-	@Override
-	public void initialize(URL arg0, ResourceBundle arg1) {
-		// TODO Auto-generated method stub
-		System.out.println("Table Reservation");
-	}
+	//GETTERS AND SETTERS 
 	public void setHasAccount(boolean hasAccount) {
-		this.hasAccount = hasAccount;
-}
+			this.hasAccount = hasAccount;
+	}
 	public void setName(String dbName) {
 		this.dbName = dbName;
-}
+	}
+	public void setOrders(List<OrderData> orderList) {
+		this.orderList = orderList;
+	}
 	public void setOrderList(List<OrderData> orderList) {
 		this.orderList = orderList;
 	}
+	
+	@Override
+	public void initialize(URL arg0, ResourceBundle arg1) {
+		Connect();
+		String sql = "UPDATE users SET name = ?, email = ?, password = ? WHERE id = ?";
+		
+			editBtn.setOnMouseClicked(event ->{
+				isEditable = true;});
+			
+			saveBtn.setOnMouseClicked(event ->{
+					try {
+						String name = nameTextField.getText();
+						String password = passwordField.getText();
+						String username = usernameTextField.getText();
+						
+						pst = con.prepareStatement(sql);
+						pst.setString(1, name);
+						pst.setString(2, username);
+						pst.setString(3, password);
+						int rowsUpdated;
+						rowsUpdated = pst.executeUpdate();
+						if(rowsUpdated > 0) {
+							System.out.println("Details updated!");	
+						}
+					} catch (SQLException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
+					
+	
+				
+				
+			});
+			
+			if(isEditable) {
+				try {
+					editDetails();
+				} catch (SQLException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+			}
+        	
+        
+			slider.setTranslateX(-200);
+			menu.setOnMouseClicked(event -> {
+				TranslateTransition slide = new TranslateTransition();
+				slide.setDuration(Duration.seconds(0.4));
+				slide.setNode(slider);
+				
+				slide.setToX(0);
+				slide.play();
+				
+				slider.setTranslateX(-200);
+				
+				slide.setOnFinished((ActionEvent e) ->{
+					menu.setVisible(false);
+					menuClose.setVisible(true);
+				});
+				
+				
+			});
+			
+			menuClose.setOnMouseClicked(event -> {
+				TranslateTransition slide = new TranslateTransition();
+				slide.setDuration(Duration.seconds(0.4));
+				slide.setNode(slider);
+				
+				slide.setToX(-200);
+				slide.play();
+				
+				slider.setTranslateX(0);
+				
+				slide.setOnFinished((ActionEvent e) ->{
+					menu.setVisible(true);
+					menuClose.setVisible(false);
+				});
+				
+				
+			});
+	}
+	
+	
+	
 }

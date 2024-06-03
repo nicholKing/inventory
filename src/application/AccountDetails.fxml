@@ -2,7 +2,6 @@
 
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.control.Button?>
-<?import javafx.scene.control.DatePicker?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.TextField?>
 <?import javafx.scene.image.Image?>
@@ -14,7 +13,7 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="720.0" prefWidth="1280.0" style="-fx-background-color: E2F9B8;" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="application.SideBarItemsController">
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="720.0" prefWidth="1280.0" style="-fx-background-color: E2F9B8;" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="application.AccountDetailsController">
    <children>
       <BorderPane layoutX="420.0" layoutY="205.0" prefHeight="200.0" prefWidth="200.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
          <top>
@@ -143,47 +142,61 @@
          <center>
             <AnchorPane prefHeight="605.0" prefWidth="850.0" style="-fx-background-color: E2F9B8;" BorderPane.alignment="CENTER">
                <children>
-                  <TextField layoutX="282.0" layoutY="118.0" prefHeight="42.0" prefWidth="216.0" />
+                  <TextField fx:id="nameTextField" layoutX="495.0" layoutY="139.0" prefHeight="42.0" prefWidth="216.0" />
                   <Label alignment="CENTER" contentDisplay="CENTER" layoutX="327.0" layoutY="24.0" prefHeight="53.0" prefWidth="426.0" text="Account Details" textAlignment="CENTER">
                      <font>
                         <Font size="36.0" />
                      </font>
                   </Label>
-                  <Label layoutX="154.0" layoutY="120.0" prefHeight="33.0" prefWidth="105.0" text="Name:">
+                  <Label layoutX="367.0" layoutY="141.0" prefHeight="33.0" prefWidth="105.0" text="Name:">
                      <font>
                         <Font size="26.0" />
                      </font>
                   </Label>
-                  <Label layoutX="154.0" layoutY="178.0" prefHeight="38.0" prefWidth="131.0" text="Username:">
+                  <Label layoutX="367.0" layoutY="199.0" prefHeight="38.0" prefWidth="131.0" text="Username:">
                      <font>
                         <Font size="26.0" />
                      </font>
                   </Label>
-                  <TextField layoutX="282.0" layoutY="176.0" prefHeight="42.0" prefWidth="216.0" />
-                  <TextField layoutX="282.0" layoutY="233.0" prefHeight="42.0" prefWidth="216.0" />
-                  <Label layoutX="154.0" layoutY="235.0" prefHeight="38.0" prefWidth="121.0" text="Password:">
+                  <TextField fx:id="usernameTextField" layoutX="495.0" layoutY="197.0" prefHeight="42.0" prefWidth="216.0" />
+                  <TextField fx:id="passwordField" layoutX="495.0" layoutY="254.0" prefHeight="42.0" prefWidth="216.0" />
+                  <Label layoutX="367.0" layoutY="256.0" prefHeight="38.0" prefWidth="121.0" text="Password:">
                      <font>
                         <Font size="26.0" />
                      </font>
                   </Label>
-                  <Label layoutX="156.0" layoutY="353.0" prefHeight="38.0" prefWidth="82.0" text="Email:">
+                  <Label layoutX="369.0" layoutY="320.0" prefHeight="38.0" prefWidth="82.0" text="Email:">
                      <font>
                         <Font size="26.0" />
                      </font>
                   </Label>
-                  <Label layoutX="155.0" layoutY="408.0" prefHeight="38.0" prefWidth="107.0" text="Address:">
+                  <Label layoutX="368.0" layoutY="375.0" prefHeight="38.0" prefWidth="107.0" text="Address:">
                      <font>
                         <Font size="26.0" />
                      </font>
                   </Label>
-                  <TextField layoutX="284.0" layoutY="351.0" prefHeight="42.0" prefWidth="216.0" />
-                  <TextField layoutX="284.0" layoutY="408.0" prefHeight="42.0" prefWidth="216.0" />
-                  <Label layoutX="156.0" layoutY="286.0" prefHeight="38.0" prefWidth="114.0" text="Birthday:">
+                  <TextField fx:id="emailField" alignment="CENTER" layoutX="497.0" layoutY="318.0" prefHeight="42.0" prefWidth="216.0" promptText="(optional)" />
+                  <TextField fx:id="addressTextField" alignment="CENTER" layoutX="497.0" layoutY="375.0" prefHeight="42.0" prefWidth="216.0" promptText="(optional)" />
+                  <Button fx:id="saveBtn" layoutX="897.0" layoutY="521.0" mnemonicParsing="false" prefHeight="48.0" prefWidth="128.0" text="Save">
                      <font>
-                        <Font size="26.0" />
+                        <Font size="25.0" />
                      </font>
-                  </Label>
-                  <DatePicker layoutX="281.0" layoutY="288.0" prefHeight="43.0" prefWidth="219.0" />
+                  </Button>
+                  <Button fx:id="editBtn" layoutX="743.0" layoutY="521.0" mnemonicParsing="false" prefHeight="48.0" prefWidth="128.0" text="Edit">
+                     <font>
+                        <Font size="25.0" />
+                     </font>
+                  </Button>
+                  <Button fx:id="addEmailBtn" layoutX="727.0" layoutY="322.0" mnemonicParsing="false" prefHeight="34.0" prefWidth="64.0" text="Add">
+                     <font>
+                        <Font size="14.0" />
+                     </font>
+                  </Button>
+                  <Button fx:id="addAddressBtn" layoutX="727.0" layoutY="379.0" mnemonicParsing="false" prefHeight="34.0" prefWidth="64.0" text="Add">
+                     <font>
+                        <Font size="14.0" />
+                     </font>
+                  </Button>
                </children></AnchorPane>
          </center>
       </BorderPane>

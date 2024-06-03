@@ -131,6 +131,8 @@ public class OrderController implements Initializable{
     boolean isOrderBtn = false;
     boolean isCartBtn = false;
     boolean isTableBtn = false;
+    boolean isAccBtn = false;
+    boolean isRewardBtn = false;
     
     boolean isBestSellers = false;
     boolean isComboMeals = false;
@@ -160,28 +162,57 @@ public class OrderController implements Initializable{
 		isOrderBtn = true;
 		changeScene(event, orderPage);
 	}
-	public void signUp(ActionEvent event) throws IOException {
-			FXMLLoader loader = new FXMLLoader(getClass().getResource("SignUp.fxml"));
-		    root = loader.load();
-			SignUpController signUpPage = loader.getController();
-			
-			stage = (Stage)((Node)event.getSource()).getScene().getWindow();
-			scene = new Scene(root);
-			stage.setScene(scene);
-			stage.show();
+	public void signIn(ActionEvent event) throws IOException, ClassNotFoundException, SQLException {
+		FXMLLoader loader = new FXMLLoader(getClass().getResource("Main.fxml"));
+	    root = loader.load();
+		if(hasAccount) {
+			Alert alert = new Alert(AlertType.CONFIRMATION);
+			alert.setTitle("Logout");
+			alert.setHeaderText("You're about to logout");
+			alert.setContentText("Are you sure you want to logout?");
+			if(alert.showAndWait().get() == ButtonType.OK) {
+				stage = (Stage)((Node)event.getSource()).getScene().getWindow();
+			    scene = new Scene(root);
+			    stage.setScene(scene);
+			    stage.show();
+			    hasAccount = false;
+			}
 		}
-	public void signIn(ActionEvent event) throws IOException {
-			FXMLLoader loader = new FXMLLoader(getClass().getResource("Main.fxml"));
-		    root = loader.load();
-			
-		    Scene1Controller loginPage = loader.getController();
-		    
-		    stage = (Stage)((Node)event.getSource()).getScene().getWindow();
-			scene = new Scene(root);
-			stage.setScene(scene);
-			stage.show();
-		
+		else {
+	    Scene1Controller loginPage = loader.getController();
+	    loginPage.Connect();
+	    stage = (Stage)((Node)event.getSource()).getScene().getWindow();
+		scene = new Scene(root);
+		stage.setScene(scene);
+		stage.show();
 		}
+	}
+public void signUp(ActionEvent event) throws IOException, ClassNotFoundException, SQLException {
+		FXMLLoader loader = new FXMLLoader(getClass().getResource("SignUp.fxml"));
+	    root = loader.load();
+		if(hasAccount) {
+			Alert alert = new Alert(AlertType.CONFIRMATION);
+			alert.setTitle("Logout");
+			alert.setHeaderText("You're about to logout");
+			alert.setContentText("Are you sure you want to logout?");
+			if(alert.showAndWait().get() == ButtonType.OK) {
+				stage = (Stage)((Node)event.getSource()).getScene().getWindow();
+			    scene = new Scene(root);
+			    stage.setScene(scene);
+			    stage.show();
+			    hasAccount = false;
+			}
+			
+		}
+		else {
+		SignUpController signUpPage = loader.getController();
+		signUpPage.Connect();
+		stage = (Stage)((Node)event.getSource()).getScene().getWindow();
+		scene = new Scene(root);
+		stage.setScene(scene);
+		stage.show();
+		}
+	}
 	public void showFAQ() {
 		Alert alert = new Alert(AlertType.INFORMATION);
         alert.setHeaderText("");
@@ -194,6 +225,7 @@ public class OrderController implements Initializable{
 	}
 	public void showAccount(ActionEvent event) throws IOException, SQLException {
 		if(hasAccount) {
+			isAccBtn = true;
 			changeScene(event, "AccountDetails.fxml");
 		}
 		else {showAlert("Login or register to edit your information", AlertType.INFORMATION);}
@@ -209,29 +241,38 @@ public class OrderController implements Initializable{
 
 	public void showRewards(ActionEvent event) throws IOException, SQLException {
 		if(hasAccount) {
+			isRewardBtn = true;
 			changeScene(event, rewardsPage);
 		}
 		else {
-			showAlert("Login or register to unlock exciting rewards!", AlertType.INFORMATION);
+			showAlert("Create an account to unlock exciting rewards!", AlertType.INFORMATION);
 		}
 	}
 	public void logout(ActionEvent event) throws IOException {
 		FXMLLoader loader = new FXMLLoader(getClass().getResource("Main.fxml"));
 		root = loader.load();
-		    
-		Alert alert = new Alert(AlertType.CONFIRMATION);
-		alert.setTitle("Logout");
-		alert.setHeaderText("You're about to logout");
-		alert.setContentText("Are you sure you want to logout?");
-			
-		if(alert.showAndWait().get() == ButtonType.OK) {
+		
+		if(!hasAccount) {
 			stage = (Stage)((Node)event.getSource()).getScene().getWindow();
 			scene = new Scene(root);
 			stage.setScene(scene);
 			stage.show();
+			Scene1Controller loginPage = loader.getController();
+		}else {
+			Alert alert = new Alert(AlertType.CONFIRMATION);
+			alert.setTitle("Logout");
+			alert.setHeaderText("You're about to logout");
+			alert.setContentText("Are you sure you want to logout?");
+			
+			if(alert.showAndWait().get() == ButtonType.OK) {
+				stage = (Stage)((Node)event.getSource()).getScene().getWindow();
+				scene = new Scene(root);
+				stage.setScene(scene);
+				stage.show();
+			}
+			Scene1Controller loginPage = loader.getController();
 		}
-		Scene1Controller loginPage = loader.getController();
-		}
+	}
 	
 	
 	//FOOD METHODS
@@ -457,13 +498,25 @@ public class OrderController implements Initializable{
 			tablePage.setHasAccount(hasAccount);
 			tablePage.setName(dbName);
 			tablePage.displayName();
+		}else if(isAccBtn) {
+			AccountDetailsController accPage = loader.getController();
+			accPage.setOrderList(orderList);
+			accPage.setHasAccount(hasAccount);
+			accPage.setName(dbName);
+			accPage.displayName();
+		}else if(isRewardBtn) {
+			AccountDetailsController accPage = loader.getController();
+			accPage.setOrderList(orderList);
+			accPage.setHasAccount(hasAccount);
+			accPage.setName(dbName);
+			accPage.displayName();
 		}
 		else{
-			SideBarItemsController sideBarPage = loader.getController();
-			sideBarPage.setOrders(orderList);
-			sideBarPage.setName(dbName);
-			sideBarPage.displayName();
-			sideBarPage.setHasAccount(hasAccount);
+			CartController cartPage = loader.getController();
+			cartPage.setOrders(orderList);
+			cartPage.setName(dbName);
+			cartPage.displayName();
+			cartPage.setHasAccount(hasAccount);
 			
 		}
 		
@@ -672,9 +725,6 @@ public class OrderController implements Initializable{
 		this.dbName = dbName;
 	}
 	
-	public void showSize() {
-		
-	}
 	public void setDisplay(boolean toggle) {
 		priceLabel1.setVisible(toggle);
 		priceLabel2.setVisible(toggle);

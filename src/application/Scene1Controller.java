@@ -87,7 +87,7 @@ public class Scene1Controller {
 
 		//if the username is empty
 		if(username.isEmpty()) showAlert("Please enter your username", AlertType.ERROR); 
-		else if(username.length() < 8) showAlert("Username must be atleast 8 characters", AlertType.ERROR);
+		else if(username.length() < 8) showAlert("Username should be atleast 8 characters", AlertType.ERROR);
 		else {
 			pst = con.prepareStatement("SELECT * FROM user_tbl");
 			rs = pst.executeQuery();
@@ -113,7 +113,7 @@ public class Scene1Controller {
 		
 		//IF THE PASSWORD IS EMPTY
 		if(password.isEmpty()) showAlert("Please enter your password", AlertType.ERROR);
-		
+		else if(password.length() < 8) showAlert("Password should be atleast 8 characters", AlertType.ERROR);
 		else {
 			try {
 				pst = con.prepareStatement("SELECT * FROM user_tbl");
@@ -169,8 +169,6 @@ public class Scene1Controller {
     	Class.forName("com.mysql.jdbc.Driver");
 		con = DriverManager.getConnection("jdbc:mysql://localhost/inventory", "root", "");
 		String page;
-		
-		
 		
 		if(username.equals("admin123")) {
 			page = "AdminSide.fxml";

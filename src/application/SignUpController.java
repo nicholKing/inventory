@@ -117,7 +117,7 @@ public class SignUpController {
 		username = usernameField.getText();
 		
 		if(username.isEmpty()) {showAlert("Please enter a username", AlertType.ERROR);}
-		else if(username.length() < 8) {showAlert("Username must be atleast 8 characters", AlertType.ERROR); return;}
+		else if(username.length() < 8) {showAlert("Username should be atleast 8 characters", AlertType.ERROR); return;}
 		else {
 			try {
 				pst = con.prepareStatement("SELECT * FROM user_tbl");
@@ -147,7 +147,7 @@ public class SignUpController {
 	public void checkPasswordField() {
 		password = passwordValue();
 		if(password.length() == 0) {showAlert("Please enter your password", AlertType.ERROR);}
-		else if(password.length() < 8) {showAlert("Password must be atleast 8 characters", AlertType.ERROR);}
+		else if(password.length() < 8) {showAlert("Password should be atleast 8 characters", AlertType.ERROR);}
 		else {hasCorrectPassword = true;}
 		return;
 	}
@@ -197,6 +197,8 @@ public class SignUpController {
         Alert alert = new Alert(alertType);
         alert.setHeaderText("");
         alert.setContentText(contentText);
+        Scene scenes = alert.getDialogPane().getScene();
+        scenes.getStylesheets().add(getClass().getResource("alert.css").toExternalForm());
         alert.show();
         
         Timer timer = new Timer();

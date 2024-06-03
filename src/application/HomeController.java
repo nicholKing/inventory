@@ -61,6 +61,7 @@ public class HomeController implements Initializable{
 	boolean hasAccount = false;
 	boolean isHomeBtn = false; //reset the condition
 	boolean isOrderBtn = false;
+	boolean isAccountBtn = false;
 	
 	Connection con;
 	PreparedStatement pst;
@@ -93,8 +94,8 @@ public class HomeController implements Initializable{
 				    scene = new Scene(root);
 				    stage.setScene(scene);
 				    stage.show();
+				    hasAccount = false;
 				}
-				hasAccount = false;
 			}
 			else {
 		    Scene1Controller loginPage = loader.getController();
@@ -104,7 +105,6 @@ public class HomeController implements Initializable{
 			stage.setScene(scene);
 			stage.show();
 			}
-		
 		}
 	public void signUp(ActionEvent event) throws IOException, ClassNotFoundException, SQLException {
 			FXMLLoader loader = new FXMLLoader(getClass().getResource("SignUp.fxml"));
@@ -119,13 +119,13 @@ public class HomeController implements Initializable{
 				    scene = new Scene(root);
 				    stage.setScene(scene);
 				    stage.show();
+				    hasAccount = false;
 				}
-				hasAccount = false;
+				
 			}
 			else {
 			SignUpController signUpPage = loader.getController();
 			signUpPage.Connect();
-			
 			stage = (Stage)((Node)event.getSource()).getScene().getWindow();
 			scene = new Scene(root);
 			stage.setScene(scene);
@@ -151,7 +151,11 @@ public class HomeController implements Initializable{
 			nameLabel.setText(dbName);
 	}
 	public void showAccount(ActionEvent event) throws IOException, SQLException {
-			if(hasAccount) {changeScene(event, accPage);}
+		
+			if(hasAccount) {
+				isAccountBtn = true;
+				changeScene(event, accPage);
+				}
 			
 			else {showAlert("Login or register to edit your information", AlertType.INFORMATION);}
 	}
@@ -168,27 +172,34 @@ public class HomeController implements Initializable{
 				changeScene(event, rewardsPage);
 			}
 			else {
-				showAlert("Login or register to unlock exciting rewards!", AlertType.INFORMATION);
+				showAlert("Create an account to unlock exciting rewards!", AlertType.INFORMATION);
 			}
 	}
-	public void logout(ActionEvent event) throws IOException {
-			FXMLLoader loader = new FXMLLoader(getClass().getResource("Main.fxml"));
-		    root = loader.load();
+	public void logout(ActionEvent event) throws IOException, ClassNotFoundException, SQLException {
+		FXMLLoader loader = new FXMLLoader(getClass().getResource("Main.fxml"));
+	    root = loader.load();
+		if(hasAccount) {
 			Alert alert = new Alert(AlertType.CONFIRMATION);
 			alert.setTitle("Logout");
 			alert.setHeaderText("You're about to logout");
 			alert.setContentText("Are you sure you want to logout?");
-			
 			if(alert.showAndWait().get() == ButtonType.OK) {
 				stage = (Stage)((Node)event.getSource()).getScene().getWindow();
 			    scene = new Scene(root);
 			    stage.setScene(scene);
 			    stage.show();
+			    hasAccount = false;
 			}
-		    Scene1Controller loginPage = loader.getController();
-		    
-		  
 		}
+		else {
+	    Scene1Controller loginPage = loader.getController();
+	    loginPage.Connect();
+	    stage = (Stage)((Node)event.getSource()).getScene().getWindow();
+		scene = new Scene(root);
+		stage.setScene(scene);
+		stage.show();
+		}
+	}
 		
 	//HELPER METHODS
 	public void Connect() {
@@ -224,8 +235,15 @@ public class HomeController implements Initializable{
 				orderPage.displayName();
 				orderPage.setHasAccount(hasAccount);
 			}
+			else if(isAccountBtn) {
+				AccountDetailsController accPage = loader.getController();
+				accPage.setOrders(orderList);
+				accPage.setName(dbName);
+				accPage.displayName();
+				accPage.setHasAccount(hasAccount);
+			}
 			else {
-				SideBarItemsController sideBarItems = loader.getController();
+				CartController sideBarItems = loader.getController();
 				sideBarItems.setOrders(orderList);
 				sideBarItems.setHasAccount(hasAccount);
 				sideBarItems.setName(dbName);
@@ -251,6 +269,8 @@ public class HomeController implements Initializable{
         alert.setTitle("Notice");
         alert.setHeaderText(null);
         alert.setContentText(contentText);
+        Scene scenes = alert.getDialogPane().getScene();
+        scenes.getStylesheets().add(getClass().getResource("alert.css").toExternalForm());
         alert.show();
   
         Timer timer = new Timer();

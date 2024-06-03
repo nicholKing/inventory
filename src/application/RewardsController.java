@@ -30,7 +30,7 @@ import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 
-public class TableReservationController implements Initializable {
+public class RewardsController implements Initializable {
 	
 	@FXML
 	private Label nameLabel;
@@ -46,7 +46,7 @@ public class TableReservationController implements Initializable {
     private Label totalPriceLabel;
     @FXML
     private VBox vBox;
-  
+    
    
 	private Stage stage;
 	private Scene scene;
@@ -159,6 +159,7 @@ public void signUp(ActionEvent event) throws IOException, ClassNotFoundException
 			showAlert("Login or register to edit your information.", AlertType.INFORMATION);}
 	}
 	public void showCart(ActionEvent event) throws IOException, SQLException {
+		
 		changeScene(event, cartPage);
 	}
 	public void showTable(ActionEvent event) throws IOException, SQLException {
@@ -167,7 +168,7 @@ public void signUp(ActionEvent event) throws IOException, ClassNotFoundException
 	}
 	public void showRewards(ActionEvent event) throws IOException, SQLException {
 			if(hasAccount) {
-				isRewardBtn = true;
+				
 				changeScene(event, rewardsPage);
 			}
 			else {showAlert("Create an account to unlock exciting rewards!", AlertType.INFORMATION);}
@@ -197,7 +198,7 @@ public void signUp(ActionEvent event) throws IOException, ClassNotFoundException
 		stage.show();
 		}
 		    
-		}
+	}
 	public void Connect() {
 		try {
 			Class.forName("com.mysql.jdbc.Driver");
@@ -240,19 +241,13 @@ public void signUp(ActionEvent event) throws IOException, ClassNotFoundException
 			accPage.setHasAccount(hasAccount);
 			accPage.setName(dbName);
 			accPage.displayName();
-		}else if(isRewardBtn) {
-			RewardsController rewardsPage = loader.getController();
-			rewardsPage.setOrderList(orderList);
-			rewardsPage.setHasAccount(hasAccount);
-			rewardsPage.setName(dbName);
-			rewardsPage.displayName();
 		}
 		else {
-			CartController cartPage = loader.getController();
-			cartPage.setOrders(orderList);
-			cartPage.setHasAccount(hasAccount);
-			cartPage.setName(dbName);
-			cartPage.displayName();
+			CartController sideBarItems = loader.getController();
+			sideBarItems.setOrders(orderList);
+			sideBarItems.setHasAccount(hasAccount);
+			sideBarItems.setName(dbName);
+			sideBarItems.displayName();
 		}
 		
 		
