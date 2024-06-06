@@ -25,8 +25,11 @@ import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.ButtonType;
 import javafx.scene.control.Label;
+import javafx.scene.image.ImageView;
 import javafx.scene.control.Alert.AlertType;
+import javafx.scene.control.Button;
 import javafx.scene.layout.AnchorPane;
+import javafx.scene.text.Font;
 import javafx.stage.Stage;
 import javafx.util.Duration;
 
@@ -37,10 +40,17 @@ public class HomeController implements Initializable{
     @FXML
     private AnchorPane slider;
     @FXML
-    private Label menuClose;
+    private ImageView menuClose;
     @FXML
-    private Label menu;
-
+    private ImageView menu;
+    @FXML
+    private ImageView account;
+    @FXML
+    private ImageView accountClose;
+    @FXML
+    private AnchorPane slider2;
+    
+    
 	private Stage stage;
 	private Scene scene;
 	private Parent root;
@@ -64,6 +74,8 @@ public class HomeController implements Initializable{
 	boolean isAccBtn = false;
 	boolean isTableBtn = false;
 	boolean isRewardBtn = false;
+	
+	int id;
 	
 	Connection con;
 	PreparedStatement pst;
@@ -143,23 +155,26 @@ public class HomeController implements Initializable{
 		
 	//SIDE BUTTONS
 	public void displayName(int id) throws SQLException {
-		
+			this.id = id;
 			pst = con.prepareStatement(query);
 			pst.setInt(1, id);
 			rs = pst.executeQuery();
 			while(rs.next()) {
 				dbName = rs.getString("name");
 			}
+			if(dbName.length() >= 12 && dbName.length() <= 15) {
+				nameLabel.setFont(new Font(18));
+			}
+			else if(dbName.length() > 15) {
+				nameLabel.setFont(new Font(15));
+			}
 			nameLabel.setText(dbName);
 	}
 	public void showAccount(ActionEvent event) throws IOException, SQLException {
-		
-			if(hasAccount) {
-				isAccBtn = true;
-				changeScene(event, accPage);
-				}
-			
-			else {showAlert("Login or register to edit your information", AlertType.INFORMATION);}
+		if(hasAccount) {
+			isAccBtn = true;
+			changeScene(event, accPage);}
+			else {showAlert("Login or register to edit your information.", AlertType.INFORMATION);}
 	}
 	public void showCart(ActionEvent event) throws IOException, SQLException {
 			
@@ -229,14 +244,13 @@ public class HomeController implements Initializable{
 				HomeController homePage = loader.getController();
 				homePage.setOrderList(orderList);
 				homePage.setHasAccount(hasAccount);
+				homePage.displayName(id);
 				homePage.setName(dbName);
-				homePage.displayName(0);
 			}
 			else if(isOrderBtn) {
 				OrderController orderPage = loader.getController();
 				orderPage.setOrders(orderList);
 				orderPage.setName(dbName);
-				orderPage.displayName();
 				orderPage.setHasAccount(hasAccount);
 			}else if(isTableBtn) {
 				TableReservationController tablePage = loader.getController();
@@ -246,9 +260,11 @@ public class HomeController implements Initializable{
 			}else if(isAccBtn) {
 				AccountDetailsController accPage = loader.getController();
 				accPage.setOrders(orderList);
+				accPage.setId(id);
 				accPage.setName(dbName);
 				accPage.displayName();
 				accPage.setHasAccount(hasAccount);
+				System.out.println(id + "haaa");
 			}else if(isRewardBtn) {
 				RewardsController rewardPage = loader.getController();
 				rewardPage.setOrderList(orderList);
@@ -298,42 +314,80 @@ public class HomeController implements Initializable{
             }
         }, 2 * 1000);
     }
-		@Override
+	private void slideWindow() {
+		slider.setTranslateX(-200);
+		menu.setOnMouseClicked(event -> {
+            TranslateTransition slide = new TranslateTransition();
+            slide.setDuration(Duration.seconds(0.4));
+            slide.setNode(slider);
+
+            slide.setToX(0);
+            slide.play();
+
+            slider.setTranslateX(-200);
+
+            slide.setOnFinished((ActionEvent e)-> {
+                menu.setVisible(false);
+                menuClose.setVisible(true);
+            });
+        });
+
+        menuClose.setOnMouseClicked(event -> {
+            TranslateTransition slide = new TranslateTransition();
+            slide.setDuration(Duration.seconds(0.4));
+            slide.setNode(slider);
+
+            slide.setToX(-200);
+            slide.play();
+
+            slider.setTranslateX(0);
+
+            slide.setOnFinished((ActionEvent e)-> {
+                menu.setVisible(true);
+                menuClose.setVisible(false);
+            });
+        });
+        
+        
+        slider2.setTranslateX(215);
+       
+		account.setOnMouseClicked(event -> {
+            TranslateTransition slide = new TranslateTransition();
+            slide.setDuration(Duration.seconds(0.4));
+            slide.setNode(slider2);
+            
+            slide.setToX(0);
+            slide.play();
+           
+            slider2.setTranslateX(215);
+           
+            slide.setOnFinished((ActionEvent e)-> {
+                account.setVisible(false);
+                accountClose.setVisible(true);
+            });
+        });
+		
+		accountClose.setOnMouseClicked(event -> {
+            TranslateTransition slide = new TranslateTransition();
+            slide.setDuration(Duration.seconds(0.4));
+            slide.setNode(slider2);
+
+            slide.setToX(215);
+            slide.play();
+            
+            slider2.setTranslateX(0);
+            
+     
+            slide.setOnFinished((ActionEvent e)-> {
+            	account.setVisible(true);
+            	accountClose.setVisible(false);
+            });
+        });
+	}
+	@Override
 	public void initialize(URL arg0, ResourceBundle arg1) {
 			
 			Connect();
-			
-			slider.setTranslateX(-200);
-			menu.setOnMouseClicked(event -> {
-	            TranslateTransition slide = new TranslateTransition();
-	            slide.setDuration(Duration.seconds(0.4));
-	            slide.setNode(slider);
-
-	            slide.setToX(0);
-	            slide.play();
-
-	            slider.setTranslateX(-200);
-
-	            slide.setOnFinished((ActionEvent e)-> {
-	                menu.setVisible(false);
-	                menuClose.setVisible(true);
-	            });
-	        });
-
-	        menuClose.setOnMouseClicked(event -> {
-	            TranslateTransition slide = new TranslateTransition();
-	            slide.setDuration(Duration.seconds(0.4));
-	            slide.setNode(slider);
-
-	            slide.setToX(-200);
-	            slide.play();
-
-	            slider.setTranslateX(0);
-
-	            slide.setOnFinished((ActionEvent e)-> {
-	                menu.setVisible(true);
-	                menuClose.setVisible(false);
-	            });
-	        });
+			slideWindow();
 	    }
 }

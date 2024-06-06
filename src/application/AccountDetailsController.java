@@ -12,6 +12,8 @@ import java.util.List;
 import java.util.ResourceBundle;
 import java.util.Timer;
 import java.util.TimerTask;
+
+import javafx.animation.PauseTransition;
 import javafx.animation.TranslateTransition;
 import javafx.application.Platform;
 import javafx.event.ActionEvent;
@@ -25,18 +27,16 @@ import javafx.scene.control.Alert;
 import javafx.scene.control.ButtonType;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
+import javafx.scene.image.ImageView;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.Button;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.VBox;
+import javafx.scene.text.Font;
 import javafx.stage.Stage;
 import javafx.util.Duration;
 
 public class AccountDetailsController implements Initializable{
-	@FXML
-	private Button editBtn;
-	@FXML
-	private Button saveBtn;
 	@FXML
     private Button addAddressBtn;
     @FXML
@@ -58,9 +58,15 @@ public class AccountDetailsController implements Initializable{
     @FXML
     private AnchorPane slider;
     @FXML
-    private Label menuClose;
+    private ImageView menuClose;
     @FXML
-    private Label menu;
+    private ImageView  menu;
+    @FXML
+    private AnchorPane slider2;
+    @FXML
+    private ImageView accountClose;
+    @FXML
+    private ImageView  account;
     @FXML
     private VBox orderLayout;
     @FXML
@@ -95,6 +101,8 @@ public class AccountDetailsController implements Initializable{
 	boolean isTableBtn = false;
 	boolean isRewardBtn = false;
 	boolean isAccBtn = false;
+	
+	int id;
 	
 	Connection con;
 	PreparedStatement pst;
@@ -172,10 +180,16 @@ public class AccountDetailsController implements Initializable{
 		
 	//SIDE BUTTONS
 	public void displayName() throws SQLException {
-			nameLabel.setText(dbName);
+		
+		if(dbName.length() >= 12 && dbName.length() <= 15) {
+			nameLabel.setFont(new Font(18));
+		}
+		else if(dbName.length() > 15) {
+			nameLabel.setFont(new Font(15));
+		}
+		nameLabel.setText(dbName);
 		}
 	public void showAccount(ActionEvent event) throws IOException, SQLException {
-			
 		if(hasAccount) {
 			isAccBtn = true;
 			changeScene(event, accPage);}
@@ -221,7 +235,17 @@ public class AccountDetailsController implements Initializable{
 	}
 	
 	//ACCOUNT SYSTEM
-	
+	public void displayDetails() throws SQLException {
+		pst = con.prepareStatement("SELECT name FROM user_tbl WHERE id = ?");
+		pst.setInt(1, id);
+		rs = pst.executeQuery();
+		if (rs.next()) {
+			dbName = rs.getString("name");
+		}
+		System.out.println(id);
+		nameTextField.setText(dbName);
+		System.out.println(dbName);
+	}
 	public void editDetails() throws SQLException {
 		
 		
@@ -258,7 +282,6 @@ public class AccountDetailsController implements Initializable{
 				OrderController orderPage = loader.getController();
 				orderPage.setOrders(orderList);
 				orderPage.setName(dbName);
-				orderPage.displayName();
 				orderPage.setHasAccount(hasAccount);
 			}else if(isTableBtn) {
 				TableReservationController tablePage = loader.getController();
@@ -311,6 +334,9 @@ public class AccountDetailsController implements Initializable{
 	    }
 	
 	//GETTERS AND SETTERS 
+	public void setId(int id) {
+		this.id = id;
+	}
 	public void setHasAccount(boolean hasAccount) {
 			this.hasAccount = hasAccount;
 	}
@@ -323,86 +349,107 @@ public class AccountDetailsController implements Initializable{
 	public void setOrderList(List<OrderData> orderList) {
 		this.orderList = orderList;
 	}
+	private void slideWindow() {
+		
+		slider.setTranslateX(-200);
+		menu.setOnMouseClicked(event -> {
+            TranslateTransition slide = new TranslateTransition();
+            slide.setDuration(Duration.seconds(0.4));
+            slide.setNode(slider);
+
+            slide.setToX(0);
+            slide.play();
+
+            slider.setTranslateX(-200);
+
+            slide.setOnFinished((ActionEvent e)-> {
+                menu.setVisible(false);
+                menuClose.setVisible(true);
+            });
+        });
+
+        menuClose.setOnMouseClicked(event -> {
+            TranslateTransition slide = new TranslateTransition();
+            slide.setDuration(Duration.seconds(0.4));
+            slide.setNode(slider);
+
+            slide.setToX(-200);
+            slide.play();
+
+            slider.setTranslateX(0);
+
+            slide.setOnFinished((ActionEvent e)-> {
+                menu.setVisible(true);
+                menuClose.setVisible(false);
+            });
+        });
+        
+        
+        account.setVisible(false);
+		accountClose.setVisible(true);
+		
+		account.setOnMouseClicked(event -> {
+            TranslateTransition slide = new TranslateTransition();
+            slide.setDuration(Duration.seconds(0.4));
+            slide.setNode(slider2);
+            
+            slide.setToX(0);
+            slide.play();
+           
+            slider2.setTranslateX(215);
+           
+            slide.setOnFinished((ActionEvent e)-> {
+                account.setVisible(false);
+                accountClose.setVisible(true);
+            });
+        });
+		
+		accountClose.setOnMouseClicked(event -> {
+            TranslateTransition slide = new TranslateTransition();
+            slide.setDuration(Duration.seconds(0.4));
+            slide.setNode(slider2);
+
+            slide.setToX(215);
+            slide.play();
+            
+            slider2.setTranslateX(0);
+            
+     
+            slide.setOnFinished((ActionEvent e)-> {
+            	account.setVisible(true);
+            	accountClose.setVisible(false);
+            });
+        });
+	}
 	
+	public void setField() {
+		nameTextField.setEditable(false);
+		usernameTextField.setEditable(false);
+		passwordField.setEditable(false);
+		emailField.setEditable(false);
+		addressTextField.setEditable(false);
+	}
 	@Override
 	public void initialize(URL arg0, ResourceBundle arg1) {
 		Connect();
 		String sql = "UPDATE users SET name = ?, email = ?, password = ? WHERE id = ?";
-		
-			editBtn.setOnMouseClicked(event ->{
-				isEditable = true;});
-			
-			saveBtn.setOnMouseClicked(event ->{
-					try {
-						String name = nameTextField.getText();
-						String password = passwordField.getText();
-						String username = usernameTextField.getText();
-						
-						pst = con.prepareStatement(sql);
-						pst.setString(1, name);
-						pst.setString(2, username);
-						pst.setString(3, password);
-						int rowsUpdated;
-						rowsUpdated = pst.executeUpdate();
-						if(rowsUpdated > 0) {
-							System.out.println("Details updated!");	
-						}
+		slideWindow();
+		setField();
+	
+			 PauseTransition delay = new PauseTransition(Duration.millis(50));
+		        delay.setOnFinished(event -> {
+		        	try {
+						displayDetails();
 					} catch (SQLException e) {
 						// TODO Auto-generated catch block
 						e.printStackTrace();
 					}
-					
+		        });
+		        delay.play();
+		
+		
+		
 	
-				
-				
-			});
-			
-			if(isEditable) {
-				try {
-					editDetails();
-				} catch (SQLException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}
-			}
-        	
-        
-			slider.setTranslateX(-200);
-			menu.setOnMouseClicked(event -> {
-				TranslateTransition slide = new TranslateTransition();
-				slide.setDuration(Duration.seconds(0.4));
-				slide.setNode(slider);
-				
-				slide.setToX(0);
-				slide.play();
-				
-				slider.setTranslateX(-200);
-				
-				slide.setOnFinished((ActionEvent e) ->{
-					menu.setVisible(false);
-					menuClose.setVisible(true);
-				});
-				
-				
-			});
-			
-			menuClose.setOnMouseClicked(event -> {
-				TranslateTransition slide = new TranslateTransition();
-				slide.setDuration(Duration.seconds(0.4));
-				slide.setNode(slider);
-				
-				slide.setToX(-200);
-				slide.play();
-				
-				slider.setTranslateX(0);
-				
-				slide.setOnFinished((ActionEvent e) ->{
-					menu.setVisible(true);
-					menuClose.setVisible(false);
-				});
-				
-				
-			});
 	}
 	
 	

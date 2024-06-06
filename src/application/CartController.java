@@ -31,6 +31,7 @@ import javafx.scene.control.Alert;
 import javafx.scene.control.ButtonType;
 import javafx.scene.control.Label;
 import javafx.scene.control.Alert.AlertType;
+import javafx.scene.image.ImageView;
 import javafx.scene.control.Button;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.HBox;
@@ -46,9 +47,15 @@ public class CartController implements Initializable{
     @FXML
     private AnchorPane slider;
     @FXML
-    private Label menuClose;
+    private ImageView menuClose;
     @FXML
-    private Label menu;
+    private ImageView menu;
+    @FXML
+    private ImageView account;
+    @FXML
+    private ImageView accountClose;
+    @FXML
+    private AnchorPane slider2;
     @FXML
     private VBox orderLayout;
     @FXML
@@ -201,32 +208,39 @@ public class CartController implements Initializable{
 		}
 	
 	//CART SYSTEM
-	private List<OrderData> sortOrders() {
-		List<OrderData> mergedList = new ArrayList<>();
+	public List<OrderData> mergeOrders(List<OrderData> orderList) {
+        List<OrderData> mergedList = new ArrayList<>();
 
-	    if (orderList.isEmpty()) {return mergedList;}
-	    
-	    // Iterate through the orders
-	    for (OrderData currentOrder : orderList) {
-	        boolean found = false;
+        if (orderList.isEmpty()) {
+            return mergedList;
+        }
 
-	        // Check if the current order has the same food name as an existing order in mergedList
-	        for (OrderData mergedOrder : mergedList) {
-	            if (currentOrder.getFoodName().equals(mergedOrder.getFoodName())) {
-	                // If the same food item is found, update the quantity
-	                int totalQuantity = Integer.parseInt(mergedOrder.getQty()) + Integer.parseInt(currentOrder.getQty());
-	                mergedOrder.setQty(String.valueOf(totalQuantity));
-	                found = true;
-	                break;
-	            }
-	        }
-	        // If the food item is not found in mergedList, add it
-	        if (!found) {mergedList.add(currentOrder);}
-	    }
-	    return mergedList;
-	}
+        // Iterate through the orders
+        for (OrderData currentOrder : orderList) {
+            boolean found = false;
+
+            // Check if the current order has the same food name and size as an existing order in mergedList
+            for (OrderData mergedOrder : mergedList) {
+                if (currentOrder.getFoodName().equals(mergedOrder.getFoodName())
+                        && currentOrder.getSize().equals(mergedOrder.getSize())) {
+                    // If the same food item with the same size is found, update the quantity
+                    int totalQuantity = Integer.parseInt(mergedOrder.getQty()) + Integer.parseInt(currentOrder.getQty());
+                    mergedOrder.setQty(String.valueOf(totalQuantity));
+                    found = true;
+                    break;
+                }
+            }
+
+            // If the food item is not found in mergedList, add it
+            if (!found) {
+                mergedList.add(currentOrder);
+            }
+        }
+
+        return mergedList;
+    }
 	private void displayOrders() {
-		orderList = sortOrders();
+		orderList = mergeOrders(orderList);
         // Display each order in the orderList
         for (OrderData order : orderList) {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("OrderItem.fxml"));
@@ -258,7 +272,6 @@ public class CartController implements Initializable{
 		OrderController orderPage = loader.getController();
 		orderPage.setHasAccount(hasAccount);
 		orderPage.setName(dbName);
-		orderPage.displayName();
 		System.out.println(orderList);
 		orderPage.setOrders(orderList);
 	}
@@ -293,7 +306,6 @@ public class CartController implements Initializable{
 				OrderController orderPage = loader.getController();
 				orderPage.setOrders(orderList);
 				orderPage.setName(dbName);
-				orderPage.displayName();
 				orderPage.setHasAccount(hasAccount);
 			}else if(isTableBtn) {
 				TableReservationController tablePage = loader.getController();
@@ -344,6 +356,77 @@ public class CartController implements Initializable{
 	            }
 	        }, 2 * 1000);
 	    }
+	private void setSlides() {
+		menu.setVisible(true);
+		menuClose.setVisible(false);
+		
+		menu.setOnMouseClicked(event -> {
+            TranslateTransition slide = new TranslateTransition();
+            slide.setDuration(Duration.seconds(0.4));
+            slide.setNode(slider);
+
+            slide.setToX(-200);
+            slide.play();
+
+            slider.setTranslateX(0);
+
+            slide.setOnFinished((ActionEvent e)-> {
+                menu.setVisible(false);
+                menuClose.setVisible(true);
+            });
+        });
+
+        menuClose.setOnMouseClicked(event -> {
+            TranslateTransition slide = new TranslateTransition();
+            slide.setDuration(Duration.seconds(0.4));
+            slide.setNode(slider);
+
+            slide.setToX(0);
+            slide.play();
+
+            slider.setTranslateX(-200);
+
+            slide.setOnFinished((ActionEvent e)-> {
+                menu.setVisible(true);
+                menuClose.setVisible(false);
+            });
+        });
+
+        slider2.setTranslateX(215);
+        
+		account.setOnMouseClicked(event -> {
+            TranslateTransition slide = new TranslateTransition();
+            slide.setDuration(Duration.seconds(0.4));
+            slide.setNode(slider2);
+            
+            slide.setToX(0);
+            slide.play();
+           
+            slider2.setTranslateX(215);
+           
+            slide.setOnFinished((ActionEvent e)-> {
+                account.setVisible(false);
+                accountClose.setVisible(true);
+            });
+        });
+		
+		accountClose.setOnMouseClicked(event -> {
+            TranslateTransition slide = new TranslateTransition();
+            slide.setDuration(Duration.seconds(0.4));
+            slide.setNode(slider2);
+
+            slide.setToX(215);
+            slide.play();
+            
+            slider2.setTranslateX(0);
+            
+     
+            slide.setOnFinished((ActionEvent e)-> {
+            	account.setVisible(true);
+            	accountClose.setVisible(false);
+            });
+        });
+	}
 	
 	//GETTERS AND SETTERS 
 	public void setHasAccount(boolean hasAccount) {
@@ -363,7 +446,7 @@ public class CartController implements Initializable{
 	public int getTotalPrice() {
 		int totalPrice = 0;
         for (OrderData order : orderList) {
-        	 totalPrice += order.getPrice(order.getFoodName()) * Integer.parseInt(order.getQty());
+        	 totalPrice += order.getFinalPrice() * Integer.parseInt(order.getQty());
         }
         return totalPrice;
     }
@@ -383,45 +466,7 @@ public class CartController implements Initializable{
 			});
 	
         	Connect();
-        
-			slider.setTranslateX(-200);
-			menu.setOnMouseClicked(event -> {
-				TranslateTransition slide = new TranslateTransition();
-				slide.setDuration(Duration.seconds(0.4));
-				slide.setNode(slider);
-				
-				slide.setToX(0);
-				slide.play();
-				
-				slider.setTranslateX(-200);
-				
-				slide.setOnFinished((ActionEvent e) ->{
-					menu.setVisible(false);
-					menuClose.setVisible(true);
-				});
-				
-				
-			});
-			
-			menuClose.setOnMouseClicked(event -> {
-				TranslateTransition slide = new TranslateTransition();
-				slide.setDuration(Duration.seconds(0.4));
-				slide.setNode(slider);
-				
-				slide.setToX(-200);
-				slide.play();
-				
-				slider.setTranslateX(0);
-				
-				slide.setOnFinished((ActionEvent e) ->{
-					menu.setVisible(true);
-					menuClose.setVisible(false);
-				});
-				
-				
-			});
+        	setSlides();
 	}
-	
-	
 	
 }

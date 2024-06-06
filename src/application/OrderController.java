@@ -36,17 +36,22 @@ public class OrderController implements Initializable{
     @FXML
     private Button logoutBtn;
     @FXML
-    private Label menu;
+    private ImageView menu;
     @FXML
-    private Label menuClose;
-    
+    private ImageView menuClose;
+    @FXML
+    private ImageView account;
+    @FXML
+    private ImageView accountClose;
+    @FXML
+    private AnchorPane slider2;
     @FXML
     private AnchorPane slider;
     @FXML
     private Label headerLabel;
     @FXML
     private Label nameLabel;
-    
+
     //ORDER SYSTEM
     @FXML
     private Button addToCartBtn;
@@ -73,9 +78,29 @@ public class OrderController implements Initializable{
     @FXML
     private ImageView img8;
     @FXML
+    private ImageView img9;
+    @FXML
+    private ImageView img10;
+    @FXML
     private ImageView plusBtn;
     @FXML
     private ImageView minusBtn;
+    @FXML
+    private Button cat1;
+    @FXML
+    private Button cat2;
+    @FXML
+    private Button cat3;
+    @FXML
+    private Button cat4;
+    @FXML
+    private Button cat5;
+    @FXML
+    private Button cat6;
+    @FXML
+    private Button cat7;
+    @FXML
+    private Button cat8;
     @FXML
     private Button btn1;
     @FXML
@@ -93,6 +118,10 @@ public class OrderController implements Initializable{
     @FXML
     private Button btn8;
     @FXML
+    private Button btn9;
+    @FXML
+    private Button btn10;
+    @FXML
     private Label priceLabel1;
     @FXML
     private Label priceLabel2;
@@ -108,7 +137,18 @@ public class OrderController implements Initializable{
     private Label priceLabel7;
     @FXML
     private Label priceLabel8;
-    
+    @FXML
+    private Label priceLabel9;
+    @FXML
+    private Label priceLabel10;
+    @FXML
+    private Label foodNameLabel;
+    @FXML
+    private Label priceLabel;
+    @FXML
+    private Button prefBtn1;
+    @FXML
+    private Button prefBtn2;
     //JAVA FX
     private Stage stage;
 	private Scene scene;
@@ -145,12 +185,15 @@ public class OrderController implements Initializable{
     
     //FOOD VARIABLES
     String foodName;
-	int price;
-	String qty;
+	String qty; // for data transferring
 	boolean clicked = false;
 	boolean added = false;
 	boolean selected = false;
-	int quantity = 0;
+	boolean pref1 = false;
+	boolean pref2 = false;
+	int quantity = 0; //for counting
+	int price;
+	char category;
    
 	//TOP BUTTONS
 	public void homeBtn(ActionEvent event) throws IOException, SQLException {
@@ -187,7 +230,7 @@ public class OrderController implements Initializable{
 		stage.show();
 		}
 	}
-public void signUp(ActionEvent event) throws IOException, ClassNotFoundException, SQLException {
+	public void signUp(ActionEvent event) throws IOException, ClassNotFoundException, SQLException {
 		FXMLLoader loader = new FXMLLoader(getClass().getResource("SignUp.fxml"));
 	    root = loader.load();
 		if(hasAccount) {
@@ -220,9 +263,6 @@ public void signUp(ActionEvent event) throws IOException, ClassNotFoundException
         alert.show();
 	}
 	//SIDE BUTTONS
-	public void displayName() throws SQLException {
-		nameLabel.setText(dbName);
-	}
 	public void showAccount(ActionEvent event) throws IOException, SQLException {
 		if(hasAccount) {
 			isAccBtn = true;
@@ -274,40 +314,67 @@ public void signUp(ActionEvent event) throws IOException, ClassNotFoundException
 		}
 	}
 	
-	
 	//FOOD METHODS
-	public void showBestSellers() {
-		btn1.setText("Salmon Symphony");
-		btn2.setText("Eternal Flame Pasta");
-		btn3.setText("Chicken Parmesan");
+	public void showRiceMeals() {
+		btn1.setText("Cordon Bleu");
+		btn2.setText("Pork Sisig");
+		btn3.setText("Lechon Kawali");
+		btn4.setText("Pork Belly");
+		btn5.setText("Grilled Chicken");
+		btn6.setText("Beef Stir-fry");
+		btn7.setText("Buffalo Wings");
+		
 		priceLabel1.setText("₱ 269"); 
 		priceLabel2.setText("₱ 259");
 		priceLabel3.setText("₱ 259");
-		
-		btn1.setPrefWidth(150);
-		btn2.setPrefWidth(150);
-		btn3.setPrefWidth(150);
-		
-		btn1.setFont(new Font(15));
-		btn2.setFont(new Font(15));
-		btn3.setFont(new Font(15));
+		priceLabel4.setText("₱ 269"); 
+		priceLabel5.setText("₱ 259");
+		priceLabel6.setText("₱ 259");
+		priceLabel7.setText("₱ 259");
 		
 		img1.setImage(image);
 		img2.setImage(image);
 		img3.setImage(image);
+		img4.setImage(image);
+		img5.setImage(image);
+		img6.setImage(image);
+		img7.setImage(image);
 		
-		btn4.setVisible(false);btn5.setVisible(false);btn6.setVisible(false);btn7.setVisible(false);btn8.setVisible(false);
-		img4.setVisible(false);img5.setVisible(false);img6.setVisible(false);img7.setVisible(false);img8.setVisible(false);
-		priceLabel4.setVisible(false);priceLabel5.setVisible(false);priceLabel6.setVisible(false);priceLabel7.setVisible(false);priceLabel8.setVisible(false);
+		setVisibility(false);
+		
+		btn1.setVisible(true);btn2.setVisible(true);btn3.setVisible(true);btn4.setVisible(true);btn5.setVisible(true);btn6.setVisible(true);btn7.setVisible(true);
+		img1.setVisible(true);img2.setVisible(true);img3.setVisible(true);img4.setVisible(true);img5.setVisible(true);img6.setVisible(true);img7.setVisible(true);
+		priceLabel1.setVisible(true);priceLabel2.setVisible(true);priceLabel3.setVisible(true);priceLabel4.setVisible(true);
+		priceLabel5.setVisible(true);priceLabel6.setVisible(true);priceLabel7.setVisible(true);
+	}
+	public void showPasta() {
+		btn1.setText("Carbonara");
+		btn2.setText("Spaghetti");
+		btn3.setText("Palabok");
+	
+		priceLabel1.setText("₱ 269"); 
+		priceLabel2.setText("₱ 259");
+		priceLabel3.setText("₱ 259");
+	
+		img1.setImage(image);
+		img2.setImage(image);
+		img3.setImage(image);
+
+		setVisibility(false);
+		
+		btn1.setVisible(true);btn2.setVisible(true);btn3.setVisible(true);
+		img1.setVisible(true);img2.setVisible(true);img3.setVisible(true);
+		priceLabel1.setVisible(true);priceLabel2.setVisible(true);priceLabel3.setVisible(true);
 		
 	}
-	public void showNewProducts() {
-		btn1.setText("Cordon Bleu");
-		btn2.setText("Sizzling Sisig");
-		btn3.setText("Carbonara");
-		btn4.setText("Palabok");
-		priceLabel1.setText("₱ 259");
-		priceLabel2.setText("₱ 239"); 
+	public void showCakes() {
+		btn1.setText("Bluberry Cake");
+		btn2.setText("Lava Cake");
+		btn3.setText("Carrot Cake");
+		btn4.setText("Red Velvet");
+		
+		priceLabel1.setText("₱ 159"); 
+		priceLabel2.setText("₱ 159");
 		priceLabel3.setText("₱ 159");
 		priceLabel4.setText("₱ 159");
 		
@@ -316,160 +383,166 @@ public void signUp(ActionEvent event) throws IOException, ClassNotFoundException
 		img3.setImage(image);
 		img4.setImage(image);
 		
-		btn5.setVisible(false);btn6.setVisible(false);btn7.setVisible(false);btn8.setVisible(false);
-		img5.setVisible(false);img6.setVisible(false);img7.setVisible(false);img8.setVisible(false);
-		priceLabel5.setVisible(false);priceLabel6.setVisible(false);priceLabel7.setVisible(false);priceLabel8.setVisible(false);
-	}
-	public void showComboMeals() {
-		btn1.setText("Classic Stack & Fries");
-		btn2.setText("BBQ Fest");
-		btn3.setText("Slice & Salad Supreme");
+		setVisibility(false);
 		
-		priceLabel1.setText("₱ 199");
-		priceLabel2.setText("₱ 299"); 
+		btn1.setVisible(true);btn2.setVisible(true);btn3.setVisible(true);btn4.setVisible(true);
+		img1.setVisible(true);img2.setVisible(true);img3.setVisible(true);img4.setVisible(true);
+		priceLabel1.setVisible(true);priceLabel2.setVisible(true);priceLabel3.setVisible(true);priceLabel4.setVisible(true);
+		
+	}
+	public void showBurger() {
+		btn1.setText("Hamburger");
+		btn2.setText("Cheeseburger");
+		btn3.setText("Elk burger");
+		btn4.setText("Veggie burger");
+	
+		priceLabel1.setText("₱ 269"); 
+		priceLabel2.setText("₱ 259");
 		priceLabel3.setText("₱ 259");
-		
-		img1.setImage(image);
-		img2.setImage(image);
-		img3.setImage(image);
-		
-		btn4.setVisible(false);btn5.setVisible(false);btn6.setVisible(false);btn7.setVisible(false);btn8.setVisible(false);
-		img4.setVisible(false);img5.setVisible(false);img6.setVisible(false);img7.setVisible(false);img8.setVisible(false);
-		priceLabel4.setVisible(false);priceLabel5.setVisible(false);priceLabel6.setVisible(false);priceLabel7.setVisible(false);priceLabel8.setVisible(false);
-	}
-	public void showChicken() {
-		btn1.setText("BBQ Bonanza Breast");
-		btn2.setText("Cheesy Chicken");
-		btn3.setText("Crispy Parmesan");
-		
-		priceLabel1.setText("₱ 219");
-		priceLabel2.setText("₱ 219"); 
-		priceLabel3.setText("₱ 219");
-		
-		btn1.setPrefWidth(170);
-		btn2.setPrefWidth(170);
-		btn3.setPrefWidth(170);
-
-		btn1.setFont(new Font(15));
-		btn2.setFont(new Font(15));
-		btn3.setFont(new Font(15));
-		
-		img1.setImage(image);
-		img2.setImage(image);
-		img3.setImage(image);
-		
-		btn4.setVisible(false);btn5.setVisible(false);btn6.setVisible(false);btn7.setVisible(false);btn8.setVisible(false);
-		img4.setVisible(false);img5.setVisible(false);img6.setVisible(false);img7.setVisible(false);img8.setVisible(false);
-		priceLabel4.setVisible(false);priceLabel5.setVisible(false);priceLabel6.setVisible(false);priceLabel7.setVisible(false);priceLabel8.setVisible(false);
-	}
-	public void showFries() {
-		btn1.setText("Cheese Fries");
-		btn2.setText("Sour & Cream Fries");
-		btn3.setText("BBQ Fries");
-		
-		priceLabel1.setText("₱ 99");
-		priceLabel2.setText("₱ 99"); 
-		priceLabel3.setText("₱ 99");
-		
-		btn1.setPrefWidth(150);
-		btn2.setPrefWidth(150);
-		btn3.setPrefWidth(150);
-		
-		btn1.setFont(new Font(15));
-		btn2.setFont(new Font(15));
-		btn3.setFont(new Font(15));
-		
-		img1.setImage(image);
-		img2.setImage(image);
-		img3.setImage(image);
+		priceLabel4.setText("₱ 269"); 
 	
-		btn4.setVisible(false);btn5.setVisible(false);btn6.setVisible(false);btn7.setVisible(false);btn8.setVisible(false);
-		img4.setVisible(false);img5.setVisible(false);img6.setVisible(false);img7.setVisible(false);img8.setVisible(false);
-		priceLabel4.setVisible(false);priceLabel5.setVisible(false);priceLabel6.setVisible(false);priceLabel7.setVisible(false);priceLabel8.setVisible(false);
-	}
-	public void showBurgers() {
-		btn1.setText("Bite-sized Bliss");
-		btn2.setText("Classic Caliber");
-		btn3.setText("The Patty Palace");
-		priceLabel1.setText("₱ 99");
-		priceLabel2.setText("₱ 139"); 
-		priceLabel3.setText("₱ 199");
-		btn1.setPrefWidth(140);
-		btn2.setPrefWidth(140);
-		btn3.setPrefWidth(140);
-		btn1.setFont(new Font(15));
-		btn2.setFont(new Font(15));
-		btn3.setFont(new Font(15));
-		
 		img1.setImage(image);
 		img2.setImage(image);
 		img3.setImage(image);
-		
-		btn4.setVisible(false);btn5.setVisible(false);btn6.setVisible(false);btn7.setVisible(false);btn8.setVisible(false);
-		img4.setVisible(false);img5.setVisible(false);img6.setVisible(false);img7.setVisible(false);img8.setVisible(false);
-		priceLabel4.setVisible(false);priceLabel5.setVisible(false);priceLabel6.setVisible(false);priceLabel7.setVisible(false);priceLabel8.setVisible(false);
-	}
-	public void showPizza() {
-		btn1.setText("Solo");
-		btn2.setText("Barkada");
-		btn3.setText("Gigante");
-		priceLabel1.setText("₱ 159");
-		priceLabel2.setText("₱ 359"); 
-		priceLabel3.setText("₱ 759");
-		
-		btn2.setLayoutX(310);
-		
-		img1.setImage(image);
-		img2.setImage(image);
-		img3.setImage(image);
-		
-		btn4.setVisible(false);btn5.setVisible(false);btn6.setVisible(false);btn7.setVisible(false);btn8.setVisible(false);
-		img4.setVisible(false);img5.setVisible(false);img6.setVisible(false);img7.setVisible(false);img8.setVisible(false);
-		priceLabel4.setVisible(false);priceLabel5.setVisible(false);priceLabel6.setVisible(false);priceLabel7.setVisible(false);priceLabel8.setVisible(false);
-	}
-	public void showDesAndBev() {
-		btn1.setText("Strawberry Shortcake");
-		btn2.setText("Banana Bread");
-		btn3.setText("Blueberry Cheesecake");
-		btn4.setText("Brownies");
-		btn5.setText("Sunny Squeeze Shack");
-		btn6.setText("Blissful Blend Cafe");
-		btn7.setText("Ice Tea Oasis");
-		
-		priceLabel1.setText("₱ 129");
-		priceLabel2.setText("₱ 89"); 
-		priceLabel3.setText("₱ 129");
-		priceLabel4.setText("₱ 79");
-		priceLabel5.setText("₱ 59");
-		priceLabel6.setText("₱ 59");
-		priceLabel7.setText("₱ 59");
-		
-		btn1.setPrefWidth(180);
-		btn2.setPrefWidth(180);
-		btn3.setPrefWidth(180);
-		btn4.setPrefWidth(180);
-		btn5.setPrefWidth(180);
-		btn6.setPrefWidth(180);
-		btn7.setPrefWidth(180);
+		img4.setImage(image);
 	
-		btn1.setFont(new Font(15));
-		btn2.setFont(new Font(15));
-		btn3.setFont(new Font(15));
-		btn4.setFont(new Font(15));
-		btn5.setFont(new Font(15));
-		btn6.setFont(new Font(15));
-		btn7.setFont(new Font(15));
-		btn2.setLayoutX(310);
+		setVisibility(false);
+
+		btn1.setVisible(true);btn2.setVisible(true);btn3.setVisible(true);btn4.setVisible(true);
+		img1.setVisible(true);img2.setVisible(true);img3.setVisible(true);img4.setVisible(true);
+		priceLabel1.setVisible(true);priceLabel2.setVisible(true);priceLabel3.setVisible(true);priceLabel4.setVisible(true);
+	
+	}
+	public void showCoffee() {
+		btn1.setText("Coffee1");
+		btn2.setText("Coffee2");
+		btn3.setText("Coffee3");
+		btn4.setText("Coffee4");
+		btn5.setText("Coffee5");
+		btn6.setText("Coffee6");
+		btn7.setText("Coffee7");
+		btn8.setText("Coffee8");
+		btn9.setText("Coffee9");
+		btn10.setText("Coffee10");
+		
+		priceLabel1.setText("₱ 269"); 
+		priceLabel2.setText("₱ 259");
+		priceLabel3.setText("₱ 259");
+		priceLabel4.setText("₱ 269"); 
+		priceLabel5.setText("₱ 259");
+		priceLabel6.setText("₱ 259");
+		priceLabel7.setText("₱ 259");
+		priceLabel8.setText("₱ 269"); 
+		priceLabel9.setText("₱ 259");
+		priceLabel10.setText("₱ 259");
+		
 		img1.setImage(image);
 		img2.setImage(image);
 		img3.setImage(image);
-		img4.setImage(image);img5.setImage(image);img6.setImage(image);img7.setImage(image);
+		img4.setImage(image);
+		img5.setImage(image);
+		img6.setImage(image);
+		img7.setImage(image);
+		img8.setImage(image);
+		img9.setImage(image);
+		img10.setImage(image);
 		
-		btn8.setVisible(false);
-		img8.setVisible(false);
-		priceLabel8.setVisible(false);
+		setVisibility(true);
+	}
+	public void showFrappe() {
+		btn1.setText("Frappe1");
+		btn2.setText("Frappe2");
+		btn3.setText("Frappe3");
+		btn4.setText("Frappe4");
+		btn5.setText("Frappe5");
+		btn6.setText("Frappe6");
+		btn7.setText("Frappe7");
+		btn8.setText("Frappe8");
+		btn9.setText("Frappe9");
+		btn10.setText("Frappe10");
+		
+		priceLabel1.setText("₱ 269"); 
+		priceLabel2.setText("₱ 259");
+		priceLabel3.setText("₱ 259");
+		priceLabel4.setText("₱ 269"); 
+		priceLabel5.setText("₱ 259");
+		priceLabel6.setText("₱ 259");
+		priceLabel7.setText("₱ 259");
+		priceLabel8.setText("₱ 269"); 
+		priceLabel9.setText("₱ 259");
+		priceLabel10.setText("₱ 259");
+		
+		img1.setImage(image);
+		img2.setImage(image);
+		img3.setImage(image);
+		img4.setImage(image);
+		img5.setImage(image);
+		img6.setImage(image);
+		img7.setImage(image);
+		img8.setImage(image);
+		img9.setImage(image);
+		img10.setImage(image);
+		
+		setVisibility(true);
+	}
+	public void showTea() {
+		btn1.setText("Tea1");
+		btn2.setText("Tea2");
+		btn3.setText("Tea3");
+		btn4.setText("Tea4");
+		btn5.setText("Tea5");
+		btn6.setText("Tea6");
+		btn7.setText("Tea7");
+
+		priceLabel1.setText("₱ 269"); 
+		priceLabel2.setText("₱ 259");
+		priceLabel3.setText("₱ 259");
+		priceLabel4.setText("₱ 269"); 
+		priceLabel5.setText("₱ 259");
+		priceLabel6.setText("₱ 259");
+		priceLabel7.setText("₱ 259");
+	
+		
+		img1.setImage(image);
+		img2.setImage(image);
+		img3.setImage(image);
+		img4.setImage(image);
+		img5.setImage(image);
+		img6.setImage(image);
+		img7.setImage(image);
+	
+		
+		setVisibility(true);
+		
+		btn8.setVisible(false);btn9.setVisible(false);btn10.setVisible(false);
+		img8.setVisible(false);img9.setVisible(false);img10.setVisible(false);
+		priceLabel8.setVisible(false);priceLabel9.setVisible(false);priceLabel10.setVisible(false);
+	}
+	public void showAppetizers() {
+		btn1.setText("Snacks");
+		btn2.setText("Mojos");
+		btn3.setText("Nachos");
+		btn4.setText("Fries");
+	
+		priceLabel1.setText("₱ 109"); 
+		priceLabel2.setText("₱ 109");
+		priceLabel3.setText("₱ 109");
+		priceLabel4.setText("₱ 109"); 
+	
+		img1.setImage(image);
+		img2.setImage(image);
+		img3.setImage(image);
+		img4.setImage(image);
+	
+		setVisibility(false);
+
+		btn1.setVisible(true);btn2.setVisible(true);btn3.setVisible(true);btn4.setVisible(true);
+		img1.setVisible(true);img2.setVisible(true);img3.setVisible(true);img4.setVisible(true);
+		priceLabel1.setVisible(true);priceLabel2.setVisible(true);priceLabel3.setVisible(true);priceLabel4.setVisible(true);
+		
 	}
 
+	
 	//HELPER METHODS
 	public void changeScene(ActionEvent event, String page) throws IOException, SQLException {
 		FXMLLoader loader = new FXMLLoader(getClass().getResource(page));
@@ -490,13 +563,11 @@ public void signUp(ActionEvent event) throws IOException, ClassNotFoundException
 			OrderController orderPage = loader.getController();
 			orderPage.setOrders(orderList);
 			orderPage.setName(dbName);
-			orderPage.displayName();
 			orderPage.setHasAccount(hasAccount);
 		}else if(isTableBtn) {
 			TableReservationController tablePage = loader.getController();
 			tablePage.setHasAccount(hasAccount);
 			tablePage.setName(dbName);
-			tablePage.displayName();
 		}else if(isAccBtn) {
 			AccountDetailsController accPage = loader.getController();
 			accPage.setOrders(orderList);
@@ -518,8 +589,80 @@ public void signUp(ActionEvent event) throws IOException, ClassNotFoundException
 		}
 		
 	}
+	private void setSlides() {
+		menu.setVisible(true);
+		menuClose.setVisible(false);
+		
+		
+		menu.setOnMouseClicked(event -> {
+            TranslateTransition slide = new TranslateTransition();
+            slide.setDuration(Duration.seconds(0.4));
+            slide.setNode(slider);
+
+            slide.setToX(-200);
+            slide.play();
+
+            slider.setTranslateX(0);
+
+            slide.setOnFinished((ActionEvent e)-> {
+                menu.setVisible(false);
+                menuClose.setVisible(true);
+            });
+        });
+
+        menuClose.setOnMouseClicked(event -> {
+            TranslateTransition slide = new TranslateTransition();
+            slide.setDuration(Duration.seconds(0.4));
+            slide.setNode(slider);
+
+            slide.setToX(0);
+            slide.play();
+
+            slider.setTranslateX(-200);
+
+            slide.setOnFinished((ActionEvent e)-> {
+                menu.setVisible(true);
+                menuClose.setVisible(false);
+            });
+        });
+
+       	slider2.setTranslateX(225);
+       	accountClose.setOnMouseClicked(event -> {
+            TranslateTransition slide = new TranslateTransition();
+            slide.setDuration(Duration.seconds(0.4));
+            slide.setNode(slider2);
+
+            slide.setToX(0);
+            slide.play();
+
+            slider2.setTranslateX(225);
+
+            slide.setOnFinished((ActionEvent e)-> {
+                account.setVisible(false);
+                accountClose.setVisible(true);
+            });
+        });
+
+       account.setOnMouseClicked(event -> {
+            TranslateTransition slide = new TranslateTransition();
+            slide.setDuration(Duration.seconds(0.4));
+            slide.setNode(slider2);
+
+            slide.setToX(225);
+            slide.play();
+
+            slider2.setTranslateX(0);
+
+            slide.setOnFinished((ActionEvent e)-> {
+            	clicked = false;
+            	account.setVisible(true);
+                accountClose.setVisible(false);
+            });
+        });
+	}
+
 	private String recordButtonClick(Button clickedBtn) {
-       
+		displayChoices();
 		String newClickedBtn = clickedBtn.getText();
 		if(previousClickedBtn.equals("")) {
 			quantity++;
@@ -537,20 +680,121 @@ public void signUp(ActionEvent event) throws IOException, ClassNotFoundException
 		previousClickedBtn = newClickedBtn;
 		qty = String.valueOf(quantity);
 		selected = true;
+		foodNameLabel.setText(newClickedBtn);
+		OrderData orderData = new OrderData();
+    	priceLabel.setText("Price: ₱" +  String.valueOf(orderData.getPrice(newClickedBtn)));
 		return foodName = newClickedBtn;
 	}
 	
-	@Override
-	public void initialize(URL arg0, ResourceBundle arg1) {
-		setBtnSize();
-		setDisplay(false);
+	public void slideWindow() {
 		
+    	
+		 slider2.setTranslateX(225);
+            TranslateTransition slide = new TranslateTransition();
+           
+            slide.setDuration(Duration.seconds(0.4));
+            slide.setNode(slider2);
+            
+            slide.setToX(0);
+            slide.play();
+            
+            slide.setOnFinished((ActionEvent e)-> {
+            	
+            });
+        
+	}
+	private void displayChoices() {
+		switch(category) {
+			case 'a': prefBtn1.setText("W/o drinks"); prefBtn2.setText("With drinks");
+					break;
+			case 'b': prefBtn1.setText("Slice"); prefBtn2.setText("Whole");
+					break;
+			case 'c': prefBtn1.setText("Short"); prefBtn2.setText("Tall");
+					break;
+			case 'd': prefBtn1.setText("Solo"); prefBtn2.setText("Family");
+					break;
+		}
+	}
+	String pref;
+	public String getSizeLabel(Button prefBtn) {
+		pref = prefBtn.getText();
+		return pref;
+	}
+	private void setCategory() {
+		category = 'a';
+		cat1.setOnAction(event -> {
+			showRiceMeals();
+			category = 'a';
+		});
+		cat2.setOnAction(event -> {
+			showPasta();
+			category = 'a';
+		});
+		cat3.setOnAction(event -> {
+			showCakes();
+			category = 'b';
+		});
+		cat4.setOnAction(event -> {
+			showBurger();
+			category = 'a';
+		});
+		cat5.setOnAction(event -> {
+			showCoffee();
+			category = 'c';
+		});
+		cat6.setOnAction(event -> {
+			showFrappe();
+			category = 'c';
+		});
+		cat7.setOnAction(event -> {
+			showTea();
+			category = 'c';
+		});
+		cat8.setOnAction(event -> {
+			showAppetizers();
+			category = 'd';
+		});
+	}
+	
+	private void funcBtns() {
+		prefBtn1.setOnAction(event ->{
+			pref = getSizeLabel(prefBtn1);
+			OrderData orderData = new OrderData();
+			price = fetchPrice(foodName);
+			priceLabel.setText("Price: ₱" +  String.valueOf(orderData.getPrice(foodName)));
+	
+		});
+		prefBtn2.setOnAction(event ->{
+			pref = getSizeLabel(prefBtn2);
+			OrderData orderData = new OrderData(); 
+			switch(category) {
+				case 'a': price = fetchPrice(foodName) + 60;
+							priceLabel.setText("Price: ₱" + String.valueOf(orderData.getPrice(foodName) + 60));
+						break;
+				case 'b': price = fetchPrice(foodName) + 700;
+				priceLabel.setText("Price: ₱" + String.valueOf(orderData.getPrice(foodName) + 700));
+						break;
+				case 'c': price = fetchPrice(foodName) + 40;
+				priceLabel.setText("Price: ₱" + String.valueOf(orderData.getPrice(foodName) + 40));
+						break;
+				case 'd': price = fetchPrice(foodName) + 210;
+				priceLabel.setText("Price: ₱" + String.valueOf(orderData.getPrice(foodName) + 210));
+						break;
+			}
+			
+		});
 		addToCartBtn.setOnAction(event ->{
 			if(selected) {
+				
+				if (price == 0) {
+					pref = getSizeLabel(prefBtn1);
+		            price = fetchPrice(foodName);
+		        }
 				OrderData orderData = new OrderData();
+				orderData.setSize(pref);
 				orderData.setFoodName(foodName);
-				orderData.setPrice(orderData.getPrice(foodName));
-				orderData.setQty(qty);
+				orderData.setPrice(price);
+				orderData.setQty(String.valueOf(quantity));
 				orderList.add(orderData);
 				selected = false;
 				added = true;
@@ -563,6 +807,7 @@ public void signUp(ActionEvent event) throws IOException, ClassNotFoundException
 			quantity++;
 			qtyTextField.setText(String.valueOf(quantity));
 			System.out.println(quantity);
+			selected = true;
 		});
 		
 		minusBtn.setOnMouseClicked(event ->{
@@ -572,146 +817,113 @@ public void signUp(ActionEvent event) throws IOException, ClassNotFoundException
 				qtyTextField.setText(String.valueOf(quantity));
 			} 
 		});
-		
-		
-		backBtn.setOnAction(event -> {
-			try {
-				clicked = false; 
-				orderBtn(event);
-		} catch (IOException | SQLException e) {e.printStackTrace();}});
+	
 		btn1.setOnAction(event ->{
 			if(!clicked) {
-				setDisplay(true);
-				headerLabel.setText(btn1.getText());
-	    		showBestSellers();
-	    		clicked = true;
+				slideWindow();
+				
+				clicked = true;
 			}
-			else {recordButtonClick(btn1);}
-		
-    	});
-    	
+			recordButtonClick(btn1);
+			
+			});
 		btn2.setOnAction(event ->{
 			if(!clicked) {
-				setDisplay(true);
-				headerLabel.setText(btn2.getText());
-	    		showNewProducts();
-	    		clicked = true;
+				slideWindow();
+				clicked = true;
 			}
-			else {recordButtonClick(btn2);}});
+			recordButtonClick(btn2);
+			
+			});
     	
 		btn3.setOnAction(event ->{
 			if(!clicked) {
-				setDisplay(true);
-				headerLabel.setText(btn3.getText());
-	    		showComboMeals();
-	    		clicked = true;
+				slideWindow();
+				clicked = true;
 			}
-			else {recordButtonClick(btn3);}});
+			recordButtonClick(btn3);
+			
+			});
     	
 		btn4.setOnAction(event ->{
 			if(!clicked) {
-				setDisplay(true);
-				headerLabel.setText(btn4.getText());
-	    		showChicken();
-	    		clicked = true;
+				slideWindow();
+				clicked = true;
 			}
-			else {recordButtonClick(btn4);}});
+			recordButtonClick(btn4);
+			
+			});
     	
 		btn5.setOnAction(event ->{
+			
 			if(!clicked) {
-				setDisplay(true);
-				headerLabel.setText(btn5.getText());
-	    		showFries();
-	    		clicked = true;
+				slideWindow();
+				clicked = true;
 			}
-			else {recordButtonClick(btn5);}});
+			recordButtonClick(btn5);
+			
+			});
     	
 		btn6.setOnAction(event ->{
+			
 			if(!clicked) {
-				setDisplay(true);
-				backBtn.setVisible(true);
-				headerLabel.setText(btn6.getText());
-	    		showBurgers();
-	    		clicked = true;
+				slideWindow();
+				clicked = true;
 			}
-			else {recordButtonClick(btn6);}});
+			recordButtonClick(btn6);
+			
+			});
 		
 		btn7.setOnAction(event ->{
 			if(!clicked) {
-				setDisplay(true);
-				headerLabel.setText(btn7.getText());
-	    		showPizza();
-	    		clicked = true;
+				slideWindow();
+				clicked = true;
 			}
-			else {recordButtonClick(btn7);}});
+			recordButtonClick(btn7);
+			
+			});
     	
 		btn8.setOnAction(event ->{
 			if(!clicked) {
-				setDisplay(true);
-				headerLabel.setText(btn8.getText());
-	    		showDesAndBev();
-	    		clicked = true;
+				slideWindow();
+				clicked = true;
 			}
-			else {recordButtonClick(btn8);}});
+			recordButtonClick(btn8);
+			});
+		btn9.setOnAction(event ->{
+			if(!clicked) {
+				slideWindow();
+				clicked = true;
+			}
+			recordButtonClick(btn9);
+			});
+		btn10.setOnAction(event ->{
+			if(!clicked) {
+				slideWindow();
+				clicked = true;
+			}
+			recordButtonClick(btn10);
+			});
     	
 		viewCartBtn.setOnAction(event ->{try {showCart(event);} catch (IOException | SQLException e) {e.printStackTrace();}});
 		
-		slider.setTranslateX(-200);
-		menu.setOnMouseClicked(event -> {
-			TranslateTransition slide = new TranslateTransition();
-			slide.setDuration(Duration.seconds(0.4));
-			slide.setNode(slider);
-			
-			slide.setToX(0);
-			slide.play();
-			
-			slider.setTranslateX(-200);
-			
-			slide.setOnFinished((ActionEvent e) ->{
-				menu.setVisible(false);
-				menuClose.setVisible(true);
-			});
-		
-		});
-		
-		menuClose.setOnMouseClicked(event -> {
-			TranslateTransition slide = new TranslateTransition();
-			slide.setDuration(Duration.seconds(0.4));
-			slide.setNode(slider);
-			
-			slide.setToX(-200);
-			slide.play();
-			
-			slider.setTranslateX(0);
-			
-			slide.setOnFinished((ActionEvent e) ->{
-				menu.setVisible(true);
-				menuClose.setVisible(false);
-			});
-			
-		});
-		
 	}
 	
-	
-	public void setBtnSize() {
-		btn1.setPrefWidth(140);
-		btn1.setPrefHeight(40);	
-		btn2.setPrefWidth(140);
-		btn2.setPrefHeight(40);	
-		btn3.setPrefWidth(140);
-		btn3.setPrefHeight(40);	
-		btn4.setPrefWidth(140);
-		btn4.setPrefHeight(40);	
-		btn5.setPrefWidth(140);
-		btn5.setPrefHeight(40);	
-		btn6.setPrefWidth(140);
-		btn6.setPrefHeight(40);	
-		btn7.setPrefWidth(140);
-		btn7.setPrefHeight(40);	
-		btn8.setPrefWidth(210);
-		btn8.setPrefHeight(40);	
+	private int fetchPrice(String foodName) {
+	    OrderData orderData = new OrderData();
+	    return orderData.getPrice(foodName);
 	}
+	@Override
+	public void initialize(URL arg0, ResourceBundle arg1) {
+		setCategory();
+       	setSlides();
+		setDisplay(true);
+		showRiceMeals();
+		funcBtns();
+	}
+	
+
+	
 	public void setOrders(List<OrderData> orderList) {
 		this.orderList = orderList;
 	}
@@ -722,21 +934,20 @@ public void signUp(ActionEvent event) throws IOException, ClassNotFoundException
 		this.dbName = dbName;
 	}
 	
+	public void setVisibility(boolean toggle) {
+		btn1.setVisible(toggle);btn2.setVisible(toggle);btn3.setVisible(toggle);btn4.setVisible(toggle);btn5.setVisible(toggle);
+		btn6.setVisible(toggle);btn7.setVisible(toggle);btn8.setVisible(toggle);btn9.setVisible(toggle);btn10.setVisible(toggle);
+		img1.setVisible(toggle);img2.setVisible(toggle);img3.setVisible(toggle);img4.setVisible(toggle);img5.setVisible(toggle);
+		img6.setVisible(toggle);img7.setVisible(toggle);img8.setVisible(toggle);img9.setVisible(toggle);img10.setVisible(toggle);
+		priceLabel1.setVisible(toggle);priceLabel2.setVisible(toggle);priceLabel3.setVisible(toggle);priceLabel4.setVisible(toggle);priceLabel5.setVisible(toggle);
+		priceLabel6.setVisible(toggle);priceLabel7.setVisible(toggle);priceLabel8.setVisible(toggle);priceLabel9.setVisible(toggle);priceLabel10.setVisible(toggle);
+	}
 	public void setDisplay(boolean toggle) {
-		priceLabel1.setVisible(toggle);
-		priceLabel2.setVisible(toggle);
-		priceLabel3.setVisible(toggle);
-		priceLabel4.setVisible(toggle);
-		priceLabel5.setVisible(toggle);
-		priceLabel6.setVisible(toggle);
-		priceLabel7.setVisible(toggle);
-		priceLabel8.setVisible(toggle);
 		qtyTextField.setVisible(toggle);
 		minusBtn.setVisible(toggle);
 		plusBtn.setVisible(toggle);
 		addToCartBtn.setVisible(toggle);
 		viewCartBtn.setVisible(toggle);
-		backBtn.setVisible(toggle);
 	}
 	private void showAlert(String contentText, AlertType alertType) {
 

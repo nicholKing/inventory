@@ -6,58 +6,44 @@
 <?import javafx.scene.image.Image?>
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.HBox?>
-<?import javafx.scene.layout.Pane?>
 <?import javafx.scene.text.Font?>
 
-<HBox fx:id="vBox" alignment="CENTER_LEFT" prefHeight="81.0" prefWidth="1064.0" style="-fx-background-color: white;" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="application.OrderDataController">
+<HBox fx:id="vBox" alignment="CENTER_LEFT" prefHeight="60.0" prefWidth="870.0" spacing="100.0" style="-fx-border-color: black; -fx-background-color: white;" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="application.OrderDataController">
    <children>
-      <Pane prefHeight="81.0" prefWidth="316.0">
-         <children>
-            <Label fx:id="foodLabel" alignment="CENTER" layoutX="-4.0" layoutY="2.0" prefHeight="81.0" prefWidth="324.0" text="foodLabel">
-               <font>
-                  <Font size="20.0" />
-               </font>
-            </Label>
-         </children>
-      </Pane>
-      <Pane prefHeight="200.0" prefWidth="200.0">
-         <children>
-            <Label fx:id="qtyLabel" alignment="CENTER" layoutX="38.0" layoutY="15.0" prefHeight="51.0" prefWidth="125.0" text="qtyLabel" textAlignment="CENTER">
-               <font>
-                  <Font size="20.0" />
-               </font>
-            </Label>
-         </children>
-         <HBox.margin>
-            <Insets left="90.0" />
-         </HBox.margin>
-         <opaqueInsets>
-            <Insets />
-         </opaqueInsets>
-      </Pane>
-      <Pane prefHeight="200.0" prefWidth="200.0">
-         <children>
-            <Label fx:id="priceLabel" alignment="CENTER" layoutX="43.0" layoutY="15.0" prefHeight="51.0" prefWidth="114.0" text="priceLabel">
-               <font>
-                  <Font size="20.0" />
-               </font>
-            </Label>
-         </children>
-         <HBox.margin>
-            <Insets left="160.0" />
-         </HBox.margin>
-      </Pane>
-      <Button fx:id="deleteBtn" mnemonicParsing="false" style="-fx-background-color: white;">
+      <Label fx:id="foodLabel" prefHeight="60.0" prefWidth="324.0" text="foodLabel" wrapText="true">
+         <font>
+            <Font size="22.0" />
+         </font>
+      </Label>
+      <Label fx:id="sizeLabel" alignment="CENTER" prefHeight="60.0" prefWidth="267.0" text="sizeLabel" textAlignment="CENTER" wrapText="true">
+         <font>
+            <Font size="22.0" />
+         </font>
+      </Label>
+      <Label fx:id="qtyLabel" alignment="CENTER" prefHeight="60.0" prefWidth="202.0" text="qtyLabel">
+         <font>
+            <Font size="22.0" />
+         </font>
+      </Label>
+      <Label fx:id="priceLabel" alignment="CENTER" prefHeight="60.0" prefWidth="205.0" text="priceLabel">
+         <font>
+            <Font size="22.0" />
+         </font>
+      </Label>
+      <Button fx:id="deleteBtn" mnemonicParsing="false" prefHeight="27.0" prefWidth="31.0" style="-fx-background-color: white;" wrapText="true">
          <graphic>
-            <ImageView fitHeight="45.0" fitWidth="30.0" pickOnBounds="true" preserveRatio="true">
+            <ImageView fitHeight="19.0" fitWidth="19.0" pickOnBounds="true" preserveRatio="true">
                <image>
                   <Image url="@../pictures/bin.png" />
                </image>
             </ImageView>
          </graphic>
+         <HBox.margin>
+            <Insets left="-50.0" />
+         </HBox.margin>
       </Button>
    </children>
    <padding>
-      <Insets left="30.0" />
+      <Insets left="10.0" right="10.0" />
    </padding>
 </HBox>

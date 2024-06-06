@@ -80,7 +80,7 @@ public class SignUpController {
 		name = nameField.getText();
 		
 		if(name.isEmpty()) showAlert("Please enter a name", AlertType.ERROR); 
-		
+		else if(name.length() > 23) showAlert("Please enter a shorter name", AlertType.ERROR); 
 		else {
 			try {
 				pst = con.prepareStatement("SELECT * FROM user_tbl");
@@ -118,6 +118,7 @@ public class SignUpController {
 		
 		if(username.isEmpty()) {showAlert("Please enter a username", AlertType.ERROR);}
 		else if(username.length() < 8) {showAlert("Username should be atleast 8 characters", AlertType.ERROR); return;}
+		else if(username.length() > 23) {showAlert("Please enter a shorter username", AlertType.ERROR); return;}
 		else {
 			try {
 				pst = con.prepareStatement("SELECT * FROM user_tbl");
