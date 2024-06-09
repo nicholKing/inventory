@@ -8,13 +8,17 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 import java.util.ResourceBundle;
+import java.util.Set;
 import java.util.Timer;
 import java.util.TimerTask;
 
 import javafx.animation.TranslateTransition;
 import javafx.application.Platform;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -24,16 +28,49 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.ButtonType;
+import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
+import javafx.scene.control.ScrollPane;
+import javafx.scene.control.TextField;
 import javafx.scene.image.ImageView;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.Button;
 import javafx.scene.layout.AnchorPane;
+import javafx.scene.layout.HBox;
+import javafx.scene.layout.VBox;
 import javafx.scene.text.Font;
 import javafx.stage.Stage;
 import javafx.util.Duration;
 
-public class AdminController implements Initializable{
+public class AdStockController implements Initializable{
+	@FXML
+	private Button addBtn;
+	@FXML
+	private Button deleteBtn;
+	@FXML
+	private Button updateBtn;
+	@FXML
+	private TextField foodnameField;
+	@FXML
+	private TextField optionField;	
+    @FXML
+    private TextField priceField;
+    @FXML
+    private TextField stockField;
+    @FXML
+    private ComboBox<String> categoryComboBox;
+    @FXML
+    private Button addButton;
+    @FXML
+    private Button updateButton;
+    @FXML
+    private Button deleteButton;
+    @FXML
+    private ScrollPane scrollPane; // ScrollPane for containing VBox
+    @FXML
+    private VBox itemsVBox; // VBox for displaying items
+    
+   
 	
 	@FXML
 	private Label nameLabel;
@@ -49,7 +86,8 @@ public class AdminController implements Initializable{
     private ImageView accountClose;
     @FXML
     private AnchorPane slider2;
-    
+  
+    private MenuItem selectedItem;
     
 	private Stage stage;
 	private Scene scene;
@@ -75,11 +113,20 @@ public class AdminController implements Initializable{
 	boolean isTableBtn = false;
 	boolean isRewardBtn = false;
 	
+	//STOCKS VARIABLE
+	String foodname;
+	String option;
+	String category;
+    int price;
+    int stock;
 	int id;
 	
 	Connection con;
 	PreparedStatement pst;
 	ResultSet rs;
+	
+	
+
 	
 	//TOP BUTTONS
 	public void homeBtn(ActionEvent event) throws IOException, SQLException {
@@ -92,7 +139,6 @@ public class AdminController implements Initializable{
 			isOrderBtn = true;
 			changeScene(event, orderPage);
 	}
-	
 	public void signIn(ActionEvent event) throws IOException, ClassNotFoundException, SQLException {
 			FXMLLoader loader = new FXMLLoader(getClass().getResource("Main.fxml"));
 		    root = loader.load();
@@ -168,7 +214,7 @@ public class AdminController implements Initializable{
 			changeScene(event, accPage);}
 			else {showAlert("Login or register to edit your information.", AlertType.INFORMATION);}
 	}
-	public void showStock(ActionEvent event) throws IOException, SQLException {
+	public void showCart(ActionEvent event) throws IOException, SQLException {
 			
 			changeScene(event,stockPage);
 	}
@@ -212,6 +258,152 @@ public class AdminController implements Initializable{
 		}
 	}
 		
+	//STOCK METHODS
+	private void loadMenuItems() {
+	    try {
+	        List<MenuItem> items = DatabaseHelper.getMenuItems();
+	        displayMenuItems(items);
+	    } catch (SQLException e) {
+	        e.printStackTrace();
+	    }
+	}
+
+	  
+	private void displayMenuItems(List<MenuItem> items) {
+	    itemsVBox.getChildren().clear(); // Clear existing items
+
+	    
+	    for (MenuItem item : items) {
+	   
+	            try {
+	                FXMLLoader loader = new FXMLLoader(getClass().getResource("AdStockVbox.fxml"));
+	                HBox itemBox = loader.load();
+
+	                AdStockPaneController controller = loader.getController();
+	                controller.setItemDetails(item);
+
+	                itemBox.setOnMouseClicked(event -> selectMenuItem(item));
+
+	                itemsVBox.getChildren().add(itemBox);
+
+	            
+	              
+	            } catch (IOException e) {
+	                e.printStackTrace();
+	            }
+	        }
+	    }
+	}
+
+	  private void selectMenuItem(MenuItem item) {
+		    selectedItem = item;
+		    foodnameField.setText(item.getFoodName());
+		    priceField.setText(String.valueOf(item.getPrice()));
+		    stockField.setText(String.valueOf(item.getStock()));
+		    categoryComboBox.setValue(item.getCategory());
+		    optionField.setText(item.getOptions());
+		}
+
+	  private void addMenuItem() {
+		    try {
+		    	 String foodName = foodnameField.getText();
+		         String option = optionField.getText();
+		         String priceText = priceField.getText();
+		         String stockText = stockField.getText();
+		         String category = categoryComboBox.getValue();
+
+		        // Check if the number of options for the food item exceeds 2
+		        int optionCount = DatabaseHelper.getOptionCountForFoodName(foodName, category);
+		        
+		        if (optionCount >= 2) {
+		            // Display an alert to the user
+		            Alert alert = new Alert(Alert.AlertType.WARNING);
+		            alert.setTitle("Warning");
+		            alert.setHeaderText(null);
+		            alert.setContentText("You can only add up to 2 options for each food item.");
+		            alert.showAndWait();
+		            return; // Exit the method
+		        }
+		        else if (foodName.isEmpty() || option.isEmpty() || priceField.getText().isEmpty() || stockField.getText().isEmpty() || category == null) {
+		            // Display an alert to inform the user to fill in all fields
+		            Alert alert = new Alert(Alert.AlertType.WARNING);
+		            alert.setTitle("Warning");
+		            alert.setHeaderText(null);
+		            alert.setContentText("Please fill in all required fields.");
+		            alert.showAndWait();
+		            return; // Exit the method
+		        }
+		        else if (!priceText.matches("\\d+") || !stockText.matches("\\d+")) {
+		            // Display an alert to inform the user that price and stock must be integers
+		            Alert alert = new Alert(Alert.AlertType.ERROR);
+		            alert.setTitle("Error");
+		            alert.setHeaderText(null);
+		            alert.setContentText("Price and stock must be integers.");
+		            alert.showAndWait();
+		            return; // Exit the method
+		        }
+		        int price = Integer.parseInt(priceText);
+		        int stock = Integer.parseInt(stockText);
+
+		        /*if (DatabaseHelper.checkExistingFoodName(foodName)) {
+		            // Display an alert to inform the user that the food name already exists
+		            Alert alert = new Alert(Alert.AlertType.ERROR);
+		            alert.setTitle("Error");
+		            alert.setHeaderText(null);
+		            alert.setContentText("Food name already exists. Please enter a unique name.");
+		            alert.showAndWait();
+		            return; // Exit the method
+		        }*/
+		        
+		        MenuItem item = new MenuItem(0, foodName, stock, price, option, category);
+		        DatabaseHelper.addMenuItem(item, category);
+
+		        clearFields();
+		        loadMenuItems();
+		    } catch (SQLException e) {
+		        e.printStackTrace();
+		    }
+		}
+
+	 private void updateMenuItem() {
+	        try {
+	            if (selectedItem != null) {
+	                String foodname = foodnameField.getText();
+	                String option = optionField.getText();
+	                int price = Integer.parseInt(priceField.getText());
+	                int stock = Integer.parseInt(stockField.getText());
+	                String category = categoryComboBox.getValue();
+
+	                MenuItem updatedItem = new MenuItem(selectedItem.getId(), foodname, stock, price, option, category);
+	                DatabaseHelper.updateMenuItem(updatedItem, category);
+
+	                clearFields();
+	                loadMenuItems();
+	            }
+	        } catch (SQLException e) {
+	            e.printStackTrace();
+	        }
+	    }
+	 private void deleteMenuItem() {
+	        try {
+	            if (selectedItem != null) {
+	                DatabaseHelper.deleteMenuItem(selectedItem.getId());
+
+	                clearFields();
+	                loadMenuItems();
+	            }
+	        } catch (SQLException e) {
+	            e.printStackTrace();
+	        }
+	    }
+	 private void clearFields() {
+	        foodnameField.clear();
+	        optionField.clear();
+	        priceField.clear();
+	        stockField.clear();
+	        categoryComboBox.setValue(null);
+	        selectedItem = null;
+	    }
 	//HELPER METHODS
 	public void Connect() {
 			try {
@@ -233,7 +425,7 @@ public class AdminController implements Initializable{
 			stage.show();
 			
 			if(isHomeBtn) {
-				AdminController homePage = loader.getController();
+				AdStockController homePage = loader.getController();
 				homePage.setOrderList(orderList);
 				homePage.setHasAccount(hasAccount);
 				homePage.displayName(id);
@@ -270,8 +462,17 @@ public class AdminController implements Initializable{
 	public void setHasAccount(boolean hasAccount) {
 			this.hasAccount = hasAccount;
 	}
+	public void setPrice(int price) {
+		this.price = price;
+	}
 	public void setName(String dbName) {
 		this.dbName = dbName;
+	}
+	public void setFoodname(String foodName) {
+		this.foodname = foodName;
+	}
+	public void setOption(String option) {
+		this.option = option;
 	}
 	public void setId(int id) {
 		this.id = id;
@@ -371,9 +572,23 @@ public class AdminController implements Initializable{
             });
         });
 	}
+
 	@Override
 	public void initialize(URL arg0, ResourceBundle arg1) {
+		
+		
+		categoryComboBox.setItems(FXCollections.observableArrayList(
+	            "Rice Meals", "Pasta", "Cakes", "Burger",
+	            "Coffee", "Frappe", "Tea", "Appetizers"
+	        ));
+		
+		 	loadMenuItems();
 			Connect();
 			slideWindow();
-	    }
+			addBtn.setOnAction(event -> addMenuItem());
+	        updateBtn.setOnAction(event -> updateMenuItem());
+	        deleteBtn.setOnAction(event -> deleteMenuItem());
+		}
+	
 }
+

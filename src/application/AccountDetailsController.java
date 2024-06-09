@@ -27,6 +27,7 @@ import javafx.scene.control.Alert;
 import javafx.scene.control.ButtonType;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
+import javafx.scene.control.Tooltip;
 import javafx.scene.image.ImageView;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.Button;
@@ -75,7 +76,28 @@ public class AccountDetailsController implements Initializable{
     private VBox vBox;
     @FXML
     private Button deleteBtn;
-   
+    @FXML 
+    private Button edit1;
+    @FXML 
+    private Button edit2;
+    @FXML 
+    private Button edit3;
+    @FXML 
+    private Button edit4;
+    @FXML 
+    private Button edit5;
+  
+    @FXML 
+    private Button save1;
+    @FXML 
+    private Button save2;
+    @FXML 
+    private Button save3;
+    @FXML 
+    private Button save4;
+    @FXML 
+    private Button save5;
+  
 	private Stage stage;
 	private Scene scene;
 	private Parent root;
@@ -104,21 +126,35 @@ public class AccountDetailsController implements Initializable{
 	
 	int id;
 	
+	//ACCOUNT SYSTEM
+	String txtName;
+	String txtPass;
+	String txtUName;
+	String txtAddress;
+	String txtEmail;
+	boolean hasCorrectName = false;
+	boolean newName = true;
+	
 	Connection con;
 	PreparedStatement pst;
 	ResultSet rs;
 	
-	//TOP BUTTONS
-	public void homeBtn(ActionEvent event) throws IOException, SQLException {
-			System.out.println("Home");
-			isHomeBtn = true;
-			changeScene(event, homePage);
-	}
-	public void orderBtn(ActionEvent event) throws IOException, SQLException {
-			
-			System.out.println("Order");
-			isOrderBtn = true;
-			changeScene(event, orderPage);
+	//RIGHT PANEL
+	public void displayName() throws SQLException {
+		
+		if(dbName.length() >= 12 && dbName.length() <= 15) {
+			nameLabel.setFont(new Font(18));
+		}
+		else if(dbName.length() > 15) {
+			nameLabel.setFont(new Font(15));
+		}
+		nameLabel.setText(dbName);
+		}
+	public void showAccount(ActionEvent event) throws IOException, SQLException {
+		if(hasAccount) {
+			isAccBtn = true;
+			changeScene(event, accPage);}
+			else {showAlert("Login or register to edit your information.", AlertType.INFORMATION);}
 	}
 	public void signIn(ActionEvent event) throws IOException, ClassNotFoundException, SQLException {
 		FXMLLoader loader = new FXMLLoader(getClass().getResource("Main.fxml"));
@@ -171,29 +207,18 @@ public class AccountDetailsController implements Initializable{
 		stage.show();
 		}
 	}
-	public void showFAQ() {
-			Alert alert = new Alert(AlertType.INFORMATION);
-	        alert.setHeaderText("");
-	        alert.setContentText("FAQ");
-	        alert.show();
-		}
 		
-	//SIDE BUTTONS
-	public void displayName() throws SQLException {
+	//LEFT PANEL
+	public void homeBtn(ActionEvent event) throws IOException, SQLException {
+		System.out.println("Home");
+		isHomeBtn = true;
+		changeScene(event, homePage);
+	}
+	public void orderBtn(ActionEvent event) throws IOException, SQLException {
 		
-		if(dbName.length() >= 12 && dbName.length() <= 15) {
-			nameLabel.setFont(new Font(18));
-		}
-		else if(dbName.length() > 15) {
-			nameLabel.setFont(new Font(15));
-		}
-		nameLabel.setText(dbName);
-		}
-	public void showAccount(ActionEvent event) throws IOException, SQLException {
-		if(hasAccount) {
-			isAccBtn = true;
-			changeScene(event, accPage);}
-			else {showAlert("Login or register to edit your information.", AlertType.INFORMATION);}
+		System.out.println("Order");
+		isOrderBtn = true;
+		changeScene(event, orderPage);
 	}
 	public void showCart(ActionEvent event) throws IOException, SQLException {
 		changeScene(event, cartPage);
@@ -235,21 +260,213 @@ public class AccountDetailsController implements Initializable{
 	}
 	
 	//ACCOUNT SYSTEM
-	public void displayDetails() throws SQLException {
-		pst = con.prepareStatement("SELECT name FROM user_tbl WHERE id = ?");
-		pst.setInt(1, id);
-		rs = pst.executeQuery();
-		if (rs.next()) {
-			dbName = rs.getString("name");
-		}
-		System.out.println(id);
-		nameTextField.setText(dbName);
-		System.out.println(dbName);
-	}
 	public void editDetails() throws SQLException {
+		edit1.setOnAction(event ->{
+			nameTextField.setEditable(true);
+			save1.setDisable(false);
+		});
+		edit2.setOnAction(event ->{
+			usernameTextField.setEditable(true);
+			save2.setDisable(false);
+		});
+		edit3.setOnAction(event ->{
+			passwordField.setEditable(true);
+			save3.setDisable(false);
+		});
+		edit4.setOnAction(event ->{
+			emailField.setEditable(true);
+			save4.setDisable(false);
+		});
+		edit5.setOnAction(event ->{
+			addressTextField.setEditable(true);
+			save5.setDisable(false);
+		});
+	}
+	public void saveDetails() {
+		save1.setOnAction(event ->{
+			try {
+				checkNameField();
+				displayName();
+				save1.setDisable(true);
+				nameTextField.setEditable(false);
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
+		});
+		save2.setOnAction(event ->{
+			try {
+				checkUsernameField();
+				save2.setDisable(true);
+				usernameTextField.setEditable(false);
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
+		});
+		save3.setOnAction(event ->{
+			try {
+				checkPasswordField();
+				save3.setDisable(true);
+				passwordField.setEditable(false);
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
+		});
+		save4.setOnAction(event ->{
+			try {
+				checkEmailField();
+				save4.setDisable(true);
+				emailField.setEditable(false);
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
+		});
+		save5.setOnAction(event ->{
+			try {
+				checkAddressField();
+				save5.setDisable(true);
+				addressTextField.setEditable(false);
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
+		});
 		
+	}
+	public void displayDetails() throws SQLException {
+
+		PreparedStatement pst = null;
+	 	ResultSet rs = null;
+
+		    try {
+		        // Prepare the query
+		        pst = con.prepareStatement("SELECT * FROM user_tbl WHERE id = ?");
+		        
+		        // Set the parameter for the query
+		        pst.setInt(1, id);
+
+		        // Execute the query
+		        rs = pst.executeQuery();
+
+		        // Process the result set
+		        if (rs.next()) {
+		            txtName = rs.getString("name");
+		            txtUName = rs.getString("username");
+		            txtPass = rs.getString("password");
+		            txtEmail = rs.getString("email");
+		            txtAddress = rs.getString("address");
+		        }
+
+		        // Set the text fields with retrieved values
+		       nameTextField.setText(txtName);
+		       usernameTextField.setText(txtUName);
+		       passwordField.setText(txtPass);
+		       emailField.setText(txtEmail);
+		       addressTextField.setText(txtAddress);
+
+		    } finally {
+		        // Close the ResultSet and PreparedStatement to free up resources
+		        if (rs != null) rs.close();
+		        if (pst != null) pst.close();
+		    }
+		}
+	public void checkNameField() throws SQLException {
+		PreparedStatement pst;
+		ResultSet rs;
+		txtName = nameTextField.getText();
 		
+		if(txtName.isEmpty()) showAlert("Please enter a name", AlertType.ERROR); 
+		else if(txtName.length() > 23) showAlert("Please enter a shorter name", AlertType.ERROR); 
+		else {
+			
+				pst = con.prepareStatement("UPDATE user_tbl SET name=? WHERE id = ?");
+					
+				pst.setString(1, txtName);
+				pst.setInt(2, id);
+				int k = pst.executeUpdate();
+				if(k == 1) {
+					showAlert("Name Updated!", AlertType.INFORMATION);
+					displayName();
+				}
+		}
+	}
+	public void checkPasswordField() throws SQLException {
+		PreparedStatement pst;
+		ResultSet rs;
+		txtPass = passwordField.getText();
 		
+		if(txtPass.isEmpty()) showAlert("Please enter a password", AlertType.ERROR); 
+		else if(txtPass.length() > 23) showAlert("Please enter a shorter password", AlertType.ERROR); 
+		else {
+			
+				pst = con.prepareStatement("UPDATE user_tbl SET password=? WHERE id = ?");
+					
+				pst.setString(1, txtPass);
+				pst.setInt(2, id);
+				int k = pst.executeUpdate();
+				if(k == 1) {
+					showAlert("Password Updated!", AlertType.INFORMATION);
+				}
+		}
+	}
+	public void checkUsernameField() throws SQLException {
+		PreparedStatement pst;
+		ResultSet rs;
+		txtUName = usernameTextField.getText();
+		
+		if(txtUName.isEmpty()) showAlert("Please enter a username", AlertType.ERROR); 
+		else if(txtUName.length() > 23) showAlert("Please enter a shorter username", AlertType.ERROR); 
+		else {
+			
+				pst = con.prepareStatement("UPDATE user_tbl SET username=? WHERE id = ?");
+					
+				pst.setString(1, txtUName);
+				pst.setInt(2, id);
+				int k = pst.executeUpdate();
+				if(k == 1) {
+					showAlert("Username Updated!", AlertType.INFORMATION);
+					
+				}
+		}
+	}
+	public void checkEmailField() throws SQLException {
+		PreparedStatement pst;
+		ResultSet rs;
+		txtEmail = emailField.getText();
+		
+		if(txtEmail.length() <= 18) { showAlert("Email should be atleast 8 characters", AlertType.ERROR); }
+		else if(!isGmailAddress(txtEmail)) { showAlert("Please enter a valid email address", AlertType.ERROR); }
+		else if(txtName.length() > 23) {showAlert("Please enter a shorter email", AlertType.ERROR); }
+		else {
+				pst = con.prepareStatement("UPDATE user_tbl SET email=? WHERE id = ?");
+			
+				pst.setString(1, txtEmail);
+				pst.setInt(2, id);
+				
+				int k = pst.executeUpdate();
+				if(k == 1) {
+					showAlert("Email updated!", AlertType.INFORMATION);
+				}
+		}
+	}
+	public void checkAddressField() throws SQLException {
+		PreparedStatement pst;
+		ResultSet rs;
+		txtAddress = addressTextField.getText();
+		
+		if(txtAddress.length() > 50) showAlert("Please enter a shorter address", AlertType.ERROR); 
+		else {
+				pst = con.prepareStatement("UPDATE user_tbl SET address=? WHERE id = ?");
+					
+				pst.setString(1, txtAddress);
+				pst.setInt(2, id);
+				int k = pst.executeUpdate();
+				if(k == 1) {
+					showAlert("Address Updated!", AlertType.INFORMATION);
+					
+				}
+		}
+	}
+	public boolean isGmailAddress(String email) {
+	    return email != null && email.endsWith("@gmail.com");
 	}
 	
 	//HELPER METHODS
@@ -276,7 +493,8 @@ public class AccountDetailsController implements Initializable{
 				homePage.setOrderList(orderList);
 				homePage.setHasAccount(hasAccount);
 				homePage.setName(dbName);
-				homePage.displayName(0);
+				homePage.displayName(id);
+				homePage.setId(id);
 			}
 			else if(isOrderBtn) {
 				OrderController orderPage = loader.getController();
@@ -331,23 +549,15 @@ public class AccountDetailsController implements Initializable{
 	                timer.cancel(); // Cancel the timer after closing the alert
 	            }
 	        }, 2 * 1000);
-	    }
-	
-	//GETTERS AND SETTERS 
-	public void setId(int id) {
-		this.id = id;
-	}
-	public void setHasAccount(boolean hasAccount) {
-			this.hasAccount = hasAccount;
-	}
-	public void setName(String dbName) {
-		this.dbName = dbName;
-	}
-	public void setOrders(List<OrderData> orderList) {
-		this.orderList = orderList;
-	}
-	public void setOrderList(List<OrderData> orderList) {
-		this.orderList = orderList;
+	    }	
+	public void showTooltip(String text, TextField field) {
+		Tooltip tooltip = new Tooltip("Please enter your " + text);
+        tooltip.setStyle("-fx-background-color: white; -fx-text-fill: black; -fx-font-size: 12px;");
+        // Set the show delay (in milliseconds)
+        tooltip.setShowDelay(javafx.util.Duration.ZERO);
+
+        // Setting tooltip to the text field
+        Tooltip.install(field, tooltip);
 	}
 	private void slideWindow() {
 		
@@ -421,24 +631,54 @@ public class AccountDetailsController implements Initializable{
             });
         });
 	}
-	
-	public void setField() {
-		nameTextField.setEditable(false);
-		usernameTextField.setEditable(false);
-		passwordField.setEditable(false);
-		emailField.setEditable(false);
-		addressTextField.setEditable(false);
+	public void toggleTextField(boolean toggle) {
+		nameTextField.setEditable(toggle);
+		usernameTextField.setEditable(toggle);
+		passwordField.setEditable(toggle);
+		addressTextField.setEditable(toggle);
+		emailField.setEditable(toggle);
 	}
+	//SETTERS 
+	public void setId(int id) {
+		this.id = id;
+	}
+	public void setHasAccount(boolean hasAccount) {
+			this.hasAccount = hasAccount;
+	}
+	public void setName(String dbName) {
+		this.dbName = dbName;
+	}
+	public void setOrders(List<OrderData> orderList) {
+		this.orderList = orderList;
+	}
+	public void setOrderList(List<OrderData> orderList) {
+		this.orderList = orderList;
+	}
+	public void setField() {
+		toggleTextField(false);
+		showTooltip("name", nameTextField);
+		showTooltip("username", usernameTextField);
+		showTooltip("password", passwordField);
+		showTooltip("email", emailField);
+		showTooltip("address", addressTextField);
+			
+	}
+	
 	@Override
 	public void initialize(URL arg0, ResourceBundle arg1) {
 		Connect();
-		String sql = "UPDATE users SET name = ?, email = ?, password = ? WHERE id = ?";
 		slideWindow();
-		setField();
-	
+		try {
+			editDetails();
+			saveDetails();
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 			 PauseTransition delay = new PauseTransition(Duration.millis(50));
 		        delay.setOnFinished(event -> {
 		        	try {
+		        		setField();
 						displayDetails();
 					} catch (SQLException e) {
 						// TODO Auto-generated catch block

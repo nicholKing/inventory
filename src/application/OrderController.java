@@ -256,12 +256,7 @@ public class OrderController implements Initializable{
 		stage.show();
 		}
 	}
-	public void showFAQ() {
-		Alert alert = new Alert(AlertType.INFORMATION);
-        alert.setHeaderText("");
-        alert.setContentText("FAQ");
-        alert.show();
-	}
+	
 	//SIDE BUTTONS
 	public void showAccount(ActionEvent event) throws IOException, SQLException {
 		if(hasAccount) {

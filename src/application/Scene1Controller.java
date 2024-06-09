@@ -171,7 +171,7 @@ public class Scene1Controller {
 		String page;
 		
 		if(username.equals("admin123")) {
-			page = "AdminSide.fxml";
+			page = "AdHomePage.fxml";
 		}
 		else if(username.equals("staff123")) {
 			page = "StaffSide.fxml";

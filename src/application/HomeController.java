@@ -264,7 +264,6 @@ public class HomeController implements Initializable{
 				accPage.setName(dbName);
 				accPage.displayName();
 				accPage.setHasAccount(hasAccount);
-				System.out.println(id + "haaa");
 			}else if(isRewardBtn) {
 				RewardsController rewardPage = loader.getController();
 				rewardPage.setOrderList(orderList);
@@ -277,9 +276,7 @@ public class HomeController implements Initializable{
 				cartPage.setHasAccount(hasAccount);
 				cartPage.setName(dbName);
 				cartPage.displayName();
-			}
-			
-			
+			}	
 	}
 	
 	//SETTER METHODS
@@ -288,6 +285,9 @@ public class HomeController implements Initializable{
 	}
 	public void setName(String dbName) {
 		this.dbName = dbName;
+	}
+	public void setId(int id) {
+		this.id = id;
 	}
 	public void setOrderList(List<OrderData> orderList) {
 		this.orderList = orderList;
@@ -386,7 +386,6 @@ public class HomeController implements Initializable{
 	}
 	@Override
 	public void initialize(URL arg0, ResourceBundle arg1) {
-			
 			Connect();
 			slideWindow();
 	    }
