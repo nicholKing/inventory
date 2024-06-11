@@ -7,6 +7,10 @@ import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.LocalTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.ResourceBundle;
@@ -16,6 +20,7 @@ import java.util.TimerTask;
 import javafx.animation.TranslateTransition;
 import javafx.application.Platform;
 import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
@@ -24,13 +29,25 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
+import javafx.scene.control.ButtonBase;
 import javafx.scene.control.ButtonType;
+import javafx.scene.control.DateCell;
+import javafx.scene.control.DatePicker;
 import javafx.scene.control.Label;
+import javafx.scene.control.ListView;
+import javafx.scene.control.MenuButton;
+import javafx.scene.control.MenuItem;
+import javafx.scene.image.ImageView;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.VBox;
+import javafx.stage.Popup;
 import javafx.stage.Stage;
+import javafx.util.Callback;
 import javafx.util.Duration;
+import javafx.util.StringConverter;
+import javafx.scene.effect.ColorAdjust;
 
 public class TableReservationController implements Initializable {
 	
@@ -48,11 +65,43 @@ public class TableReservationController implements Initializable {
     private Label totalPriceLabel;
     @FXML
     private VBox vBox;
-  
+    @FXML
+    private DatePicker datePicker;
+    @FXML
+    private Button timeButton;
+    
+    @FXML
+    private Label tableNumberLabel;
+    
+    @FXML
+    private ImageView oneSeat;
+    @FXML
+    private ImageView twoSeat;
+    @FXML
+    private ImageView fourSeat;
+    @FXML
+    private ImageView fourSeat2;
+    @FXML
+    private ImageView fiveSeat;
+    @FXML
+    private ImageView sixSeat;
+    @FXML
+    private ImageView eightSeat;
+    @FXML
+    private ImageView eightSeat2;
+    @FXML
+    private ImageView tenSeat;
+    @FXML
+    private Button bookNow;
+    @FXML
+    private Label tryLabel;
+    
    
 	private Stage stage;
 	private Scene scene;
 	private Parent root;
+	private LocalDate selectedDate;
+    private LocalTime selectedTime;
 	
 	List<OrderData> orderList = new ArrayList<>();
 	OrderData orderData = new OrderData();
@@ -67,6 +116,7 @@ public class TableReservationController implements Initializable {
     String rewardsPage = "RewardsPage.fxml";
     String query = "SELECT name FROM user_tbl WHERE id = ?";
     String dbName;
+    public int reservedTable;
     
 	boolean hasAccount = false;
 	boolean isHomeBtn = false;
@@ -78,6 +128,298 @@ public class TableReservationController implements Initializable {
 	Connection con;
 	PreparedStatement pst;
 	ResultSet rs;
+	
+	private final Popup timePopup = new Popup();
+    private final ListView<String> timeListView = new ListView<>();
+	
+    public void initialize() {
+        // Disable dates before today in the DatePicker
+        datePicker.setDayCellFactory(getDayCellFactory());
+        
+        datePicker.setConverter(new StringConverter<LocalDate>() {
+            String pattern = "MMM dd, yyyy"; // Customize the format as needed
+            DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern(pattern);
+
+            public String toString(LocalDate date) {
+                if (date != null) {
+                    return dateFormatter.format(date);
+                } else {
+                    return "";
+                }
+            }
+
+            public LocalDate fromString(String string) {
+                if (string != null && !string.isEmpty()) {
+                    return LocalDate.parse(string, dateFormatter);
+                } else {
+                    return null;
+                }
+            }
+        });
+
+
+        // Setup the time popup
+        timePopup.setAutoHide(true);
+        timePopup.getContent().add(timeListView);
+        timeListView.setOnMouseClicked(event -> {
+        	String selectedTimeString = timeListView.getSelectionModel().getSelectedItem();
+            if (selectedTimeString != null) {
+                timeButton.setText(selectedTimeString);
+                DateTimeFormatter formatter = DateTimeFormatter.ofPattern("hh:mm a");
+                selectedTime = LocalTime.parse(selectedTimeString, formatter);
+                timePopup.hide();
+            }
+        });
+
+        // Set preferred size of the ListView (width and height)
+        timeListView.setPrefSize(100, 300);  // Adjust the width and height as needed
+
+        // Populate the time list when the date picker value changes
+        datePicker.valueProperty().addListener((obs, oldDate, newDate) -> {
+            if (newDate != null) {
+            	selectedDate = newDate;
+                populateTimeList(newDate);
+            }
+        });
+
+        // Initial population with today's date
+        datePicker.setValue(LocalDate.now());
+        populateTimeList(LocalDate.now());
+
+        // Show the popup when the button is clicked
+     // Show the popup when the button is clicked
+        timeButton.setOnAction(event -> {
+            if (!timePopup.isShowing()) {
+                // Calculate popup position relative to the button
+                double buttonX = timeButton.localToScreen(timeButton.getBoundsInLocal()).getMinX();
+                double buttonY = timeButton.localToScreen(timeButton.getBoundsInLocal()).getMaxY(); // Change this line
+                double popupX = buttonX;  
+                double popupY = buttonY;  
+
+                timePopup.show(timeButton, popupX, popupY);
+            }
+        });
+       
+        tableNumber();
+    }
+    
+    public void tableNumber() {
+    	
+    	EventHandler<MouseEvent> clearHighlight = event -> {
+            oneSeat.setStyle("");
+            twoSeat.setStyle("");
+            fourSeat.setStyle("");
+            fourSeat2.setStyle("");
+            fiveSeat.setStyle("");
+            sixSeat.setStyle("");
+            eightSeat.setStyle("");
+            eightSeat2.setStyle("");
+            tenSeat.setStyle("");
+        };
+    	
+    	oneSeat.setOnMouseClicked(new EventHandler<MouseEvent>() {
+            public void handle(MouseEvent event) {
+            	clearHighlight.handle(event);
+            	oneSeat.setStyle("-fx-effect: dropshadow(gaussian, rgba(0,0,0,0.8), 10, 0, 0, 0); -fx-border-color: #561C24; -fx-border-width: 2;");
+                // Update the label text
+                tableNumberLabel.setText("1");
+                // Update int reservedTable
+                reservedTable = 1;
+            }
+        });
+    	
+    	twoSeat.setOnMouseClicked(new EventHandler<MouseEvent>() {
+            public void handle(MouseEvent event) {
+            	clearHighlight.handle(event);
+            	twoSeat.setStyle("-fx-effect: dropshadow(gaussian, rgba(0,0,0,0.8), 10, 0, 0, 0); -fx-border-color: #561C24; -fx-border-width: 2;");
+                // Update the label text
+                tableNumberLabel.setText("2");
+                reservedTable = 2;
+            }
+        });
+    	
+    	fourSeat.setOnMouseClicked(new EventHandler<MouseEvent>() {
+            public void handle(MouseEvent event) {
+            	clearHighlight.handle(event);
+            	fourSeat.setStyle("-fx-effect: dropshadow(gaussian, rgba(0,0,0,0.8), 10, 0, 0, 0); -fx-border-color: #561C24; -fx-border-width: 2;");
+                // Update the label text
+                tableNumberLabel.setText("4");
+                reservedTable = 40;
+            }
+        });
+    	
+    	fourSeat2.setOnMouseClicked(new EventHandler<MouseEvent>() {
+            public void handle(MouseEvent event) {
+            	clearHighlight.handle(event);
+            	fourSeat2.setStyle("-fx-effect: dropshadow(gaussian, rgba(0,0,0,0.8), 10, 0, 0, 0); -fx-border-color: #561C24; -fx-border-width: 2;");
+                // Update the label text
+                tableNumberLabel.setText("4");
+                reservedTable = 41;
+            }
+        });
+    	
+    	fiveSeat.setOnMouseClicked(new EventHandler<MouseEvent>() {
+            public void handle(MouseEvent event) {
+            	clearHighlight.handle(event);
+            	fiveSeat.setStyle("-fx-effect: dropshadow(gaussian, rgba(0,0,0,0.8), 10, 0, 0, 0); -fx-border-color: #561C24; -fx-border-width: 2;");
+                // Update the label text
+                tableNumberLabel.setText("5");
+                reservedTable = 5;
+            }
+        });
+    	
+    	sixSeat.setOnMouseClicked(new EventHandler<MouseEvent>() {
+            public void handle(MouseEvent event) {
+            	clearHighlight.handle(event);
+            	sixSeat.setStyle("-fx-effect: dropshadow(gaussian, rgba(0,0,0,0.8), 10, 0, 0, 0); -fx-border-color: #561C24; -fx-border-width: 2;");
+                // Update the label text
+                tableNumberLabel.setText("6");
+                reservedTable = 6;
+            }
+        });
+    	
+    	eightSeat.setOnMouseClicked(new EventHandler<MouseEvent>() {
+            public void handle(MouseEvent event) {
+            	clearHighlight.handle(event);
+            	eightSeat.setStyle("-fx-effect: dropshadow(gaussian, rgba(0,0,0,0.8), 10, 0, 0, 0); -fx-border-color: #561C24; -fx-border-width: 2;");
+                // Update the label text
+                tableNumberLabel.setText("8");
+                reservedTable = 80;
+            }
+        });
+    	
+    	eightSeat2.setOnMouseClicked(new EventHandler<MouseEvent>() {
+            public void handle(MouseEvent event) {
+            	clearHighlight.handle(event);
+            	eightSeat2.setStyle("-fx-effect: dropshadow(gaussian, rgba(0,0,0,0.8), 10, 0, 0, 0); -fx-border-color: #561C24; -fx-border-width: 2;");
+                // Update the label text
+                tableNumberLabel.setText("8");
+                reservedTable = 81;
+            }
+        });
+    	
+    	tenSeat.setOnMouseClicked(new EventHandler<MouseEvent>() {
+            public void handle(MouseEvent event) {
+            	clearHighlight.handle(event);
+            	tenSeat.setStyle("-fx-effect: dropshadow(gaussian, rgba(0,0,0,0.8), 10, 0, 0, 0); -fx-border-color: #561C24; -fx-border-width: 2;");
+                // Update the label text
+                tableNumberLabel.setText("10");
+                reservedTable = 10;
+            }
+        });
+    	
+    	ColorAdjust grayscale = new ColorAdjust();
+        grayscale.setSaturation(-1);
+    	
+		bookNow.setOnAction(event -> {
+				saveSelectedDateTime();
+                switch (reservedTable) {
+                case 1:
+                	oneSeat.setEffect(grayscale);
+                	oneSeat.setDisable(true);
+                	break;
+                case 2:
+                	twoSeat.setEffect(grayscale);
+                	twoSeat.setDisable(true);
+                	break;
+                case 40:
+                	fourSeat.setEffect(grayscale);
+                	fourSeat.setDisable(true);
+                	break;
+                case 41:
+                	fourSeat2.setEffect(grayscale);
+                	fourSeat2.setDisable(true);
+                	break;
+                case 5:
+                	fiveSeat.setEffect(grayscale);
+                	fiveSeat.setDisable(true);
+                	break;	
+                case 6:
+                	sixSeat.setEffect(grayscale);
+                	sixSeat.setDisable(true);
+                	break;
+                case 80:
+                	eightSeat.setEffect(grayscale);
+                	eightSeat.setDisable(true);
+                	break;
+                case 81:
+                	eightSeat2.setEffect(grayscale);
+                	eightSeat2.setDisable(true);
+                	break;
+                case 10:
+                	tenSeat.setEffect(grayscale);
+                	tenSeat.setDisable(true);
+                	break;
+                }
+        });
+    }
+    
+    
+
+    private void populateTimeList(LocalDate selectedDate) {
+        timeListView.getItems().clear();
+        List<String> timeItems = generateTimeItems(selectedDate);
+        timeListView.getItems().addAll(timeItems);
+        timeListView.setStyle("-fx-font-size: 12px;");
+    }
+
+    private List<String> generateTimeItems(LocalDate selectedDate) {
+        List<String> timeItems = new ArrayList<>();
+        LocalDateTime now = LocalDateTime.now();
+        LocalDateTime startDateTime;
+        LocalDateTime endDateTime = selectedDate.atTime(LocalTime.of(23, 30));
+
+        if (selectedDate.isEqual(now.toLocalDate())) {
+            // If the selected date is today, start from the next available half-hour interval
+            int minutes = now.getMinute();
+            int adjustment = (minutes < 30) ? 30 - minutes : 60 - minutes;
+            startDateTime = now.plusMinutes(adjustment).withSecond(0).withNano(0);
+        } else {
+            // If the selected date is not today, start from 10:00 AM
+            startDateTime = selectedDate.atTime(LocalTime.of(10, 0));
+        }
+
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("hh:mm a");
+
+        while (!startDateTime.isAfter(endDateTime)) {
+            timeItems.add(startDateTime.format(formatter));
+            startDateTime = startDateTime.plusMinutes(30);
+        }
+
+        return timeItems;
+    }
+
+    private Callback<DatePicker, DateCell> getDayCellFactory() {
+        return new Callback<>() {
+            @Override
+            public DateCell call(final DatePicker datePicker) {
+                return new DateCell() {
+                    @Override
+                    public void updateItem(LocalDate item, boolean empty) {
+                        super.updateItem(item, empty);
+                        if (item.isBefore(LocalDate.now())) {
+                            setDisable(true);
+                            setStyle("-fx-background-color: #ffc0cb;"); // Optional: adds a pink background to disabled dates
+                        }
+                    }
+                };
+            }
+        };
+    }
+    
+    private void saveSelectedDateTime() {
+        if (selectedDate != null && selectedTime != null) {
+        	LocalDateTime selectedDateTime = LocalDateTime.of(selectedDate, selectedTime);
+            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("MMM dd, yyyy hh:mm a");
+            tryLabel.setText("Selected Date and Time: " + selectedDateTime.format(formatter));
+        } else {
+            System.out.println("Please select both date and time.");
+        }
+    }
+	
+	
+	
+	
 	
 	//TOP BUTTONS
 	public void homeBtn(ActionEvent event) throws IOException, SQLException {
@@ -229,7 +571,6 @@ public void signUp(ActionEvent event) throws IOException, ClassNotFoundException
 			OrderController orderPage = loader.getController();
 			orderPage.setOrders(orderList);
 			orderPage.setName(dbName);
-			orderPage.displayName();
 			orderPage.setHasAccount(hasAccount);
 		}else if(isTableBtn) {
 			TableReservationController tablePage = loader.getController();
