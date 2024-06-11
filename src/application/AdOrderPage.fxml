@@ -131,7 +131,7 @@
                   <Font size="28.0" />
                </font>
             </Label>
-            <ScrollPane fx:id="scrollPane" layoutX="169.0" layoutY="276.0" prefHeight="433.0" prefWidth="1017.0" style="-fx-background-color: WHITE;">
+            <ScrollPane fx:id="scrollPane" layoutX="190.0" layoutY="276.0" prefHeight="433.0" prefWidth="992.0" style="-fx-background-color: WHITE;">
                <content>
                   <GridPane fx:id="rootGridPane" alignment="CENTER" hgap="25.0" style="-fx-border-color: black; -fx-background-color: WHITE;" />
                </content>
@@ -190,7 +190,7 @@
                         </ImageView>
                      </graphic>
                   </Button>
-                  <Button contentDisplay="TOP" mnemonicParsing="false" onAction="#showRewards" prefHeight="75.0" prefWidth="156.0" style="-fx-background-color: E8D8C4;" text="Employment">
+                  <Button contentDisplay="TOP" mnemonicParsing="false" onAction="#showEmployment" prefHeight="75.0" prefWidth="156.0" style="-fx-background-color: E8D8C4;" text="Employment">
                      <font>
                         <Font name="Arial" size="14.0" />
                      </font>

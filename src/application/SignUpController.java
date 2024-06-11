@@ -187,7 +187,6 @@ public class SignUpController {
 		root = loader.load();
 		
 		Scene1Controller loginPage = loader.getController();
-		loginPage.setName(name);
 		
 		stage = (Stage)((Node)event.getSource()).getScene().getWindow();
 		scene = new Scene(root);

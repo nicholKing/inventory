@@ -21,7 +21,7 @@
                <children>
                   <Pane layoutX="451.0" layoutY="28.0" prefHeight="51.0" prefWidth="1280.0" style="-fx-background-color: BBCE8A;" AnchorPane.bottomAnchor="64.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
                      <children>
-                        <Button layoutX="1128.0" layoutY="13.0" mnemonicParsing="false" onAction="#showFAQ" text="FAQ" />
+                        <Button layoutX="1128.0" layoutY="13.0" mnemonicParsing="false" text="FAQ" />
                         <Button layoutX="1176.0" layoutY="13.0" mnemonicParsing="false" text="ABOUT US" />
                         <Label layoutX="14.0" layoutY="11.0" prefHeight="30.0" prefWidth="287.0" text="Title ">
                            <font>
@@ -209,7 +209,6 @@
                         <Image url="@../pictures/6-seater.png" />
                      </image>
                   </ImageView>
-                  <ImageView fitHeight="150.0" fitWidth="200.0" pickOnBounds="true" preserveRatio="true" />
                   <ImageView fx:id="fourSeat2" fitHeight="150.0" fitWidth="228.0" layoutX="-15.0" layoutY="321.0" pickOnBounds="true" preserveRatio="true">
                      <image>
                         <Image url="@../pictures/4.2-seater.png" />

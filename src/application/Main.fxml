@@ -30,7 +30,7 @@
       <CheckBox fx:id="pass_toggle" layoutX="714.0" layoutY="387.0" mnemonicParsing="false" onAction="#togglevisiblePassword" prefHeight="11.0" prefWidth="112.0" styleClass="text" text="Show password" />
       <TextField fx:id="pass_text" layoutX="678.0" layoutY="339.0" prefHeight="40.0" prefWidth="187.0" promptText="Password" styleClass="textField" />
       <PasswordField fx:id="pass_hidden" layoutX="678.0" layoutY="339.0" prefHeight="40.0" prefWidth="187.0" promptText="Password" styleClass="textField" />
-      <Button id="guestBtn" fx:id="orderGuest" layoutX="714.0" layoutY="519.0" mnemonicParsing="false" onAction="#changeScene" prefHeight="17.0" prefWidth="112.0" styleClass="text" text="Order as guest" />
+      <Button id="guestBtn" layoutX="714.0" layoutY="519.0" mnemonicParsing="false" onAction="#orderAsGuest" prefHeight="17.0" prefWidth="112.0" styleClass="text" text="Order as guest" />
       <Label id="create" alignment="CENTER" contentDisplay="CENTER" layoutX="586.0" layoutY="202.0" prefHeight="64.0" prefWidth="370.0" styleClass="text" text="Welcome Back" textAlignment="CENTER">
          <font>
             <Font size="17.0" />

@@ -34,7 +34,7 @@ import javafx.scene.text.Font;
 import javafx.stage.Stage;
 import javafx.util.Duration;
 
-public class AdminController implements Initializable{
+public class EmploymentController implements Initializable{
 	
 	@FXML
 	private Label nameLabel;
@@ -94,7 +94,6 @@ public class AdminController implements Initializable{
 	    } else {
 	        nameLabel.setFont(new Font(24)); // Default font size for shorter names
 	    }
-
 	    // Set text and enable wrapping
 	    nameLabel.setText(dbName);
 	    nameLabel.setWrapText(true);
@@ -237,7 +236,7 @@ public class AdminController implements Initializable{
 			stage.show();
 			
 			if(isHomeBtn) {
-				AdminController homePage = loader.getController();
+				EmploymentController homePage = loader.getController();
 				homePage.setOrderList(orderList);
 				homePage.setUserDetails(role, hasAccount, dbName, id);
 				homePage.displayName();
@@ -249,6 +248,7 @@ public class AdminController implements Initializable{
 				TableReservationController tablePage = loader.getController();
 				tablePage.setHasAccount(hasAccount);
 				tablePage.setName(dbName);
+				tablePage.displayName();
 			}else if(isAccBtn) {
 				AccountDetailsController accPage = loader.getController();
 				accPage.setOrders(orderList);

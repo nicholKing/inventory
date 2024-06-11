@@ -26,7 +26,7 @@ public class Scene1Controller {
     String password;
     String username = "";
     String name = "";
-    String query = "SELECT id FROM user_tbl WHERE username = ?";
+    String query = "SELECT id, name FROM user_tbl WHERE username = ?";
     
     boolean hasCorrectPassword = false;
     boolean hasCorrectUsername = false;
@@ -43,9 +43,8 @@ public class Scene1Controller {
     TextField pass_text;
     @FXML
     CheckBox pass_toggle;
-    @FXML
-    Button orderGuest;
     
+ 
     private Stage stage;
     private Scene scene;
     private Parent root;
@@ -189,6 +188,16 @@ public class Scene1Controller {
 		
 		if(username.equals("admin123")) {
 			AdminController adminPage = loader.getController();
+			pst = con.prepareStatement(query);
+			pst.setString(1, username);
+			rs = pst.executeQuery();
+			while (rs.next()) {
+				name = rs.getString("name");
+				id = rs.getInt("id");
+				}
+			adminPage.setUserDetails("Owner", hasAccount, name, 2);
+			adminPage.displayName();
+			
 		}
 		else if(username.equals("staff123")) {
 			CashierController cashierPage = loader.getController();
@@ -204,9 +213,14 @@ public class Scene1Controller {
 			pst = con.prepareStatement(query);
 			pst.setString(1, username);
 			rs = pst.executeQuery();
-			while (rs.next()) {id = rs.getInt("id");}
-			homePage.setHasAccount(hasAccount);
-			homePage.displayName(id);
+			while (rs.next()) {
+				name = rs.getString("name");
+				id = rs.getInt("id");
+				}
+			
+			homePage.setUserDetails("Customer", hasAccount, name, id);
+			homePage.displayName();
+			
 		}
 		
 	}
@@ -215,11 +229,19 @@ public class Scene1Controller {
 		con = DriverManager.getConnection("jdbc:mysql://localhost/inventory", "root", "");
 	}
     
+    public void orderAsGuest(ActionEvent event) throws IOException {
+    	FXMLLoader loader = new FXMLLoader(getClass().getResource("HomePage.fxml"));
+		root = loader.load();
+		stage = (Stage)((Node)event.getSource()).getScene().getWindow();
+		scene = new Scene(root);
+		stage.setScene(scene);
+		stage.show();
+		HomeController homePage = loader.getController();
+		homePage.setUserDetails("Customer", hasAccount, "Guest", 0);
+		System.out.println("Test");
+    }
     //SETTER METHODS
-    public void setName(String name) {
-		this.name = name;
-		System.out.println(name + "at Login Page");
-	}
+
     
     //SHOW PASSWORD METHODS
     public void togglevisiblePassword(ActionEvent event) throws IOException{
@@ -235,8 +257,7 @@ public class Scene1Controller {
 	}
     public void initialize(URL location, ResourceBundle resources) throws IOException {
 	    this.togglevisiblePassword(null);
-	    
-	}
+    }
     private String passwordValue() {
 	    return pass_toggle.isSelected()?
 	       pass_text.getText(): pass_hidden.getText();

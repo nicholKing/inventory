@@ -28,6 +28,7 @@ import javafx.scene.control.Label;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.VBox;
+import javafx.scene.text.Font;
 import javafx.stage.Stage;
 
 public class RewardsController implements Initializable {
@@ -55,13 +56,15 @@ public class RewardsController implements Initializable {
 	List<OrderData> orderList = new ArrayList<>();
 	OrderData orderData = new OrderData();
 	
+	int id;
+	String role;
 	String name;
 	String username = "";
 	String orderPage = "OrderPage.fxml";
     String homePage = "HomePage.fxml";
     String accPage = "AccountDetails.fxml";
     String cartPage = "MyCart.fxml";
-    String tablePage = "TablePage.fxml";
+    String tablePage = "TableReservationPage.fxml";
     String rewardsPage = "RewardsPage.fxml";
     String query = "SELECT name FROM user_tbl WHERE id = ?";
     String dbName;
@@ -149,7 +152,14 @@ public void signUp(ActionEvent event) throws IOException, ClassNotFoundException
 		
 	//SIDE BUTTONS
 	public void displayName() throws SQLException {
+		if(dbName.length() >= 12 && dbName.length() <= 15) {
+			nameLabel.setFont(new Font(18));
+		}
+		else if(dbName.length() > 15) {
+			nameLabel.setFont(new Font(15));
+		}
 			nameLabel.setText(dbName);
+			nameLabel.setText(role);
 		}
 	public void showAccount(ActionEvent event) throws IOException, SQLException {
 		if(hasAccount) {
@@ -220,38 +230,31 @@ public void signUp(ActionEvent event) throws IOException, ClassNotFoundException
 		if(isHomeBtn) {
 			HomeController homePage = loader.getController();
 			homePage.setOrderList(orderList);
-			homePage.setHasAccount(hasAccount);
-			homePage.setName(dbName);
-			homePage.displayName(0);
+			homePage.setUserDetails(role, hasAccount, dbName, id);
+			homePage.displayName();
 		}
 		else if(isOrderBtn) {
 			OrderController orderPage = loader.getController();
 			orderPage.setOrders(orderList);
-			orderPage.setName(dbName);
-			orderPage.displayName();
-			orderPage.setHasAccount(hasAccount);
+			orderPage.setUserDetails(role, hasAccount, dbName, id);
 		}else if(isTableBtn) {
 			TableReservationController tablePage = loader.getController();
-			tablePage.setHasAccount(hasAccount);
-			tablePage.setName(dbName);
-			tablePage.displayName();
+			//cartPage.setUserDetails(role, hasAccount, dbName, id);
+			
 		}else if(isAccBtn) {
 			AccountDetailsController accPage = loader.getController();
 			accPage.setOrders(orderList);
-			accPage.setName(dbName);
+			accPage.setUserDetails(role, hasAccount, dbName, id);
 			accPage.displayName();
-			accPage.setHasAccount(hasAccount);
 		}else if(isRewardBtn) {
 			RewardsController rewardPage = loader.getController();
 			rewardPage.setOrderList(orderList);
-			rewardPage.setHasAccount(hasAccount);
-			rewardPage.setName(dbName);
+			rewardPage.setUserDetails(role, hasAccount, dbName, id);
 			rewardPage.displayName();
 		}else {
 			CartController cartPage = loader.getController();
 			cartPage.setOrders(orderList);
-			cartPage.setHasAccount(hasAccount);
-			cartPage.setName(dbName);
+			cartPage.setUserDetails(role, hasAccount, dbName, id);
 			cartPage.displayName();
 		}
 		
@@ -284,12 +287,12 @@ public void signUp(ActionEvent event) throws IOException, ClassNotFoundException
 		// TODO Auto-generated method stub
 		System.out.println("Table Reservation");
 	}
-	public void setHasAccount(boolean hasAccount) {
-		this.hasAccount = hasAccount;
-}
-	public void setName(String dbName) {
-		this.dbName = dbName;
-}
+	public void setUserDetails(String role, boolean hasAccount, String dbName, int id) {
+	    this.role = role;
+	    this.hasAccount = hasAccount;
+	    this.dbName = dbName;
+	    this.id = id;
+	}
 	public void setOrderList(List<OrderData> orderList) {
 		this.orderList = orderList;
 	}

@@ -71,7 +71,6 @@ public class OrderPanelController {
                 String selectedOption = selectedRadioButton.getText();
                 // Get price for the selected option from the options map
 				int price = optionsMap.get(selectedOption);
-				System.out.println("Price of selected option: " + price);
 				priceLabel.setText(String.valueOf(price));
             }
         });

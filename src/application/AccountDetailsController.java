@@ -20,6 +20,7 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
+import javafx.geometry.Pos;
 import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
@@ -27,7 +28,9 @@ import javafx.scene.control.Alert;
 import javafx.scene.control.ButtonType;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
+import javafx.scene.control.TextInputControl;
 import javafx.scene.control.Tooltip;
+import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.Button;
@@ -38,6 +41,14 @@ import javafx.stage.Stage;
 import javafx.util.Duration;
 
 public class AccountDetailsController implements Initializable{
+	@FXML
+	private Button btn1;
+	@FXML
+	private Button btn2;
+	@FXML
+	private ImageView img1;
+	@FXML
+	private ImageView img2;
 	@FXML
     private Button addAddressBtn;
     @FXML
@@ -56,6 +67,8 @@ public class AccountDetailsController implements Initializable{
     private TextField usernameTextField;
 	@FXML
 	private Label nameLabel;
+	@FXML
+	private Label roleLabel;
     @FXML
     private AnchorPane slider;
     @FXML
@@ -86,7 +99,6 @@ public class AccountDetailsController implements Initializable{
     private Button edit4;
     @FXML 
     private Button edit5;
-  
     @FXML 
     private Button save1;
     @FXML 
@@ -102,16 +114,24 @@ public class AccountDetailsController implements Initializable{
 	private Scene scene;
 	private Parent root;
 	
+	private Image stockImg = new Image("/pictures/ready-stock.png");
+	private Image employmentImg = new Image("/pictures/headhunting.png");
+	
 	List<OrderData> orderList = new ArrayList<>();
 	OrderData orderData = new OrderData();
 	
+	int id;
+	String role;
 	String name;
 	String username = "";
 	String orderPage = "OrderPage.fxml";
+	String adOrderPage = "AdOrderPage.fxml";
+	String adStockPage = "AdStockPage.fxml";
+	String adHomePage = "AdHomePage.fxml";
     String homePage = "HomePage.fxml";
     String accPage = "AccountDetails.fxml";
     String cartPage = "MyCart.fxml";
-    String tablePage = "TablePage.fxml";
+    String tablePage = "TableReservationPage.fxml";
     String rewardsPage = "RewardsPage.fxml";
     String query = "SELECT name FROM user_tbl WHERE id = ?";
     String dbName;
@@ -123,8 +143,7 @@ public class AccountDetailsController implements Initializable{
 	boolean isTableBtn = false;
 	boolean isRewardBtn = false;
 	boolean isAccBtn = false;
-	
-	int id;
+	boolean isCartBtn = false;
 	
 	//ACCOUNT SYSTEM
 	String txtName;
@@ -134,6 +153,7 @@ public class AccountDetailsController implements Initializable{
 	String txtEmail;
 	boolean hasCorrectName = false;
 	boolean newName = true;
+	boolean isSuccessEdit = false;
 	
 	Connection con;
 	PreparedStatement pst;
@@ -141,20 +161,34 @@ public class AccountDetailsController implements Initializable{
 	
 	//RIGHT PANEL
 	public void displayName() throws SQLException {
-		
-		if(dbName.length() >= 12 && dbName.length() <= 15) {
-			nameLabel.setFont(new Font(18));
-		}
-		else if(dbName.length() > 15) {
-			nameLabel.setFont(new Font(15));
-		}
-		nameLabel.setText(dbName);
-		}
+	    // Calculate font size based on name length
+	    if (dbName.length() >= 12 && dbName.length() <= 15) {
+	        nameLabel.setFont(new Font(18));
+	    } else if (dbName.length() > 15) {
+	        nameLabel.setFont(new Font(12));
+	    } else {
+	        nameLabel.setFont(new Font(24)); // Default font size for shorter names
+	    }
+
+	    // Set text and enable wrapping
+	    nameLabel.setText(dbName);
+	    nameLabel.setWrapText(true);
+	    nameLabel.setMaxWidth(Double.MAX_VALUE);
+	    
+	    // Optionally, set alignment if needed
+	    nameLabel.setAlignment(Pos.CENTER_LEFT);
+	    
+	    // Set role text
+	    roleLabel.setText(role);
+	}
 	public void showAccount(ActionEvent event) throws IOException, SQLException {
 		if(hasAccount) {
 			isAccBtn = true;
-			changeScene(event, accPage);}
-			else {showAlert("Login or register to edit your information.", AlertType.INFORMATION);}
+			changeScene(event, accPage);
+		}
+		else {
+			showAlert("Login or register to edit your information.", AlertType.INFORMATION);
+		}
 	}
 	public void signIn(ActionEvent event) throws IOException, ClassNotFoundException, SQLException {
 		FXMLLoader loader = new FXMLLoader(getClass().getResource("Main.fxml"));
@@ -173,12 +207,12 @@ public class AccountDetailsController implements Initializable{
 			}
 		}
 		else {
-	    Scene1Controller loginPage = loader.getController();
-	    loginPage.Connect();
-	    stage = (Stage)((Node)event.getSource()).getScene().getWindow();
-		scene = new Scene(root);
-		stage.setScene(scene);
-		stage.show();
+		    Scene1Controller loginPage = loader.getController();
+		    loginPage.Connect();
+		    stage = (Stage)((Node)event.getSource()).getScene().getWindow();
+			scene = new Scene(root);
+			stage.setScene(scene);
+			stage.show();
 		}
 	}
 	public void signUp(ActionEvent event) throws IOException, ClassNotFoundException, SQLException {
@@ -195,8 +229,7 @@ public class AccountDetailsController implements Initializable{
 			    stage.setScene(scene);
 			    stage.show();
 			    hasAccount = false;
-			}
-			
+			}	
 		}
 		else {
 		SignUpController signUpPage = loader.getController();
@@ -210,18 +243,16 @@ public class AccountDetailsController implements Initializable{
 		
 	//LEFT PANEL
 	public void homeBtn(ActionEvent event) throws IOException, SQLException {
-		System.out.println("Home");
 		isHomeBtn = true;
-		changeScene(event, homePage);
+		changeScene(event, role.equals("Owner") ? adHomePage : homePage);
 	}
 	public void orderBtn(ActionEvent event) throws IOException, SQLException {
-		
-		System.out.println("Order");
 		isOrderBtn = true;
-		changeScene(event, orderPage);
+		changeScene(event, role.equals("Owner") ? adOrderPage : orderPage);
 	}
 	public void showCart(ActionEvent event) throws IOException, SQLException {
-		changeScene(event, cartPage);
+		isCartBtn = true;
+		changeScene(event, role.equals("admin") ? adStockPage : cartPage);
 	}
 	public void showTable(ActionEvent event) throws IOException, SQLException {
 			isTableBtn = true;
@@ -250,12 +281,12 @@ public class AccountDetailsController implements Initializable{
 			}
 		}
 		else {
-	    Scene1Controller loginPage = loader.getController();
-	    loginPage.Connect();
-	    stage = (Stage)((Node)event.getSource()).getScene().getWindow();
-		scene = new Scene(root);
-		stage.setScene(scene);
-		stage.show();
+		    Scene1Controller loginPage = loader.getController();
+		    loginPage.Connect();
+		    stage = (Stage)((Node)event.getSource()).getScene().getWindow();
+			scene = new Scene(root);
+			stage.setScene(scene);
+			stage.show();
 		}
 	}
 	
@@ -283,58 +314,29 @@ public class AccountDetailsController implements Initializable{
 		});
 	}
 	public void saveDetails() {
-		save1.setOnAction(event ->{
-			try {
-				checkNameField();
-				displayName();
-				save1.setDisable(true);
-				nameTextField.setEditable(false);
-			} catch (SQLException e) {
-				e.printStackTrace();
-			}
-		});
-		save2.setOnAction(event ->{
-			try {
-				checkUsernameField();
-				save2.setDisable(true);
-				usernameTextField.setEditable(false);
-			} catch (SQLException e) {
-				e.printStackTrace();
-			}
-		});
-		save3.setOnAction(event ->{
-			try {
-				checkPasswordField();
-				save3.setDisable(true);
-				passwordField.setEditable(false);
-			} catch (SQLException e) {
-				e.printStackTrace();
-			}
-		});
-		save4.setOnAction(event ->{
-			try {
-				checkEmailField();
-				save4.setDisable(true);
-				emailField.setEditable(false);
-			} catch (SQLException e) {
-				e.printStackTrace();
-			}
-		});
-		save5.setOnAction(event ->{
-			try {
-				checkAddressField();
-				save5.setDisable(true);
-				addressTextField.setEditable(false);
-			} catch (SQLException e) {
-				e.printStackTrace();
-			}
-		});
-		
+	    save1.setOnAction(event -> handleSaveAction(this::checkNameField, nameTextField, save1));
+	    save2.setOnAction(event -> handleSaveAction(this::checkUsernameField, usernameTextField, save2));
+	    save3.setOnAction(event -> handleSaveAction(this::checkPasswordField, passwordField, save3));
+	    save4.setOnAction(event -> handleSaveAction(this::checkEmailField, emailField, save4));
+	    save5.setOnAction(event -> handleSaveAction(this::checkAddressField, addressTextField, save5));
+	}
+	private void handleSaveAction(CheckedSQLExceptionRunnable checkFieldFunction, TextInputControl textField, Button saveButton) {
+	    try {
+	        checkFieldFunction.run();
+	        if (isSuccessEdit) {
+	            saveButton.setDisable(true);
+	            textField.setEditable(false);
+	            isSuccessEdit = false;
+	        }
+	    } catch (SQLException e) {
+	        e.printStackTrace();
+	    }
+	}
+	@FunctionalInterface
+	interface CheckedSQLExceptionRunnable {
+	    void run() throws SQLException;
 	}
 	public void displayDetails() throws SQLException {
-
-		PreparedStatement pst = null;
-	 	ResultSet rs = null;
 
 		    try {
 		        // Prepare the query
@@ -353,7 +355,8 @@ public class AccountDetailsController implements Initializable{
 		            txtPass = rs.getString("password");
 		            txtEmail = rs.getString("email");
 		            txtAddress = rs.getString("address");
-		        }
+		           
+		        } 
 
 		        // Set the text fields with retrieved values
 		       nameTextField.setText(txtName);
@@ -362,11 +365,9 @@ public class AccountDetailsController implements Initializable{
 		       emailField.setText(txtEmail);
 		       addressTextField.setText(txtAddress);
 
-		    } finally {
-		        // Close the ResultSet and PreparedStatement to free up resources
-		        if (rs != null) rs.close();
-		        if (pst != null) pst.close();
-		    }
+		    }catch (Exception e) {
+				e.printStackTrace();
+			}
 		}
 	public void checkNameField() throws SQLException {
 		PreparedStatement pst;
@@ -384,26 +385,9 @@ public class AccountDetailsController implements Initializable{
 				int k = pst.executeUpdate();
 				if(k == 1) {
 					showAlert("Name Updated!", AlertType.INFORMATION);
+					dbName = txtName;
 					displayName();
-				}
-		}
-	}
-	public void checkPasswordField() throws SQLException {
-		PreparedStatement pst;
-		ResultSet rs;
-		txtPass = passwordField.getText();
-		
-		if(txtPass.isEmpty()) showAlert("Please enter a password", AlertType.ERROR); 
-		else if(txtPass.length() > 23) showAlert("Please enter a shorter password", AlertType.ERROR); 
-		else {
-			
-				pst = con.prepareStatement("UPDATE user_tbl SET password=? WHERE id = ?");
-					
-				pst.setString(1, txtPass);
-				pst.setInt(2, id);
-				int k = pst.executeUpdate();
-				if(k == 1) {
-					showAlert("Password Updated!", AlertType.INFORMATION);
+					isSuccessEdit = true;
 				}
 		}
 	}
@@ -413,6 +397,7 @@ public class AccountDetailsController implements Initializable{
 		txtUName = usernameTextField.getText();
 		
 		if(txtUName.isEmpty()) showAlert("Please enter a username", AlertType.ERROR); 
+		else if (txtUName.length() < 8) showAlert("Username should be at least 8 characters", AlertType.ERROR);
 		else if(txtUName.length() > 23) showAlert("Please enter a shorter username", AlertType.ERROR); 
 		else {
 			
@@ -423,18 +408,46 @@ public class AccountDetailsController implements Initializable{
 				int k = pst.executeUpdate();
 				if(k == 1) {
 					showAlert("Username Updated!", AlertType.INFORMATION);
+					isSuccessEdit = true;
+				}
+		}
+	}
+	public void checkPasswordField() throws SQLException {
+		PreparedStatement pst;
+		ResultSet rs;
+		txtPass = passwordField.getText();
+		
+		if(txtPass.isEmpty()) showAlert("Please enter a password", AlertType.ERROR); 
+		else if (txtPass.length() < 8) showAlert("Password should be at least 8 characters", AlertType.ERROR);
+		else if(txtPass.length() > 23) showAlert("Please enter a shorter password", AlertType.ERROR); 
+		else {
+			
+				pst = con.prepareStatement("UPDATE user_tbl SET password=? WHERE id = ?");
 					
+				pst.setString(1, txtPass);
+				pst.setInt(2, id);
+				int k = pst.executeUpdate();
+				if(k == 1) {
+					showAlert("Password Updated!", AlertType.INFORMATION);
+					isSuccessEdit = true;
 				}
 		}
 	}
 	public void checkEmailField() throws SQLException {
 		PreparedStatement pst;
-		ResultSet rs;
 		txtEmail = emailField.getText();
 		
-		if(txtEmail.length() <= 18) { showAlert("Email should be atleast 8 characters", AlertType.ERROR); }
-		else if(!isGmailAddress(txtEmail)) { showAlert("Please enter a valid email address", AlertType.ERROR); }
-		else if(txtName.length() > 23) {showAlert("Please enter a shorter email", AlertType.ERROR); }
+		if(txtEmail.length() <= 18) { 
+			emailField.setEditable(true);
+			showAlert("Email should be atleast 8 characters", AlertType.ERROR); 
+		}
+		else if(!isGmailAddress(txtEmail)) { 
+			
+			showAlert("Please enter a valid email address", AlertType.ERROR); 
+		}
+		else if(txtName.length() > 23) {
+			showAlert("Please enter a shorter email", AlertType.ERROR); 
+		}
 		else {
 				pst = con.prepareStatement("UPDATE user_tbl SET email=? WHERE id = ?");
 			
@@ -444,6 +457,7 @@ public class AccountDetailsController implements Initializable{
 				int k = pst.executeUpdate();
 				if(k == 1) {
 					showAlert("Email updated!", AlertType.INFORMATION);
+					isSuccessEdit = true;
 				}
 		}
 	}
@@ -461,7 +475,7 @@ public class AccountDetailsController implements Initializable{
 				int k = pst.executeUpdate();
 				if(k == 1) {
 					showAlert("Address Updated!", AlertType.INFORMATION);
-					
+					isSuccessEdit = true;
 				}
 		}
 	}
@@ -480,53 +494,75 @@ public class AccountDetailsController implements Initializable{
 			}
 	}
 	public void changeScene(ActionEvent event, String page) throws IOException, SQLException {
-			
-			FXMLLoader loader = new FXMLLoader(getClass().getResource(page));
-			root = loader.load();
+	    FXMLLoader loader = new FXMLLoader(getClass().getResource(page));
+	    Parent root = loader.load();
 
-			stage = (Stage)((Node)event.getSource()).getScene().getWindow();
-			scene = new Scene(root);
-			stage.setScene(scene);
-			stage.show();
-			if(isHomeBtn) {
-				HomeController homePage = loader.getController();
-				homePage.setOrderList(orderList);
-				homePage.setHasAccount(hasAccount);
-				homePage.setName(dbName);
-				homePage.displayName(id);
-				homePage.setId(id);
-			}
-			else if(isOrderBtn) {
-				OrderController orderPage = loader.getController();
-				orderPage.setOrders(orderList);
-				orderPage.setName(dbName);
-				orderPage.setHasAccount(hasAccount);
-			}else if(isTableBtn) {
-				TableReservationController tablePage = loader.getController();
-				tablePage.setHasAccount(hasAccount);
-				tablePage.setName(dbName);
-				tablePage.displayName();
-			}else if(isAccBtn) {
-				AccountDetailsController accPage = loader.getController();
-				accPage.setOrders(orderList);
-				accPage.setName(dbName);
-				accPage.displayName();
-				accPage.setHasAccount(hasAccount);
-			}else if(isRewardBtn) {
-				RewardsController rewardPage = loader.getController();
-				rewardPage.setOrderList(orderList);
-				rewardPage.setHasAccount(hasAccount);
-				rewardPage.setName(dbName);
-				rewardPage.displayName();
-			}else {
-				CartController cartPage = loader.getController();
-				cartPage.setOrders(orderList);
-				cartPage.setHasAccount(hasAccount);
-				cartPage.setName(dbName);
-				cartPage.displayName();
-			}
-			
-			
+	    Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
+	    Scene scene = new Scene(root);
+	    stage.setScene(scene);
+	    stage.show();
+
+	    if (role.equals("Customer")) {
+	        handleCustomerControllers(loader);
+	    } else if (role.equals("Owner")) {
+	        handleAdminControllers(loader);
+	    }
+	}
+	private void handleCustomerControllers(FXMLLoader loader) throws SQLException {
+	    if (isHomeBtn) {
+	        HomeController homePage = loader.getController();
+	        homePage.setOrderList(orderList);
+	        homePage.setUserDetails(role, hasAccount, dbName, id);   
+	        homePage.displayName();
+	    } else if (isOrderBtn) {
+	        OrderController orderPage = loader.getController();
+	        orderPage.setOrders(orderList);
+	        orderPage.setUserDetails(role, hasAccount, dbName, id);  
+	    } else if (isTableBtn) {
+	        TableReservationController tablePage = loader.getController();
+	        tablePage.setUserDetails(role, hasAccount, dbName, id);  
+	       
+	    } else if (isRewardBtn) {
+	        RewardsController rewardPage = loader.getController();
+	        rewardPage.setOrderList(orderList);
+	        rewardPage.setUserDetails(role, hasAccount, dbName, id);  
+	        rewardPage.displayName();
+	    } else if (isAccBtn) {
+		    AccountDetailsController accPage = loader.getController();
+		    accPage.setOrders(orderList);
+		    accPage.setUserDetails(role, hasAccount, dbName, id);  
+		    accPage.displayName();
+	    } else {
+	        CartController cartPage = loader.getController();
+	        cartPage.setOrders(orderList);
+	        cartPage.setUserDetails(role, hasAccount, dbName, id);  
+	        cartPage.displayName();
+	    
+	    }
+	}
+	private void handleAdminControllers(FXMLLoader loader) throws SQLException {
+		if (isHomeBtn) {
+	        AdminController homePage = loader.getController();
+	        homePage.setOrderList(orderList);
+	        homePage.setUserDetails(role, hasAccount, dbName, id);   
+	        homePage.displayName();
+		}
+	   else if (isOrderBtn) {
+	        AdOrderController adOrderPage = loader.getController();
+	        adOrderPage.setUserDetails(role, hasAccount, dbName, id);  
+	    } else if (isCartBtn) {
+	        AdStockController stockPage = loader.getController();
+	        stockPage.setUserDetails(role, hasAccount, dbName, id);
+	        stockPage.displayName();
+	    } else if (isRewardBtn) {
+	        EmploymentController employmentPage = loader.getController();
+	    }else if (isAccBtn) {
+	        AccountDetailsController accPage = loader.getController();
+	        accPage.setOrders(orderList);
+	        accPage.setUserDetails(role, hasAccount, dbName, id);
+	        accPage.displayName();
+	        
+	    }
 	}
 	private void showAlert(String contentText, AlertType alertType) {
 
@@ -638,36 +674,41 @@ public class AccountDetailsController implements Initializable{
 		addressTextField.setEditable(toggle);
 		emailField.setEditable(toggle);
 	}
+	
+	public void displayIcon() {
+		if(role.equals("Owner")) {
+			img1.setImage(stockImg);
+			img2.setImage(employmentImg);
+			btn1.setText("Stocks");
+			btn2.setText("Employment");
+		}
+	}
+	
 	//SETTERS 
-	public void setId(int id) {
-		this.id = id;
-	}
-	public void setHasAccount(boolean hasAccount) {
-			this.hasAccount = hasAccount;
-	}
-	public void setName(String dbName) {
-		this.dbName = dbName;
+	public void setUserDetails(String role, boolean hasAccount, String dbName, int id) {
+	    this.role = role;
+	    this.hasAccount = hasAccount;
+	    this.dbName = dbName;
+	    this.id = id;
 	}
 	public void setOrders(List<OrderData> orderList) {
 		this.orderList = orderList;
 	}
-	public void setOrderList(List<OrderData> orderList) {
-		this.orderList = orderList;
-	}
+	
 	public void setField() {
 		toggleTextField(false);
 		showTooltip("name", nameTextField);
 		showTooltip("username", usernameTextField);
 		showTooltip("password", passwordField);
 		showTooltip("email", emailField);
-		showTooltip("address", addressTextField);
-			
+		showTooltip("address", addressTextField);	
 	}
 	
 	@Override
 	public void initialize(URL arg0, ResourceBundle arg1) {
 		Connect();
 		slideWindow();
+		
 		try {
 			editDetails();
 			saveDetails();
@@ -678,6 +719,7 @@ public class AccountDetailsController implements Initializable{
 			 PauseTransition delay = new PauseTransition(Duration.millis(50));
 		        delay.setOnFinished(event -> {
 		        	try {
+		        		displayIcon();
 		        		setField();
 						displayDetails();
 					} catch (SQLException e) {
@@ -686,10 +728,7 @@ public class AccountDetailsController implements Initializable{
 					}
 		        });
 		        delay.play();
-		
-		
-		
-	
+
 	}
 	
 	

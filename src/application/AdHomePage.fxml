@@ -6,7 +6,7 @@
 <?import javafx.scene.image.Image?>
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.AnchorPane?>
-<?import javafx.scene.layout.Pane?>
+<?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
@@ -64,7 +64,7 @@
                         </ImageView>
                      </graphic>
                   </Button>
-                  <Button contentDisplay="TOP" mnemonicParsing="false" onAction="#showRewards" prefHeight="75.0" prefWidth="156.0" style="-fx-background-color: E8D8C4;" text="Employment">
+                  <Button contentDisplay="TOP" mnemonicParsing="false" onAction="#showEmployment" prefHeight="75.0" prefWidth="156.0" style="-fx-background-color: E8D8C4;" text="Employment">
                      <font>
                         <Font name="Arial" size="14.0" />
                      </font>
@@ -102,49 +102,70 @@
       </Label>
       <AnchorPane fx:id="slider2" layoutX="1065.0" layoutY="85.0" prefHeight="640.0" prefWidth="215.0" style="-fx-background-color: E8D8C4;">
          <children>
-            <Pane layoutY="-1.0" prefHeight="109.0" prefWidth="215.0">
+            <VBox prefHeight="640.0" prefWidth="215.0">
                <children>
-                  <Label fx:id="nameLabel" layoutY="9.0" prefHeight="48.0" prefWidth="136.0" text="Guest" wrapText="true">
-                     <padding>
-                        <Insets left="15.0" />
-                     </padding>
-                     <font>
-                        <Font size="24.0" />
-                     </font>
-                  </Label>
-                  <Label layoutX="13.0" layoutY="59.0" prefHeight="21.0" prefWidth="111.0" text="Role">
-                     <font>
-                        <Font size="13.0" />
-                     </font>
-                     <padding>
-                        <Insets left="5.0" />
-                     </padding>
-                  </Label>
-                  <Button alignment="CENTER" layoutX="124.0" layoutY="9.0" mnemonicParsing="false" onAction="#showAccount" prefHeight="60.0" prefWidth="73.0" style="-fx-background-color: E8D8C4;">
-                     <font>
-                        <Font name="Arial" size="22.0" />
-                     </font>
-                     <graphic>
-                        <ImageView fitHeight="43.0" fitWidth="44.0" pickOnBounds="true" preserveRatio="true">
-                           <image>
-                              <Image url="@../pictures/profile-user.png" />
-                           </image>
-                        </ImageView>
-                     </graphic>
-                  </Button>
-                  <Button layoutX="119.0" layoutY="69.0" mnemonicParsing="false" onAction="#showAccount" text="Edit Account" />
+                  <HBox prefHeight="0.0" prefWidth="215.0">
+                     <children>
+                        <Label fx:id="nameLabel" prefHeight="75.0" prefWidth="135.0" text="Guest" wrapText="true">
+                           <padding>
+                              <Insets left="15.0" />
+                           </padding>
+                           <font>
+                              <Font size="24.0" />
+                           </font>
+                        </Label>
+                        <Button alignment="CENTER" mnemonicParsing="false" onAction="#showAccount" prefHeight="60.0" prefWidth="73.0" style="-fx-background-color: E8D8C4;">
+                           <font>
+                              <Font name="Arial" size="22.0" />
+                           </font>
+                           <graphic>
+                              <ImageView fitHeight="43.0" fitWidth="44.0" pickOnBounds="true" preserveRatio="true">
+                                 <image>
+                                    <Image url="@../pictures/profile-user.png" />
+                                 </image>
+                              </ImageView>
+                           </graphic>
+                        </Button>
+                     </children>
+                     <VBox.margin>
+                        <Insets top="24.0" />
+                     </VBox.margin>
+                  </HBox>
+                  <HBox alignment="CENTER_LEFT" prefHeight="24.0" prefWidth="215.0">
+                     <children>
+                        <Label fx:id="roleLabel" prefHeight="21.0" prefWidth="111.0" text="Role">
+                           <font>
+                              <Font size="13.0" />
+                           </font>
+                           <padding>
+                              <Insets left="5.0" />
+                           </padding>
+                           <HBox.margin>
+                              <Insets left="8.0" />
+                           </HBox.margin>
+                        </Label>
+                        <Button mnemonicParsing="false" onAction="#showAccount" text="Edit Account" />
+                     </children>
+                     <VBox.margin>
+                        <Insets bottom="440.0" />
+                     </VBox.margin>
+                  </HBox>
+                  <HBox alignment="CENTER" prefHeight="29.0" prefWidth="215.0" spacing="32.0">
+                     <children>
+                        <Button mnemonicParsing="false" onAction="#signUp" style="-fx-background-color: white;" stylesheets="@application.css" text="Sign up">
+                           <font>
+                              <Font size="18.0" />
+                           </font>
+                        </Button>
+                        <Button mnemonicParsing="false" onAction="#signIn" style="-fx-background-color: white;" stylesheets="@application.css" text="Log in">
+                           <font>
+                              <Font size="18.0" />
+                           </font>
+                        </Button>
+                     </children>
+                  </HBox>
                </children>
-            </Pane>
-            <Button layoutX="116.0" layoutY="574.0" mnemonicParsing="false" onAction="#signUp" style="-fx-background-color: E8D8C4;" stylesheets="@application.css" text="Sign up">
-               <font>
-                  <Font size="18.0" />
-               </font>
-            </Button>
-            <Button layoutX="41.0" layoutY="574.0" mnemonicParsing="false" onAction="#signIn" style="-fx-background-color: E8D8C4;" stylesheets="@application.css" text="Log in">
-               <font>
-                  <Font size="18.0" />
-               </font>
-            </Button>
+            </VBox>
          </children>
       </AnchorPane>
       <AnchorPane prefHeight="90.0" prefWidth="1280.0" style="-fx-background-color: C7B7A3;">

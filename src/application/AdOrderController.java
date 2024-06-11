@@ -43,8 +43,6 @@ public class AdOrderController implements Initializable{
 	private ImageView menu;
 	@FXML
 	private ImageView menuClose;
-	
-	
 	@FXML
 	private AnchorPane slider;
 	@FXML
@@ -81,24 +79,23 @@ public class AdOrderController implements Initializable{
     private ScrollPane scrollPane;
     @FXML
     private GridPane rootGridPane;
-    @FXML
-    private Button prefBtn1;
-    @FXML
-    private Button prefBtn2;
     //JAVA FX
     private Stage stage;
 	private Scene scene;
 	private Parent root;
 	
-	Image image = new Image("/pictures/fast-food.png");
 	List<OrderData> orderList = new ArrayList<>();
+	
+	String role;
 	String dbName;
 	String orderPage = "AdOrderPage.fxml";
-    String homePage = "HomePage.fxml";
+    String homePage = "AdHomePage.fxml";
     String accPage = "AccountDetails.fxml";
     String tablePage = "TablePage.fxml";
-    String rewardsPage = "RewardsPage.fxml";
+    String employmentPage = "EmploymentPage.fxml";
     String previousClickedBtn = ""; 
+    
+    int id;
     
 	boolean hasAccount = false;
 	boolean isHomeBtn = false;
@@ -107,17 +104,8 @@ public class AdOrderController implements Initializable{
     boolean isCartBtn = false;
     boolean isTableBtn = false;
     boolean isAccBtn = false;
-    boolean isRewardBtn = false;
-    
-    boolean isBestSellers = false;
-    boolean isComboMeals = false;
-    boolean isNewProducts = false;
-    boolean isChicken = false;
-    boolean isFries = false;
-    boolean isBurger = false;
-    boolean isPizza = false;
-    boolean isDessert = false;
-    
+    boolean isEmploymentBtn = false;
+ 
     //FOOD VARIABLES
     String foodName;
 	String qty; // for data transferring
@@ -183,12 +171,12 @@ public class AdOrderController implements Initializable{
 			
 		}
 		else {
-		SignUpController signUpPage = loader.getController();
-		signUpPage.Connect();
-		stage = (Stage)((Node)event.getSource()).getScene().getWindow();
-		scene = new Scene(root);
-		stage.setScene(scene);
-		stage.show();
+			SignUpController signUpPage = loader.getController();
+			signUpPage.Connect();
+			stage = (Stage)((Node)event.getSource()).getScene().getWindow();
+			scene = new Scene(root);
+			stage.setScene(scene);
+			stage.show();
 		}
 	}
 	
@@ -210,10 +198,10 @@ public class AdOrderController implements Initializable{
 		isTableBtn = true;
 		changeScene(event, "TablePage.fxml");
 		}
-	public void showRewards(ActionEvent event) throws IOException, SQLException {
+	public void showEmployment(ActionEvent event) throws IOException, SQLException {
 		if(hasAccount) {
-			isRewardBtn = true;
-			changeScene(event, rewardsPage);
+			isEmploymentBtn = true;
+			changeScene(event, employmentPage);
 		}
 		else {
 			showAlert("Create an account to unlock exciting rewards!", AlertType.INFORMATION);
@@ -266,7 +254,7 @@ public class AdOrderController implements Initializable{
 	        int row = i / COLUMNS;
 
 	        String foodName = item.getFoodName();
-	        
+
 	        // Check if the food name has already been displayed
 	        if (!displayedNames.contains(foodName)) {
 	            try {
@@ -274,9 +262,10 @@ public class AdOrderController implements Initializable{
 	                VBox orderBox = loader.load();
 	                OrderPanelController controller = loader.getController();
 	                controller.setItemDetails(item);
-
+	               
+	                // Add the VBox to the GridPane
 	                rootGridPane.add(orderBox, col, row);
-	                
+
 	                // Add the food name to the set of displayed names
 	                displayedNames.add(foodName);
 	            } catch (IOException e) {
@@ -284,30 +273,28 @@ public class AdOrderController implements Initializable{
 	            }
 	        }
 	    }
+
+	    // Rearrange the GridPane to ensure there are no gaps
+	    rearrangeGridPane();
+	}
+	private void rearrangeGridPane() {
+	    List<Node> nodes = new ArrayList<>(rootGridPane.getChildren());
+	    rootGridPane.getChildren().clear();
+
+	    for (int i = 0; i < nodes.size(); i++) {
+	        int col = i % COLUMNS;
+	        int row = i / COLUMNS;
+	        rootGridPane.add(nodes.get(i), col, row);
+	    }
 	}
 
-
-  
-    private void rearrangeGridPane() {
-        List<VBox> vBoxes = rootGridPane.getChildren().stream()
-            .filter(node -> node instanceof VBox)
-            .map(node -> (VBox) node)
-            .collect(Collectors.toList());
-
-        rootGridPane.getChildren().clear();
-
-        for (int i = 0; i < vBoxes.size(); i++) {
-            int currentColumn = i % COLUMNS;
-            int currentRow = i / COLUMNS;
-            rootGridPane.add(vBoxes.get(i), currentColumn, currentRow);
-        }
-    }
-    
-    private void clearFields() {
-        nameField.clear();
-        priceField.clear();
-        stockField.clear();
-    }
+	//HELPER METHODS
+	public void setUserDetails(String role, boolean hasAccount, String dbName, int id) {
+	    this.role = role;
+	    this.hasAccount = hasAccount;
+	    this.dbName = dbName;
+	    this.id = id;
+	}
     public void changeScene(ActionEvent event, String page) throws IOException, SQLException {
 		FXMLLoader loader = new FXMLLoader(getClass().getResource(page));
 		root = loader.load();
@@ -317,14 +304,15 @@ public class AdOrderController implements Initializable{
 		stage.setScene(scene);
 		stage.show();
 		if(isHomeBtn) {
-			HomeController homePage = loader.getController();
+			AdminController homePage = loader.getController();
 			homePage.setOrderList(orderList);
-			homePage.setHasAccount(hasAccount);
-			homePage.setName(dbName);
-			homePage.displayName(0);
+			homePage.setUserDetails(role, hasAccount, dbName, id);
+			homePage.displayName();
 		}
 		else if(isOrderBtn) {
 			AdOrderController orderPage = loader.getController();
+			orderPage.setUserDetails(role, hasAccount, dbName, id);
+			
 		}else if(isTableBtn) {
 			TableReservationController tablePage = loader.getController();
 			tablePage.setHasAccount(hasAccount);
@@ -332,24 +320,23 @@ public class AdOrderController implements Initializable{
 		}else if(isAccBtn) {
 			AccountDetailsController accPage = loader.getController();
 			accPage.setOrders(orderList);
-			accPage.setName(dbName);
+			accPage.setUserDetails(role, hasAccount, dbName, id);
 			accPage.displayName();
-			accPage.setHasAccount(hasAccount);
-		}else if(isRewardBtn) {
+			
+		}else if(isEmploymentBtn) {
 			RewardsController rewardPage = loader.getController();
 			rewardPage.setOrderList(orderList);
-			rewardPage.setHasAccount(hasAccount);
-			rewardPage.setName(dbName);
+			rewardPage.setUserDetails(role, hasAccount, dbName, id);
 			rewardPage.displayName();
 		}else {
 			AdStockController stockPage = loader.getController();
+			stockPage.setUserDetails(role, hasAccount, dbName, id);
+			stockPage.displayName();
 			
 		}
 		
 	}
-    
-    
-	private void setSlides() {
+    private void setSlides() {
 		menu.setVisible(true);
 		menuClose.setVisible(false);
 		
@@ -386,10 +373,7 @@ public class AdOrderController implements Initializable{
             });
         });
 	}
-       	
-          
-        
-	private void showAlert(String contentText, AlertType alertType) {
+    private void showAlert(String contentText, AlertType alertType) {
 
 		 Alert alert = new Alert(alertType);
 	        alert.setTitle("Notice");
@@ -411,9 +395,7 @@ public class AdOrderController implements Initializable{
 	            }
 	        }, 2 * 1000);
 	    }
-   
-    
-    
+  
 	@Override
 	public void initialize(URL arg0, ResourceBundle arg1) {
 		cat1.setOnAction(event -> loadOrdersByCategory("Rice Meals"));

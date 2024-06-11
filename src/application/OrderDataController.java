@@ -28,7 +28,7 @@ public class OrderDataController implements Initializable {
     	qtyLabel.setText(orderData.getQty());
     	price = orderData.getFinalPrice() * Integer.parseInt(orderData.getQty());
     	priceLabel.setText(String.valueOf(price));
-    	sizeLabel.setText(orderData.getSize());
+    	sizeLabel.setText(orderData.getOption());
     }
     
     public Button getButton() {

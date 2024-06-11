@@ -29,13 +29,17 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.ButtonType;
+import javafx.scene.control.Dialog;
 import javafx.scene.control.Label;
+import javafx.scene.control.ScrollPane;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.image.ImageView;
 import javafx.scene.control.Button;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
+import javafx.scene.text.Font;
+import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.util.Duration;
 
@@ -44,6 +48,8 @@ public class CartController implements Initializable{
 	
 	@FXML
 	private Label nameLabel;
+	@FXML
+	private Label roleLabel;
     @FXML
     private AnchorPane slider;
     @FXML
@@ -73,14 +79,15 @@ public class CartController implements Initializable{
 	
 	List<OrderData> orderList = new ArrayList<>();
 	OrderData orderData = new OrderData();
-	
+	int id;
+	String role;
 	String name;
 	String username = "";
 	String orderPage = "OrderPage.fxml";
     String homePage = "HomePage.fxml";
     String accPage = "AccountDetails.fxml";
     String cartPage = "MyCart.fxml";
-    String tablePage = "TablePage.fxml";
+    String tablePage = "TableReservationPage.fxml";
     String rewardsPage = "RewardsPage.fxml";
     String query = "SELECT name FROM user_tbl WHERE id = ?";
     String dbName;
@@ -91,22 +98,27 @@ public class CartController implements Initializable{
 	boolean isTableBtn = false;
 	boolean isAccBtn = false;
 	boolean isRewardBtn = false;
-	
+	boolean successOrder = false;
 	Connection con;
 	PreparedStatement pst;
 	ResultSet rs;
 	
-	//TOP BUTTONS
-	public void homeBtn(ActionEvent event) throws IOException, SQLException {
-			System.out.println("Home");
-			isHomeBtn = true;
-			changeScene(event, homePage);
+	//RIGHT PANEL
+	public void displayName() throws SQLException {
+		if(dbName.length() >= 12 && dbName.length() <= 15) {
+			nameLabel.setFont(new Font(18));
+		}
+		else if(dbName.length() > 15) {
+			nameLabel.setFont(new Font(15));
+		}
+		nameLabel.setText(dbName);
+		roleLabel.setText(role);
 	}
-	public void orderBtn(ActionEvent event) throws IOException, SQLException {
-			
-			System.out.println("Order");
-			isOrderBtn = true;
-			changeScene(event, orderPage);
+	public void showAccount(ActionEvent event) throws IOException, SQLException {
+		if(hasAccount) {
+			isAccBtn = true;
+			changeScene(event, accPage);}
+			else {showAlert("Login or register to edit your information.", AlertType.INFORMATION);}
 	}
 	public void signIn(ActionEvent event) throws IOException, ClassNotFoundException, SQLException {
 		FXMLLoader loader = new FXMLLoader(getClass().getResource("Main.fxml"));
@@ -158,23 +170,20 @@ public class CartController implements Initializable{
 		stage.show();
 		}
 	}
-	public void showFAQ() {
-			Alert alert = new Alert(AlertType.INFORMATION);
-	        alert.setHeaderText("");
-	        alert.setContentText("FAQ");
-	        alert.show();
-		}
+
 		
-	//SIDE BUTTONS
-	public void displayName() throws SQLException {
-			nameLabel.setText(dbName);
-		}
-	public void showAccount(ActionEvent event) throws IOException, SQLException {
-		if(hasAccount) {
-			isAccBtn = true;
-			changeScene(event, accPage);}
-			else {showAlert("Login or register to edit your information.", AlertType.INFORMATION);}
-	}
+	//LEFT PANEL
+	public void homeBtn(ActionEvent event) throws IOException, SQLException {
+		System.out.println("Home");
+		isHomeBtn = true;
+		changeScene(event, homePage);
+}
+	public void orderBtn(ActionEvent event) throws IOException, SQLException {
+		
+		System.out.println("Order");
+		isOrderBtn = true;
+		changeScene(event, orderPage);
+}
 	public void showCart(ActionEvent event) throws IOException, SQLException {
 		changeScene(event, cartPage);
 	}
@@ -221,8 +230,8 @@ public class CartController implements Initializable{
 
             // Check if the current order has the same food name and size as an existing order in mergedList
             for (OrderData mergedOrder : mergedList) {
-                if (currentOrder.getFoodName().equals(mergedOrder.getFoodName())
-                        && currentOrder.getSize().equals(mergedOrder.getSize())) {
+                if (currentOrder.getFoodName().equals(mergedOrder.getFoodName()) && currentOrder.getOption().equals(mergedOrder.getOption())) {
+                	System.out.println("Salamin");
                     // If the same food item with the same size is found, update the quantity
                     int totalQuantity = Integer.parseInt(mergedOrder.getQty()) + Integer.parseInt(currentOrder.getQty());
                     mergedOrder.setQty(String.valueOf(totalQuantity));
@@ -270,11 +279,79 @@ public class CartController implements Initializable{
 		stage.setScene(scene);
 		stage.show();
 		OrderController orderPage = loader.getController();
-		orderPage.setHasAccount(hasAccount);
-		orderPage.setName(dbName);
-		System.out.println(orderList);
+		orderPage.setUserDetails(role, hasAccount, dbName, id);  
 		orderPage.setOrders(orderList);
 	}
+	
+	public void proceedToCheckout() {
+        DatabaseHelper databaseHelper = new DatabaseHelper();
+
+        // Iterate through each item in the cart
+        for (OrderData order : orderList) {
+            String itemName = order.getFoodName();
+            String option = order.getOption();
+            int quantityOrdered = Integer.parseInt(order.getQty());
+
+            
+            try {
+                int availableStock = DatabaseHelper.getAvailableStock(itemName, option);
+                if (quantityOrdered > availableStock) {
+                    showAlert("The quantity ordered for " + itemName + " (" + option + ") exceeds the available stock. Available stock: " + availableStock, AlertType.ERROR);
+                    return; // Exit the method to prevent proceeding to checkout
+                }
+            } catch (SQLException e) {
+                e.printStackTrace();
+                showAlert("An error occurred while checking stock for " + itemName + " (" + option + ").", AlertType.ERROR);
+                return; // Exit the method to prevent proceeding to checkout
+            }
+        }
+        
+        for (OrderData order : orderList) {
+        	 String itemName = order.getFoodName();
+             String option = order.getOption();
+             int quantityOrdered = Integer.parseInt(order.getQty());
+
+            try {
+            	successOrder = true;
+                DatabaseHelper.decreaseStock(itemName, option, quantityOrdered);
+            } catch (SQLException e) {
+                e.printStackTrace();
+                showAlert("An error occurred while updating stock for " + itemName + " (" + option + ").", AlertType.ERROR);
+            }
+        }
+        if(successOrder) {
+        		successOrder = false;
+        		orderLayout.getChildren().clear();
+        		showCartSummaryDialog();
+        		totalPriceLabel.setText("");
+        		orderList.clear();
+        }
+        
+        
+	}
+	private void showCartSummaryDialog() {
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("OrderSummaryDialog.fxml"));
+            VBox dialogRoot = loader.load();
+
+            OrderSummaryDialogController controller = loader.getController();
+            controller.setCartItems(orderList);
+            
+           
+            Stage dialogStage = new Stage();
+            controller.setDialogStage(dialogStage);
+            
+            dialogStage.initModality(Modality.WINDOW_MODAL);
+            dialogStage.setScene(new Scene(dialogRoot));
+            dialogStage.setTitle("Order Summary");
+            dialogStage.showAndWait();
+
+        } catch (IOException e) {
+            e.printStackTrace();
+            showAlert("Unable to load the order summary dialog.", AlertType.ERROR);
+        }
+    }
+	
 	
 	//HELPER METHODS
 	public void Connect() {
@@ -298,37 +375,32 @@ public class CartController implements Initializable{
 			if(isHomeBtn) {
 				HomeController homePage = loader.getController();
 				homePage.setOrderList(orderList);
-				homePage.setHasAccount(hasAccount);
-				homePage.setName(dbName);
-				homePage.displayName(0);
+				homePage.setUserDetails(role, hasAccount, dbName, id);  
+				homePage.displayName();
 			}
 			else if(isOrderBtn) {
 				OrderController orderPage = loader.getController();
 				orderPage.setOrders(orderList);
-				orderPage.setName(dbName);
-				orderPage.setHasAccount(hasAccount);
+				orderPage.setUserDetails(role, hasAccount, dbName, id);  
 			}else if(isTableBtn) {
 				TableReservationController tablePage = loader.getController();
 				tablePage.setHasAccount(hasAccount);
 				tablePage.setName(dbName);
-				tablePage.displayName();
+				
 			}else if(isAccBtn) {
 				AccountDetailsController accPage = loader.getController();
 				accPage.setOrders(orderList);
-				accPage.setName(dbName);
+				accPage.setUserDetails(role, hasAccount, dbName, id);  
 				accPage.displayName();
-				accPage.setHasAccount(hasAccount);
 			}else if(isRewardBtn) {
 				RewardsController rewardPage = loader.getController();
 				rewardPage.setOrderList(orderList);
-				rewardPage.setHasAccount(hasAccount);
-				rewardPage.setName(dbName);
+				rewardPage.setUserDetails(role, hasAccount, dbName, id);  
 				rewardPage.displayName();
 			}else {
 				CartController cartPage = loader.getController();
 				cartPage.setOrders(orderList);
-				cartPage.setHasAccount(hasAccount);
-				cartPage.setName(dbName);
+				cartPage.setUserDetails(role, hasAccount, dbName, id);  
 				cartPage.displayName();
 			}
 			
@@ -429,11 +501,11 @@ public class CartController implements Initializable{
 	}
 	
 	//GETTERS AND SETTERS 
-	public void setHasAccount(boolean hasAccount) {
-			this.hasAccount = hasAccount;
-	}
-	public void setName(String dbName) {
-		this.dbName = dbName;
+	public void setUserDetails(String role, boolean hasAccount, String dbName, int id) {
+	    this.role = role;
+	    this.hasAccount = hasAccount;
+	    this.dbName = dbName;
+	    this.id = id;
 	}
 	public void setOrders(List<OrderData> orderList) {
 		this.orderList = orderList;
@@ -455,14 +527,25 @@ public class CartController implements Initializable{
 	public void initialize(URL arg0, ResourceBundle arg1) {
 			
 			confirmBtn.setOnMouseClicked(event ->{
-				Alert alert = new Alert(AlertType.CONFIRMATION);
-				alert.setTitle("Checkout");
-				alert.setHeaderText("");
-				alert.setContentText("Are you sure you want to proceed?");
-				
-				if(alert.showAndWait().get() == ButtonType.OK) {
-					System.out.println("Proceed");
+				if(orderList.isEmpty()) {
+					showAlert("Please choose your order first.", AlertType.ERROR);
 				}
+				else {
+					Alert alert = new Alert(AlertType.CONFIRMATION);
+					alert.setTitle("Checkout");
+					alert.setHeaderText("");
+					alert.setContentText("Are you sure you want to proceed?");
+					Scene scenes = alert.getDialogPane().getScene();
+				    scenes.getStylesheets().add(getClass().getResource("alert.css").toExternalForm());
+					
+					if(alert.showAndWait().get() == ButtonType.OK) {
+						proceedToCheckout();
+						
+					}
+				}
+					
+				
+			
 			});
 	
         	Connect();

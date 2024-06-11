@@ -1,6 +1,5 @@
 package application;
 
-import java.util.List;
 
 public class MenuItem {
     private int id;
@@ -9,6 +8,7 @@ public class MenuItem {
     private int stock;
     private String options;
     private String category;
+    private String imagePath;
 
     public MenuItem(int id, String foodName, int stock, int price, String options, String category) {
         this.id = id;
@@ -17,10 +17,8 @@ public class MenuItem {
         this.stock = stock;
         this.options = options;
         this.category = category;
-        System.out.println(category);
-        
     }
-    
+ 
     public int getId() {
         return id;
     }
@@ -33,6 +31,9 @@ public class MenuItem {
         return foodName;
     }
 
+    public void setSelectedItem(MenuItem selectedItem) {
+        this.foodName = selectedItem.foodName;
+    }
     public void setFoodName(String foodName) {
         this.foodName = foodName;
     }

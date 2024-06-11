@@ -2,10 +2,18 @@ package application;
 
 import java.io.IOException;
 import java.net.URL;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
+
+import application.MenuItem;
 import java.util.ResourceBundle;
+import java.util.Set;
 import java.util.Timer;
 import java.util.TimerTask;
 
@@ -22,17 +30,22 @@ import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.ButtonType;
 import javafx.scene.control.Label;
+import javafx.scene.control.RadioButton;
 import javafx.scene.control.TextField;
+import javafx.scene.control.ToggleGroup;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.layout.AnchorPane;
+import javafx.scene.layout.GridPane;
+import javafx.scene.layout.VBox;
 import javafx.scene.text.Font;
 import javafx.stage.Stage;
 import javafx.util.Duration;
 
 public class OrderController implements Initializable{
-	
+	@FXML
+	private Button selectBtn;
     @FXML
     private Button logoutBtn;
     @FXML
@@ -102,66 +115,32 @@ public class OrderController implements Initializable{
     @FXML
     private Button cat8;
     @FXML
-    private Button btn1;
+    private RadioButton opt1;
     @FXML
-    private Button btn2;
-    @FXML
-    private Button btn3;
-    @FXML
-    private Button btn4;
-    @FXML
-    private Button btn5;
-    @FXML
-    private Button btn6;
-    @FXML
-    private Button btn7;
-    @FXML
-    private Button btn8;
-    @FXML
-    private Button btn9;
-    @FXML
-    private Button btn10;
-    @FXML
-    private Label priceLabel1;
-    @FXML
-    private Label priceLabel2;
-    @FXML
-    private Label priceLabel3;
-    @FXML
-    private Label priceLabel4;
-    @FXML
-    private Label priceLabel5;
-    @FXML
-    private Label priceLabel6;
-    @FXML
-    private Label priceLabel7;
-    @FXML
-    private Label priceLabel8;
-    @FXML
-    private Label priceLabel9;
-    @FXML
-    private Label priceLabel10;
+    private RadioButton opt2;
     @FXML
     private Label foodNameLabel;
+    @FXML 
+    public Label priceSlidingLabel;
     @FXML
-    private Label priceLabel;
-    @FXML
-    private Button prefBtn1;
-    @FXML
-    private Button prefBtn2;
+    private GridPane rootGridPane;
+    
+    private MenuItem selectedItem;
     //JAVA FX
     private Stage stage;
 	private Scene scene;
 	private Parent root;
 	
-	Image image = new Image("/pictures/fast-food.png");
 	List<OrderData> orderList = new ArrayList<>();
+	
+	int id;
 	String dbName;
+	String role;
 	String orderPage = "OrderPage.fxml";
     String homePage = "HomePage.fxml";
     String accPage = "AccountDetails.fxml";
     String cartPage = "MyCart.fxml";
-    String tablePage = "TablePage.fxml";
+    String tablePage = "TableReservationPage.fxml";
     String rewardsPage = "RewardsPage.fxml";
     String previousClickedBtn = ""; // Initialize with an empty string
     
@@ -173,29 +152,32 @@ public class OrderController implements Initializable{
     boolean isTableBtn = false;
     boolean isAccBtn = false;
     boolean isRewardBtn = false;
-    
-    boolean isBestSellers = false;
-    boolean isComboMeals = false;
-    boolean isNewProducts = false;
-    boolean isChicken = false;
-    boolean isFries = false;
-    boolean isBurger = false;
-    boolean isPizza = false;
-    boolean isDessert = false;
-    
+ 
+    Connection con;
+	PreparedStatement pst;
+	ResultSet rs;
+	String query = "SELECT name FROM user_tbl WHERE id = ?";
+	
     //FOOD VARIABLES
-    String foodName;
+	String currentCategory;
+	String recordedBtn;
+	String foodName;
+	String option;
 	String qty; // for data transferring
+	
 	boolean clicked = false;
 	boolean added = false;
 	boolean selected = false;
 	boolean pref1 = false;
 	boolean pref2 = false;
+	
 	int quantity = 0; //for counting
-	int price;
+	int initialPrice;
+	
 	char category;
-   
-	//TOP BUTTONS
+	private static final int COLUMNS = 5;
+	
+	//TOP BUTTON
 	public void homeBtn(ActionEvent event) throws IOException, SQLException {
 		isHomeBtn = true;
 		changeScene(event, homePage);
@@ -248,12 +230,12 @@ public class OrderController implements Initializable{
 			
 		}
 		else {
-		SignUpController signUpPage = loader.getController();
-		signUpPage.Connect();
-		stage = (Stage)((Node)event.getSource()).getScene().getWindow();
-		scene = new Scene(root);
-		stage.setScene(scene);
-		stage.show();
+			SignUpController signUpPage = loader.getController();
+			signUpPage.Connect();
+			stage = (Stage)((Node)event.getSource()).getScene().getWindow();
+			scene = new Scene(root);
+			stage.setScene(scene);
+			stage.show();
 		}
 	}
 	
@@ -271,9 +253,8 @@ public class OrderController implements Initializable{
 	}
 	public void showTable(ActionEvent event) throws IOException, SQLException {
 		isTableBtn = true;
-		changeScene(event, "TablePage.fxml");
+		changeScene(event, "TableReservationPage.fxml");
 		}
-
 	public void showRewards(ActionEvent event) throws IOException, SQLException {
 		if(hasAccount) {
 			isRewardBtn = true;
@@ -309,236 +290,246 @@ public class OrderController implements Initializable{
 		}
 	}
 	
-	//FOOD METHODS
-	public void showRiceMeals() {
-		btn1.setText("Cordon Bleu");
-		btn2.setText("Pork Sisig");
-		btn3.setText("Lechon Kawali");
-		btn4.setText("Pork Belly");
-		btn5.setText("Grilled Chicken");
-		btn6.setText("Beef Stir-fry");
-		btn7.setText("Buffalo Wings");
-		
-		priceLabel1.setText("₱ 269"); 
-		priceLabel2.setText("₱ 259");
-		priceLabel3.setText("₱ 259");
-		priceLabel4.setText("₱ 269"); 
-		priceLabel5.setText("₱ 259");
-		priceLabel6.setText("₱ 259");
-		priceLabel7.setText("₱ 259");
-		
-		img1.setImage(image);
-		img2.setImage(image);
-		img3.setImage(image);
-		img4.setImage(image);
-		img5.setImage(image);
-		img6.setImage(image);
-		img7.setImage(image);
-		
-		setVisibility(false);
-		
-		btn1.setVisible(true);btn2.setVisible(true);btn3.setVisible(true);btn4.setVisible(true);btn5.setVisible(true);btn6.setVisible(true);btn7.setVisible(true);
-		img1.setVisible(true);img2.setVisible(true);img3.setVisible(true);img4.setVisible(true);img5.setVisible(true);img6.setVisible(true);img7.setVisible(true);
-		priceLabel1.setVisible(true);priceLabel2.setVisible(true);priceLabel3.setVisible(true);priceLabel4.setVisible(true);
-		priceLabel5.setVisible(true);priceLabel6.setVisible(true);priceLabel7.setVisible(true);
-	}
-	public void showPasta() {
-		btn1.setText("Carbonara");
-		btn2.setText("Spaghetti");
-		btn3.setText("Palabok");
-	
-		priceLabel1.setText("₱ 269"); 
-		priceLabel2.setText("₱ 259");
-		priceLabel3.setText("₱ 259");
-	
-		img1.setImage(image);
-		img2.setImage(image);
-		img3.setImage(image);
+	//ORDER METHODS
+	private void loadOrdersByCategory(String category) {
+	        currentCategory = category;
+	        try {
+	            List<MenuItem> items = DatabaseHelper.getMenuItemsByCategory(category);
+	            displayOrders(items);
+	        } catch (SQLException e) {
+	            e.printStackTrace();
+	        }
+	    }
+	private void displayOrders(List<MenuItem> items) throws SQLException {
+		    rootGridPane.getChildren().clear();
 
-		setVisibility(false);
-		
-		btn1.setVisible(true);btn2.setVisible(true);btn3.setVisible(true);
-		img1.setVisible(true);img2.setVisible(true);img3.setVisible(true);
-		priceLabel1.setVisible(true);priceLabel2.setVisible(true);priceLabel3.setVisible(true);
-		
-	}
-	public void showCakes() {
-		btn1.setText("Bluberry Cake");
-		btn2.setText("Lava Cake");
-		btn3.setText("Carrot Cake");
-		btn4.setText("Red Velvet");
-		
-		priceLabel1.setText("₱ 159"); 
-		priceLabel2.setText("₱ 159");
-		priceLabel3.setText("₱ 159");
-		priceLabel4.setText("₱ 159");
-		
-		img1.setImage(image);
-		img2.setImage(image);
-		img3.setImage(image);
-		img4.setImage(image);
-		
-		setVisibility(false);
-		
-		btn1.setVisible(true);btn2.setVisible(true);btn3.setVisible(true);btn4.setVisible(true);
-		img1.setVisible(true);img2.setVisible(true);img3.setVisible(true);img4.setVisible(true);
-		priceLabel1.setVisible(true);priceLabel2.setVisible(true);priceLabel3.setVisible(true);priceLabel4.setVisible(true);
-		
-	}
-	public void showBurger() {
-		btn1.setText("Hamburger");
-		btn2.setText("Cheeseburger");
-		btn3.setText("Elk burger");
-		btn4.setText("Veggie burger");
-	
-		priceLabel1.setText("₱ 269"); 
-		priceLabel2.setText("₱ 259");
-		priceLabel3.setText("₱ 259");
-		priceLabel4.setText("₱ 269"); 
-	
-		img1.setImage(image);
-		img2.setImage(image);
-		img3.setImage(image);
-		img4.setImage(image);
-	
-		setVisibility(false);
+		    Set<String> displayedNames = new HashSet<>(); // To store displayed food names
 
-		btn1.setVisible(true);btn2.setVisible(true);btn3.setVisible(true);btn4.setVisible(true);
-		img1.setVisible(true);img2.setVisible(true);img3.setVisible(true);img4.setVisible(true);
-		priceLabel1.setVisible(true);priceLabel2.setVisible(true);priceLabel3.setVisible(true);priceLabel4.setVisible(true);
-	
-	}
-	public void showCoffee() {
-		btn1.setText("Coffee1");
-		btn2.setText("Coffee2");
-		btn3.setText("Coffee3");
-		btn4.setText("Coffee4");
-		btn5.setText("Coffee5");
-		btn6.setText("Coffee6");
-		btn7.setText("Coffee7");
-		btn8.setText("Coffee8");
-		btn9.setText("Coffee9");
-		btn10.setText("Coffee10");
-		
-		priceLabel1.setText("₱ 269"); 
-		priceLabel2.setText("₱ 259");
-		priceLabel3.setText("₱ 259");
-		priceLabel4.setText("₱ 269"); 
-		priceLabel5.setText("₱ 259");
-		priceLabel6.setText("₱ 259");
-		priceLabel7.setText("₱ 259");
-		priceLabel8.setText("₱ 269"); 
-		priceLabel9.setText("₱ 259");
-		priceLabel10.setText("₱ 259");
-		
-		img1.setImage(image);
-		img2.setImage(image);
-		img3.setImage(image);
-		img4.setImage(image);
-		img5.setImage(image);
-		img6.setImage(image);
-		img7.setImage(image);
-		img8.setImage(image);
-		img9.setImage(image);
-		img10.setImage(image);
-		
-		setVisibility(true);
-	}
-	public void showFrappe() {
-		btn1.setText("Frappe1");
-		btn2.setText("Frappe2");
-		btn3.setText("Frappe3");
-		btn4.setText("Frappe4");
-		btn5.setText("Frappe5");
-		btn6.setText("Frappe6");
-		btn7.setText("Frappe7");
-		btn8.setText("Frappe8");
-		btn9.setText("Frappe9");
-		btn10.setText("Frappe10");
-		
-		priceLabel1.setText("₱ 269"); 
-		priceLabel2.setText("₱ 259");
-		priceLabel3.setText("₱ 259");
-		priceLabel4.setText("₱ 269"); 
-		priceLabel5.setText("₱ 259");
-		priceLabel6.setText("₱ 259");
-		priceLabel7.setText("₱ 259");
-		priceLabel8.setText("₱ 269"); 
-		priceLabel9.setText("₱ 259");
-		priceLabel10.setText("₱ 259");
-		
-		img1.setImage(image);
-		img2.setImage(image);
-		img3.setImage(image);
-		img4.setImage(image);
-		img5.setImage(image);
-		img6.setImage(image);
-		img7.setImage(image);
-		img8.setImage(image);
-		img9.setImage(image);
-		img10.setImage(image);
-		
-		setVisibility(true);
-	}
-	public void showTea() {
-		btn1.setText("Tea1");
-		btn2.setText("Tea2");
-		btn3.setText("Tea3");
-		btn4.setText("Tea4");
-		btn5.setText("Tea5");
-		btn6.setText("Tea6");
-		btn7.setText("Tea7");
+		    for (int i = 0; i < items.size(); i++) {
+		        MenuItem item = items.get(i);
+		        int col = i % COLUMNS;
+		        int row = i / COLUMNS;
 
-		priceLabel1.setText("₱ 269"); 
-		priceLabel2.setText("₱ 259");
-		priceLabel3.setText("₱ 259");
-		priceLabel4.setText("₱ 269"); 
-		priceLabel5.setText("₱ 259");
-		priceLabel6.setText("₱ 259");
-		priceLabel7.setText("₱ 259");
-	
-		
-		img1.setImage(image);
-		img2.setImage(image);
-		img3.setImage(image);
-		img4.setImage(image);
-		img5.setImage(image);
-		img6.setImage(image);
-		img7.setImage(image);
-	
-		
-		setVisibility(true);
-		
-		btn8.setVisible(false);btn9.setVisible(false);btn10.setVisible(false);
-		img8.setVisible(false);img9.setVisible(false);img10.setVisible(false);
-		priceLabel8.setVisible(false);priceLabel9.setVisible(false);priceLabel10.setVisible(false);
-	}
-	public void showAppetizers() {
-		btn1.setText("Snacks");
-		btn2.setText("Mojos");
-		btn3.setText("Nachos");
-		btn4.setText("Fries");
-	
-		priceLabel1.setText("₱ 109"); 
-		priceLabel2.setText("₱ 109");
-		priceLabel3.setText("₱ 109");
-		priceLabel4.setText("₱ 109"); 
-	
-		img1.setImage(image);
-		img2.setImage(image);
-		img3.setImage(image);
-		img4.setImage(image);
-	
-		setVisibility(false);
+		        String foodName = item.getFoodName();
 
-		btn1.setVisible(true);btn2.setVisible(true);btn3.setVisible(true);btn4.setVisible(true);
-		img1.setVisible(true);img2.setVisible(true);img3.setVisible(true);img4.setVisible(true);
-		priceLabel1.setVisible(true);priceLabel2.setVisible(true);priceLabel3.setVisible(true);priceLabel4.setVisible(true);
+		        // Check if the food name has already been displayed
+		        if (!displayedNames.contains(foodName)) {
+		            try {
+		                FXMLLoader loader = new FXMLLoader(getClass().getResource("OrderPanel2.fxml"));
+		                VBox orderBox = loader.load();
+		                OrderPanel2Controller controller = loader.getController();  
+		                Map<String, Integer> optionsMap = DatabaseHelper.searchMenuItemOptions(foodName);
+		                
+		                controller.setName(foodName);
+		                controller.setItemDetails(item);
+		                int cheapestPrice = getCheapestOptionPrice(optionsMap);
+		                controller.setPrice(String.valueOf(cheapestPrice));
+		                
+		                
+		                if(DatabaseHelper.isItemOutOfStock(foodName)) {
+		                	controller.getSelectBtn().setText("OUT OF STOCK");
+		                }
+		                	 controller.getSelectBtn().setOnAction(event -> {
+									try {
+										if(!DatabaseHelper.isItemOutOfStock(foodName)) {
+												selectMenuItem(item);
+										}
+										else {
+											showAlert("Sorry this item is out of stock right now", AlertType.INFORMATION);
+										}
+										
+									} catch (SQLException e) {
+										// TODO Auto-generated catch block
+										e.printStackTrace();
+									}
+								});
+           		                
+		                // Add the VBox to the GridPane
+		                rootGridPane.add(orderBox, col, row);
+
+		                // Add the food name to the set of displayed names
+		                displayedNames.add(foodName);
+		            } catch (IOException e) {
+		                e.printStackTrace();
+		            }
+		        }
+		    }
+
+		    // Rearrange the GridPane to ensure there are no gaps
+		    rearrangeGridPane();
+		}
+	
+	private int getCheapestOptionPrice(Map<String, Integer> options) {
+	    return options.values().stream().min(Integer::compareTo).orElse(0);
+	}
+	
+	private void rearrangeGridPane() {
+		    List<Node> nodes = new ArrayList<>(rootGridPane.getChildren());
+		    rootGridPane.getChildren().clear();
+
+		    for (int i = 0; i < nodes.size(); i++) {
+		        int col = i % COLUMNS;
+		        int row = i / COLUMNS;
+		        rootGridPane.add(nodes.get(i), col, row);
+		    }
+		}
+	private void loadMenuItems() {
+	    try {
+	        List<MenuItem> items = DatabaseHelper.getMenuItems();
+	        displayOrders(items);
+	    } catch (SQLException e) {
+	        e.printStackTrace();
+	    }
+	}
+	private void selectMenuItem(MenuItem item) throws SQLException {
 		
+	    selectedItem = item;
+	    foodName = selectedItem.getFoodName();
+	    foodNameLabel.setText(selectedItem.getFoodName());
+	    
+	    priceSlidingLabel.setText(String.valueOf(selectedItem.getPrice()));
+	    if(!selected) {
+	    	slideWindow();
+	    }
+	    recordButtonClick(foodName);
+	    selectOption(item);
+	}
+	public void selectOption(MenuItem item) throws SQLException {
+	    ToggleGroup toggleGroup = new ToggleGroup();
+	    opt1.setToggleGroup(toggleGroup);
+	    opt2.setToggleGroup(toggleGroup);
+
+	    // Retrieve options for the specific food item from the database
+	    Map<String, Integer> optionsMap = DatabaseHelper.searchMenuItemOptions(item.getFoodName());
+
+	    // Set default option to the cheapest
+	    String defaultOption = getDefaultOption(optionsMap);
+
+	    // Set text of radio buttons with options and ensure opt1 is cheaper
+	    setRadioButtonOptions(optionsMap, defaultOption);
+
+	    // Add listener to toggle group to handle selection change
+	    toggleGroup.selectedToggleProperty().addListener((observable, oldValue, newValue) -> {
+	        if (newValue != null) {
+	            RadioButton selectedRadioButton = (RadioButton) newValue;
+	            String selectedOption = selectedRadioButton.getText();
+	            // Get price for the selected option from the options map
+	            int price = optionsMap.get(selectedOption);
+	            initialPrice = price;
+	            // Update UI with the selected option's price
+	            priceSlidingLabel.setText(String.valueOf(price));
+	            option = selectedOption;
+	        }
+	    });
 	}
 
+	private String getDefaultOption(Map<String, Integer> optionsMap) {
+	    return optionsMap.entrySet().stream()
+	        .min(Map.Entry.comparingByValue())
+	        .map(Map.Entry::getKey)
+	        .orElse("");
+	}
+
+	private void setRadioButtonOptions(Map<String, Integer> optionsMap, String defaultOption) {
+	    if (optionsMap.size() == 1) {
+	        // When there's only one option, set it to opt1 and hide opt2
+	        String singleOptionKey = optionsMap.keySet().iterator().next();
+	        opt1.setText(singleOptionKey);
+	        opt1.setVisible(true);
+	        opt1.setSelected(true);
+	        opt2.setVisible(false);
+	        
+	        priceSlidingLabel.setText(String.valueOf(optionsMap.get(singleOptionKey)));
+	        initialPrice = optionsMap.get(singleOptionKey);
+	        option = singleOptionKey;
+	    } else {
+	        // When there are multiple options, determine which one is cheaper
+	        String[] keys = optionsMap.keySet().toArray(new String[0]);
+	        String option1Key = keys[0];
+	        String option2Key = keys[1];
+
+	        // Ensure opt1 is set to the cheaper option
+	        if (optionsMap.get(option2Key) < optionsMap.get(option1Key)) {
+	            option1Key = keys[1];
+	            option2Key = keys[0];
+	        }
+
+	        // Set opt1 with the cheaper option
+	        opt1.setText(option1Key);
+	        opt1.setVisible(true);
+	        opt1.setSelected(true);
+	        priceSlidingLabel.setText(String.valueOf(optionsMap.get(option1Key)));
+	        initialPrice = optionsMap.get(option1Key);
+	        option = option1Key;
+
+	        // Set opt2 with the other option
+	        opt2.setText(option2Key);
+	        opt2.setVisible(true);
+	    }
+	}
+
+	//SETTER METHODS
+	public void setOrders(List<OrderData> orderList) {
+		this.orderList = orderList;
+	}
+	public void setUserDetails(String role, boolean hasAccount, String dbName, int id) {
+	    this.role = role;
+	    this.hasAccount = hasAccount;
+	    this.dbName = dbName;
+	    this.id = id;
+	}
+	public void setDisplay(boolean toggle) {
+		qtyTextField.setVisible(toggle);
+		minusBtn.setVisible(toggle);
+		plusBtn.setVisible(toggle);
+		addToCartBtn.setVisible(toggle);
+		viewCartBtn.setVisible(toggle);
+	}
 	
 	//HELPER METHODS
+	private void showAlert(String contentText, AlertType alertType) {
+
+		 Alert alert = new Alert(alertType);
+	        alert.setTitle("Notice");
+	        alert.setHeaderText(null);
+	        alert.setContentText(contentText);
+	        Scene scenes = alert.getDialogPane().getScene();
+	        scenes.getStylesheets().add(getClass().getResource("alert.css").toExternalForm());
+	        alert.show();
+	  
+	        Timer timer = new Timer();
+	        timer.schedule(new TimerTask() {
+	            @Override
+	            public void run() {
+	            	Platform.runLater(() -> {
+	                   alert.close();
+	                });
+	                
+	                timer.cancel(); // Cancel the timer after closing the alert
+	            }
+	        }, 2 * 1000);
+	    }
+	private String recordButtonClick(String clickedButton) {
+	       
+		String newClickedBtn = clickedButton;
+		if(previousClickedBtn.equals("")) {
+			quantity++;
+			qtyTextField.setText(String.valueOf(quantity));
+		}
+		else if (previousClickedBtn.equals(newClickedBtn)) {
+		  quantity++;
+		  qtyTextField.setText(String.valueOf(quantity));
+		}
+		else {
+			quantity = 1;
+			qtyTextField.setText(String.valueOf(quantity));
+		}
+		// Update previousClickedBtn for next comparison
+		previousClickedBtn = newClickedBtn;
+		qty = String.valueOf(quantity);
+		selected = true;
+		return foodName = newClickedBtn;
+	}
 	public void changeScene(ActionEvent event, String page) throws IOException, SQLException {
 		FXMLLoader loader = new FXMLLoader(getClass().getResource(page));
 		root = loader.load();
@@ -550,15 +541,13 @@ public class OrderController implements Initializable{
 		if(isHomeBtn) {
 			HomeController homePage = loader.getController();
 			homePage.setOrderList(orderList);
-			homePage.setHasAccount(hasAccount);
-			homePage.setName(dbName);
-			homePage.displayName(0);
+			homePage.setUserDetails(role, hasAccount, dbName, id);
+			homePage.displayName();
 		}
 		else if(isOrderBtn) {
 			OrderController orderPage = loader.getController();
 			orderPage.setOrders(orderList);
-			orderPage.setName(dbName);
-			orderPage.setHasAccount(hasAccount);
+			orderPage.setUserDetails(role, hasAccount, dbName, id);
 		}else if(isTableBtn) {
 			TableReservationController tablePage = loader.getController();
 			tablePage.setHasAccount(hasAccount);
@@ -566,21 +555,20 @@ public class OrderController implements Initializable{
 		}else if(isAccBtn) {
 			AccountDetailsController accPage = loader.getController();
 			accPage.setOrders(orderList);
-			accPage.setName(dbName);
+			accPage.setUserDetails(role, hasAccount, dbName, id);
 			accPage.displayName();
-			accPage.setHasAccount(hasAccount);
 		}else if(isRewardBtn) {
 			RewardsController rewardPage = loader.getController();
 			rewardPage.setOrderList(orderList);
-			rewardPage.setHasAccount(hasAccount);
-			rewardPage.setName(dbName);
+			rewardPage.setUserDetails(role, hasAccount, dbName, id);
 			rewardPage.displayName();
 		}else {
 			CartController cartPage = loader.getController();
 			cartPage.setOrders(orderList);
-			cartPage.setHasAccount(hasAccount);
-			cartPage.setName(dbName);
+			cartPage.setUserDetails(role, hasAccount, dbName, id);
 			cartPage.displayName();
+			
+			
 		}
 		
 	}
@@ -655,35 +643,7 @@ public class OrderController implements Initializable{
             });
         });
 	}
-
-	private String recordButtonClick(Button clickedBtn) {
-		displayChoices();
-		String newClickedBtn = clickedBtn.getText();
-		if(previousClickedBtn.equals("")) {
-			quantity++;
-			qtyTextField.setText(String.valueOf(quantity));
-		}
-		else if (previousClickedBtn.equals(newClickedBtn)) {
-		  quantity++;
-		  qtyTextField.setText(String.valueOf(quantity));
-		}
-		else {
-			quantity = 1;
-			qtyTextField.setText(String.valueOf(quantity));
-		}
-		// Update previousClickedBtn for next comparison
-		previousClickedBtn = newClickedBtn;
-		qty = String.valueOf(quantity);
-		selected = true;
-		foodNameLabel.setText(newClickedBtn);
-		OrderData orderData = new OrderData();
-    	priceLabel.setText("Price: ₱" +  String.valueOf(orderData.getPrice(newClickedBtn)));
-		return foodName = newClickedBtn;
-	}
-	
 	public void slideWindow() {
-		
-    	
 		 slider2.setTranslateX(225);
             TranslateTransition slide = new TranslateTransition();
            
@@ -698,104 +658,22 @@ public class OrderController implements Initializable{
             });
         
 	}
-	private void displayChoices() {
-		switch(category) {
-			case 'a': prefBtn1.setText("W/o drinks"); prefBtn2.setText("With drinks");
-					break;
-			case 'b': prefBtn1.setText("Slice"); prefBtn2.setText("Whole");
-					break;
-			case 'c': prefBtn1.setText("Short"); prefBtn2.setText("Tall");
-					break;
-			case 'd': prefBtn1.setText("Solo"); prefBtn2.setText("Family");
-					break;
-		}
-	}
-	String pref;
-	public String getSizeLabel(Button prefBtn) {
-		pref = prefBtn.getText();
-		return pref;
-	}
-	private void setCategory() {
-		category = 'a';
-		cat1.setOnAction(event -> {
-			showRiceMeals();
-			category = 'a';
-		});
-		cat2.setOnAction(event -> {
-			showPasta();
-			category = 'a';
-		});
-		cat3.setOnAction(event -> {
-			showCakes();
-			category = 'b';
-		});
-		cat4.setOnAction(event -> {
-			showBurger();
-			category = 'a';
-		});
-		cat5.setOnAction(event -> {
-			showCoffee();
-			category = 'c';
-		});
-		cat6.setOnAction(event -> {
-			showFrappe();
-			category = 'c';
-		});
-		cat7.setOnAction(event -> {
-			showTea();
-			category = 'c';
-		});
-		cat8.setOnAction(event -> {
-			showAppetizers();
-			category = 'd';
-		});
-	}
-	
 	private void funcBtns() {
-		prefBtn1.setOnAction(event ->{
-			pref = getSizeLabel(prefBtn1);
-			OrderData orderData = new OrderData();
-			price = fetchPrice(foodName);
-			priceLabel.setText("Price: ₱" +  String.valueOf(orderData.getPrice(foodName)));
-	
-		});
-		prefBtn2.setOnAction(event ->{
-			pref = getSizeLabel(prefBtn2);
-			OrderData orderData = new OrderData(); 
-			switch(category) {
-				case 'a': price = fetchPrice(foodName) + 60;
-							priceLabel.setText("Price: ₱" + String.valueOf(orderData.getPrice(foodName) + 60));
-						break;
-				case 'b': price = fetchPrice(foodName) + 700;
-				priceLabel.setText("Price: ₱" + String.valueOf(orderData.getPrice(foodName) + 700));
-						break;
-				case 'c': price = fetchPrice(foodName) + 40;
-				priceLabel.setText("Price: ₱" + String.valueOf(orderData.getPrice(foodName) + 40));
-						break;
-				case 'd': price = fetchPrice(foodName) + 210;
-				priceLabel.setText("Price: ₱" + String.valueOf(orderData.getPrice(foodName) + 210));
-						break;
-			}
-			
-		});
 		addToCartBtn.setOnAction(event ->{
-			if(selected) {
-				
-				if (price == 0) {
-					pref = getSizeLabel(prefBtn1);
-		            price = fetchPrice(foodName);
-		        }
+			if(quantity == 0) {
+				showAlert("Please select an order first", AlertType.INFORMATION);
+			}else {
 				OrderData orderData = new OrderData();
-				orderData.setSize(pref);
-				orderData.setFoodName(foodName);
-				orderData.setPrice(price);
 				orderData.setQty(String.valueOf(quantity));
+				orderData.setFoodName(foodName);
+				orderData.setOption(option);
+				orderData.setPrice(initialPrice);
 				orderList.add(orderData);
-				selected = false;
-				added = true;
 				qtyTextField.setText("0");
 				quantity = 0;
-			}else {showAlert("Please select an item", AlertType.ERROR);}
+				System.out.println(option);
+			}
+
 		});
 		
 		plusBtn.setOnMouseClicked(event ->{
@@ -812,158 +690,32 @@ public class OrderController implements Initializable{
 				qtyTextField.setText(String.valueOf(quantity));
 			} 
 		});
-	
-		btn1.setOnAction(event ->{
-			if(!clicked) {
-				slideWindow();
-				
-				clicked = true;
-			}
-			recordButtonClick(btn1);
-			
-			});
-		btn2.setOnAction(event ->{
-			if(!clicked) {
-				slideWindow();
-				clicked = true;
-			}
-			recordButtonClick(btn2);
-			
-			});
-    	
-		btn3.setOnAction(event ->{
-			if(!clicked) {
-				slideWindow();
-				clicked = true;
-			}
-			recordButtonClick(btn3);
-			
-			});
-    	
-		btn4.setOnAction(event ->{
-			if(!clicked) {
-				slideWindow();
-				clicked = true;
-			}
-			recordButtonClick(btn4);
-			
-			});
-    	
-		btn5.setOnAction(event ->{
-			
-			if(!clicked) {
-				slideWindow();
-				clicked = true;
-			}
-			recordButtonClick(btn5);
-			
-			});
-    	
-		btn6.setOnAction(event ->{
-			
-			if(!clicked) {
-				slideWindow();
-				clicked = true;
-			}
-			recordButtonClick(btn6);
-			
-			});
-		
-		btn7.setOnAction(event ->{
-			if(!clicked) {
-				slideWindow();
-				clicked = true;
-			}
-			recordButtonClick(btn7);
-			
-			});
-    	
-		btn8.setOnAction(event ->{
-			if(!clicked) {
-				slideWindow();
-				clicked = true;
-			}
-			recordButtonClick(btn8);
-			});
-		btn9.setOnAction(event ->{
-			if(!clicked) {
-				slideWindow();
-				clicked = true;
-			}
-			recordButtonClick(btn9);
-			});
-		btn10.setOnAction(event ->{
-			if(!clicked) {
-				slideWindow();
-				clicked = true;
-			}
-			recordButtonClick(btn10);
-			});
     	
 		viewCartBtn.setOnAction(event ->{try {showCart(event);} catch (IOException | SQLException e) {e.printStackTrace();}});
 		
 	}
-	
-	private int fetchPrice(String foodName) {
-	    OrderData orderData = new OrderData();
-	    return orderData.getPrice(foodName);
+	private void setupMenu() {
+	    loadMenuItems();
+	    setSlides();
+	    setDisplay(true);
+	    funcBtns();
+	}
+	private void setupCategoryButtons() {
+	    cat1.setOnAction(event -> loadOrdersByCategory("Rice Meals"));
+	    cat2.setOnAction(event -> loadOrdersByCategory("Pasta"));
+	    cat3.setOnAction(event -> loadOrdersByCategory("Cakes"));
+	    cat4.setOnAction(event -> loadOrdersByCategory("Burger"));
+	    cat5.setOnAction(event -> loadOrdersByCategory("Coffee"));
+	    cat6.setOnAction(event -> loadOrdersByCategory("Frappe"));
+	    cat7.setOnAction(event -> loadOrdersByCategory("Tea"));
+	    cat8.setOnAction(event -> loadOrdersByCategory("Appetizers"));
 	}
 	@Override
 	public void initialize(URL arg0, ResourceBundle arg1) {
-		setCategory();
-       	setSlides();
-		setDisplay(true);
-		showRiceMeals();
-		funcBtns();
+	    setupMenu();
+	    setupCategoryButtons();
+	    loadOrdersByCategory("Rice Meals");
+	    rearrangeGridPane();
 	}
 	
-
-	
-	public void setOrders(List<OrderData> orderList) {
-		this.orderList = orderList;
-	}
-	public void setHasAccount(boolean hasAccount) {
-		this.hasAccount = hasAccount;
-	}
-	public void setName(String dbName) {
-		this.dbName = dbName;
-	}
-	
-	public void setVisibility(boolean toggle) {
-		btn1.setVisible(toggle);btn2.setVisible(toggle);btn3.setVisible(toggle);btn4.setVisible(toggle);btn5.setVisible(toggle);
-		btn6.setVisible(toggle);btn7.setVisible(toggle);btn8.setVisible(toggle);btn9.setVisible(toggle);btn10.setVisible(toggle);
-		img1.setVisible(toggle);img2.setVisible(toggle);img3.setVisible(toggle);img4.setVisible(toggle);img5.setVisible(toggle);
-		img6.setVisible(toggle);img7.setVisible(toggle);img8.setVisible(toggle);img9.setVisible(toggle);img10.setVisible(toggle);
-		priceLabel1.setVisible(toggle);priceLabel2.setVisible(toggle);priceLabel3.setVisible(toggle);priceLabel4.setVisible(toggle);priceLabel5.setVisible(toggle);
-		priceLabel6.setVisible(toggle);priceLabel7.setVisible(toggle);priceLabel8.setVisible(toggle);priceLabel9.setVisible(toggle);priceLabel10.setVisible(toggle);
-	}
-	public void setDisplay(boolean toggle) {
-		qtyTextField.setVisible(toggle);
-		minusBtn.setVisible(toggle);
-		plusBtn.setVisible(toggle);
-		addToCartBtn.setVisible(toggle);
-		viewCartBtn.setVisible(toggle);
-	}
-	private void showAlert(String contentText, AlertType alertType) {
-
-		 Alert alert = new Alert(alertType);
-	        alert.setTitle("Notice");
-	        alert.setHeaderText(null);
-	        alert.setContentText(contentText);
-	        Scene scenes = alert.getDialogPane().getScene();
-	        scenes.getStylesheets().add(getClass().getResource("alert.css").toExternalForm());
-	        alert.show();
-	  
-	        Timer timer = new Timer();
-	        timer.schedule(new TimerTask() {
-	            @Override
-	            public void run() {
-	            	Platform.runLater(() -> {
-	                   alert.close();
-	                });
-	                
-	                timer.cancel(); // Cancel the timer after closing the alert
-	            }
-	        }, 2 * 1000);
-	    }
 }

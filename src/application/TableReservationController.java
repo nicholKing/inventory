@@ -51,14 +51,18 @@ import javafx.scene.effect.ColorAdjust;
 
 public class TableReservationController implements Initializable {
 	
-	@FXML
-	private Label nameLabel;
     @FXML
     private AnchorPane slider;
     @FXML
-    private Label menuClose;
+    private ImageView menuClose;
     @FXML
-    private Label menu;
+    private ImageView menu;
+    @FXML
+    private AnchorPane slider2;
+    @FXML
+    private ImageView accountClose;
+    @FXML
+    private ImageView account;
     @FXML
     private VBox orderLayout;
     @FXML
@@ -69,10 +73,8 @@ public class TableReservationController implements Initializable {
     private DatePicker datePicker;
     @FXML
     private Button timeButton;
-    
     @FXML
     private Label tableNumberLabel;
-    
     @FXML
     private ImageView oneSeat;
     @FXML
@@ -106,6 +108,8 @@ public class TableReservationController implements Initializable {
 	List<OrderData> orderList = new ArrayList<>();
 	OrderData orderData = new OrderData();
 	
+	int id;
+	String role;
 	String name;
 	String username = "";
 	String orderPage = "OrderPage.fxml";
@@ -124,6 +128,8 @@ public class TableReservationController implements Initializable {
 	boolean isTableBtn = false;
 	boolean isAccBtn = false;
 	boolean isRewardBtn = false;
+	
+	boolean clicked = false;
 	
 	Connection con;
 	PreparedStatement pst;
@@ -186,7 +192,6 @@ public class TableReservationController implements Initializable {
         datePicker.setValue(LocalDate.now());
         populateTimeList(LocalDate.now());
 
-        // Show the popup when the button is clicked
      // Show the popup when the button is clicked
         timeButton.setOnAction(event -> {
             if (!timePopup.isShowing()) {
@@ -202,7 +207,7 @@ public class TableReservationController implements Initializable {
        
         tableNumber();
     }
-    
+   
     public void tableNumber() {
     	
     	EventHandler<MouseEvent> clearHighlight = event -> {
@@ -225,9 +230,14 @@ public class TableReservationController implements Initializable {
                 tableNumberLabel.setText("1");
                 // Update int reservedTable
                 reservedTable = 1;
+                if(!clicked) {
+                	 slideWindow();
+                	 clicked = true;
+                }
+               
             }
         });
-    	
+
     	twoSeat.setOnMouseClicked(new EventHandler<MouseEvent>() {
             public void handle(MouseEvent event) {
             	clearHighlight.handle(event);
@@ -235,6 +245,10 @@ public class TableReservationController implements Initializable {
                 // Update the label text
                 tableNumberLabel.setText("2");
                 reservedTable = 2;
+                if(!clicked) {
+               	 slideWindow();
+               	 clicked = true;
+               }
             }
         });
     	
@@ -245,6 +259,10 @@ public class TableReservationController implements Initializable {
                 // Update the label text
                 tableNumberLabel.setText("4");
                 reservedTable = 40;
+                if(!clicked) {
+               	 slideWindow();
+               	 clicked = true;
+               }
             }
         });
     	
@@ -255,6 +273,10 @@ public class TableReservationController implements Initializable {
                 // Update the label text
                 tableNumberLabel.setText("4");
                 reservedTable = 41;
+                if(!clicked) {
+               	 slideWindow();
+               	 clicked = true;
+               }
             }
         });
     	
@@ -265,6 +287,10 @@ public class TableReservationController implements Initializable {
                 // Update the label text
                 tableNumberLabel.setText("5");
                 reservedTable = 5;
+                if(!clicked) {
+               	 slideWindow();
+               	 clicked = true;
+               }
             }
         });
     	
@@ -275,6 +301,10 @@ public class TableReservationController implements Initializable {
                 // Update the label text
                 tableNumberLabel.setText("6");
                 reservedTable = 6;
+                if(!clicked) {
+               	 slideWindow();
+               	 clicked = true;
+               }
             }
         });
     	
@@ -285,6 +315,10 @@ public class TableReservationController implements Initializable {
                 // Update the label text
                 tableNumberLabel.setText("8");
                 reservedTable = 80;
+                if(!clicked) {
+               	 slideWindow();
+               	 clicked = true;
+               }
             }
         });
     	
@@ -295,6 +329,10 @@ public class TableReservationController implements Initializable {
                 // Update the label text
                 tableNumberLabel.setText("8");
                 reservedTable = 81;
+                if(!clicked) {
+               	 slideWindow();
+               	 clicked = true;
+               }
             }
         });
     	
@@ -305,6 +343,10 @@ public class TableReservationController implements Initializable {
                 // Update the label text
                 tableNumberLabel.setText("10");
                 reservedTable = 10;
+                if(!clicked) {
+               	 slideWindow();
+               	 clicked = true;
+               }
             }
         });
     	
@@ -354,8 +396,6 @@ public class TableReservationController implements Initializable {
         });
     }
     
-    
-
     private void populateTimeList(LocalDate selectedDate) {
         timeListView.getItems().clear();
         List<String> timeItems = generateTimeItems(selectedDate);
@@ -413,13 +453,10 @@ public class TableReservationController implements Initializable {
             DateTimeFormatter formatter = DateTimeFormatter.ofPattern("MMM dd, yyyy hh:mm a");
             tryLabel.setText("Selected Date and Time: " + selectedDateTime.format(formatter));
         } else {
-            System.out.println("Please select both date and time.");
+            showAlert("Please select both date and time", AlertType.ERROR);
         }
     }
-	
-	
-	
-	
+
 	
 	//TOP BUTTONS
 	public void homeBtn(ActionEvent event) throws IOException, SQLException {
@@ -458,7 +495,7 @@ public class TableReservationController implements Initializable {
 		stage.show();
 		}
 	}
-public void signUp(ActionEvent event) throws IOException, ClassNotFoundException, SQLException {
+	public void signUp(ActionEvent event) throws IOException, ClassNotFoundException, SQLException {
 		FXMLLoader loader = new FXMLLoader(getClass().getResource("SignUp.fxml"));
 	    root = loader.load();
 		if(hasAccount) {
@@ -476,25 +513,16 @@ public void signUp(ActionEvent event) throws IOException, ClassNotFoundException
 			
 		}
 		else {
-		SignUpController signUpPage = loader.getController();
-		signUpPage.Connect();
-		stage = (Stage)((Node)event.getSource()).getScene().getWindow();
-		scene = new Scene(root);
-		stage.setScene(scene);
-		stage.show();
+			SignUpController signUpPage = loader.getController();
+			signUpPage.Connect();
+			stage = (Stage)((Node)event.getSource()).getScene().getWindow();
+			scene = new Scene(root);
+			stage.setScene(scene);
+			stage.show();
 		}
 	}
-	public void showFAQ() {
-			Alert alert = new Alert(AlertType.INFORMATION);
-	        alert.setHeaderText("");
-	        alert.setContentText("FAQ");
-	        alert.show();
-		}
 		
 	//SIDE BUTTONS
-	public void displayName() throws SQLException {
-			nameLabel.setText(dbName);
-		}
 	public void showAccount(ActionEvent event) throws IOException, SQLException {
 		if(hasAccount) {
 			isAccBtn = true;
@@ -533,12 +561,12 @@ public void signUp(ActionEvent event) throws IOException, ClassNotFoundException
 			}
 		}
 		else {
-	    Scene1Controller loginPage = loader.getController();
-	    loginPage.Connect();
-	    stage = (Stage)((Node)event.getSource()).getScene().getWindow();
-		scene = new Scene(root);
-		stage.setScene(scene);
-		stage.show();
+		    Scene1Controller loginPage = loader.getController();
+		    loginPage.Connect();
+		    stage = (Stage)((Node)event.getSource()).getScene().getWindow();
+			scene = new Scene(root);
+			stage.setScene(scene);
+			stage.show();
 		}
 		    
 		}
@@ -563,42 +591,46 @@ public void signUp(ActionEvent event) throws IOException, ClassNotFoundException
 		if(isHomeBtn) {
 			HomeController homePage = loader.getController();
 			homePage.setOrderList(orderList);
-			homePage.setHasAccount(hasAccount);
-			homePage.setName(dbName);
-			homePage.displayName(0);
+			homePage.setUserDetails(role, hasAccount, dbName, reservedTable);
+			homePage.displayName();
 		}
 		else if(isOrderBtn) {
 			OrderController orderPage = loader.getController();
 			orderPage.setOrders(orderList);
-			orderPage.setName(dbName);
-			orderPage.setHasAccount(hasAccount);
+			orderPage.setUserDetails(role, hasAccount, dbName, reservedTable);
+			
 		}else if(isTableBtn) {
 			TableReservationController tablePage = loader.getController();
-			tablePage.setHasAccount(hasAccount);
-			tablePage.setName(dbName);
-			tablePage.displayName();
+			tablePage.setUserDetails(role, hasAccount, dbName, reservedTable);
+			
+			
 		}else if(isAccBtn) {
 			AccountDetailsController accPage = loader.getController();
 			accPage.setOrders(orderList);
-			accPage.setName(dbName);
+			accPage.setUserDetails(role, hasAccount, dbName, reservedTable);
 			accPage.displayName();
-			accPage.setHasAccount(hasAccount);
+			
 		}else if(isRewardBtn) {
 			RewardsController rewardPage = loader.getController();
 			rewardPage.setOrderList(orderList);
-			rewardPage.setHasAccount(hasAccount);
-			rewardPage.setName(dbName);
+			rewardPage.setUserDetails(role, hasAccount, dbName, reservedTable);
 			rewardPage.displayName();
 		}else {
 			CartController cartPage = loader.getController();
 			cartPage.setOrders(orderList);
-			cartPage.setHasAccount(hasAccount);
-			cartPage.setName(dbName);
+			cartPage.setUserDetails(role, hasAccount, dbName, reservedTable);
 			cartPage.displayName();
 		}
 		
 		
 }
+	public void setUserDetails(String role, boolean hasAccount, String dbName, int id) {
+	    this.role = role;
+	    this.hasAccount = hasAccount;
+	    this.dbName = dbName;
+	    this.id = id;
+	}
+	
 	private void showAlert(String contentText, AlertType alertType) {
 	
 		 Alert alert = new Alert(alertType);
@@ -621,9 +653,23 @@ public void signUp(ActionEvent event) throws IOException, ClassNotFoundException
 	            }
 	        }, 2 * 1000);
 	    }
-	@Override
-	public void initialize(URL arg0, ResourceBundle arg1) {
-		// TODO Auto-generated method stub
+	public void slideWindow() {
+		 slider2.setTranslateX(400);
+           TranslateTransition slide = new TranslateTransition();
+          
+           slide.setDuration(Duration.seconds(0.5));
+           slide.setNode(slider2);
+           
+           slide.setToX(0);
+           slide.play();
+           
+           slide.setOnFinished((ActionEvent e)-> {
+        	   account.setVisible(false);
+               accountClose.setVisible(true);
+           });
+       
+	}
+	private void setSlides() {
 		slider.setTranslateX(-200);
 		menu.setOnMouseClicked(event -> {
             TranslateTransition slide = new TranslateTransition();
@@ -636,6 +682,7 @@ public void signUp(ActionEvent event) throws IOException, ClassNotFoundException
             slider.setTranslateX(-200);
 
             slide.setOnFinished((ActionEvent e)-> {
+            	
                 menu.setVisible(false);
                 menuClose.setVisible(true);
             });
@@ -652,10 +699,53 @@ public void signUp(ActionEvent event) throws IOException, ClassNotFoundException
             slider.setTranslateX(0);
 
             slide.setOnFinished((ActionEvent e)-> {
+            	
                 menu.setVisible(true);
                 menuClose.setVisible(false);
             });
         });
+        
+        
+        slider2.setTranslateX(400);
+       
+		account.setOnMouseClicked(event -> {
+            TranslateTransition slide = new TranslateTransition();
+            slide.setDuration(Duration.seconds(0.5));
+            slide.setNode(slider2);
+            
+            slide.setToX(0);
+            slide.play();
+           
+            slider2.setTranslateX(400);
+           
+            slide.setOnFinished((ActionEvent e)-> {
+                account.setVisible(false);
+                accountClose.setVisible(true);
+            });
+        });
+		
+		accountClose.setOnMouseClicked(event -> {
+            TranslateTransition slide = new TranslateTransition();
+            slide.setDuration(Duration.seconds(0.4));
+            slide.setNode(slider2);
+
+            slide.setToX(400);
+            slide.play();
+            
+            slider2.setTranslateX(0);
+            
+     
+            slide.setOnFinished((ActionEvent e)-> {
+            	account.setVisible(true);
+            	accountClose.setVisible(false);
+            });
+        });
+	}
+	
+	@Override
+	public void initialize(URL arg0, ResourceBundle arg1) {
+		// TODO Auto-generated method stub
+		setSlides();
 	}
 	public void setHasAccount(boolean hasAccount) {
 		this.hasAccount = hasAccount;

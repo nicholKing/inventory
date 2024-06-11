@@ -8,21 +8,19 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
-import java.util.HashSet;
+import java.util.Comparator;
 import java.util.List;
 import java.util.ResourceBundle;
-import java.util.Set;
 import java.util.Timer;
 import java.util.TimerTask;
-
 import javafx.animation.TranslateTransition;
 import javafx.application.Platform;
 import javafx.collections.FXCollections;
-import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
+import javafx.geometry.Pos;
 import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
@@ -44,6 +42,8 @@ import javafx.util.Duration;
 
 public class AdStockController implements Initializable{
 	@FXML
+	private Label roleLabel;
+	@FXML
 	private Button addBtn;
 	@FXML
 	private Button deleteBtn;
@@ -60,6 +60,8 @@ public class AdStockController implements Initializable{
     @FXML
     private ComboBox<String> categoryComboBox;
     @FXML
+    private ComboBox<String> filterComboBox;
+    @FXML
     private Button addButton;
     @FXML
     private Button updateButton;
@@ -69,9 +71,6 @@ public class AdStockController implements Initializable{
     private ScrollPane scrollPane; // ScrollPane for containing VBox
     @FXML
     private VBox itemsVBox; // VBox for displaying items
-    
-   
-	
 	@FXML
 	private Label nameLabel;
     @FXML
@@ -94,16 +93,17 @@ public class AdStockController implements Initializable{
 	private Parent root;
 	
 	List<OrderData> orderList = new ArrayList<>();
-	
+
+	int id;
+	String role;
 	String name;
 	String username = "";
 	String orderPage = "AdOrderPage.fxml";
     String homePage = "AdHomePage.fxml";
     String accPage = "AccountDetails.fxml";
     String stockPage = "AdStockPage.fxml";
-    String tablePage = "TablePage.fxml";
-    String rewardsPage = "RewardsPage.fxml";
-    
+    String tablePage = "TableReservationPage.fxml";
+    String employmentPage = "EmploymentPage.fxml";
     String query = "SELECT name FROM user_tbl WHERE id = ?";
     String dbName = "Guest";
 	boolean hasAccount = false;
@@ -111,15 +111,16 @@ public class AdStockController implements Initializable{
 	boolean isOrderBtn = false;
 	boolean isAccBtn = false;
 	boolean isTableBtn = false;
-	boolean isRewardBtn = false;
+	boolean isEmploymentBtn = false;
 	
 	//STOCKS VARIABLE
 	String foodname;
 	String option;
 	String category;
+	
     int price;
     int stock;
-	int id;
+	
 	
 	Connection con;
 	PreparedStatement pst;
@@ -192,21 +193,26 @@ public class AdStockController implements Initializable{
 		}
 	
 	//SIDE BUTTONS
-	public void displayName(int id) throws SQLException {
-			this.id = id;
-			pst = con.prepareStatement(query);
-			pst.setInt(1, id);
-			rs = pst.executeQuery();
-			while(rs.next()) {
-				dbName = rs.getString("name");
-			}
-			if(dbName.length() >= 12 && dbName.length() <= 15) {
-				nameLabel.setFont(new Font(18));
-			}
-			else if(dbName.length() > 15) {
-				nameLabel.setFont(new Font(15));
-			}
-			nameLabel.setText(dbName);
+	public void displayName() throws SQLException {
+	    // Calculate font size based on name length
+	    if (dbName.length() >= 12 && dbName.length() <= 15) {
+	        nameLabel.setFont(new Font(18));
+	    } else if (dbName.length() > 15) {
+	        nameLabel.setFont(new Font(12));
+	    } else {
+	        nameLabel.setFont(new Font(24)); // Default font size for shorter names
+	    }
+
+	    // Set text and enable wrapping
+	    nameLabel.setText(dbName);
+	    nameLabel.setWrapText(true);
+	    nameLabel.setMaxWidth(Double.MAX_VALUE);
+	    
+	    // Optionally, set alignment if needed
+	    nameLabel.setAlignment(Pos.CENTER_LEFT);
+	    
+	    // Set role text
+	    roleLabel.setText(role);
 	}
 	public void showAccount(ActionEvent event) throws IOException, SQLException {
 		if(hasAccount) {
@@ -223,10 +229,10 @@ public class AdStockController implements Initializable{
 		changeScene(event, tablePage);
 			
 	}
-	public void showRewards(ActionEvent event) throws IOException, SQLException {
+	public void showEmployment(ActionEvent event) throws IOException, SQLException {
 			if(hasAccount) {
-				isRewardBtn = true;
-				changeScene(event, rewardsPage);
+				isEmploymentBtn = true;
+				changeScene(event, employmentPage);
 			}
 			else {
 				showAlert("Create an account to unlock exciting rewards!", AlertType.INFORMATION);
@@ -259,6 +265,19 @@ public class AdStockController implements Initializable{
 	}
 		
 	//STOCK METHODS
+	private void loadMenuItemsByCategory(String category) {
+	        try {
+	            List<MenuItem> items;
+	            if ("All".equals(category)) {
+	                items = DatabaseHelper.getMenuItems();
+	            } else {
+	                items = DatabaseHelper.filterMenuItemsByCategory(category);
+	            }
+	            displayMenuItems(items);
+	        } catch (SQLException e) {
+	            e.printStackTrace();
+	        }
+	}
 	private void loadMenuItems() {
 	    try {
 	        List<MenuItem> items = DatabaseHelper.getMenuItems();
@@ -267,35 +286,46 @@ public class AdStockController implements Initializable{
 	        e.printStackTrace();
 	    }
 	}
-
-	  
 	private void displayMenuItems(List<MenuItem> items) {
-	    itemsVBox.getChildren().clear(); // Clear existing items
+	    // Sort items alphabetically by food name
+		items.sort(Comparator
+		        .comparing(MenuItem::getFoodName)
+		        .thenComparing(MenuItem::getCategory)
+		        .thenComparing(item -> getFirstOption(item.getOptions())));
 
-	    
+	    // Clear existing items
+	    itemsVBox.getChildren().clear();
+
+	    // Loop through sorted items and add them to the VBox
 	    for (MenuItem item : items) {
-	   
-	            try {
-	                FXMLLoader loader = new FXMLLoader(getClass().getResource("AdStockVbox.fxml"));
-	                HBox itemBox = loader.load();
+	        try {
+	            // Load the FXML for each item
+	            FXMLLoader loader = new FXMLLoader(getClass().getResource("AdStockVbox.fxml"));
+	            HBox itemBox = loader.load();
 
-	                AdStockPaneController controller = loader.getController();
-	                controller.setItemDetails(item);
+	            // Get the controller and set item details
+	            AdStockPaneController controller = loader.getController();
+	            controller.setItemDetails(item);
 
-	                itemBox.setOnMouseClicked(event -> selectMenuItem(item));
+	            // Set an on-click event for the item box
+	            itemBox.setOnMouseClicked(event -> selectMenuItem(item));
 
-	                itemsVBox.getChildren().add(itemBox);
+	            // Add the item box to the VBox
+	            itemsVBox.getChildren().add(itemBox);
 
-	            
-	              
-	            } catch (IOException e) {
-	                e.printStackTrace();
-	            }
+	        } catch (IOException e) {
+	            e.printStackTrace();
 	        }
 	    }
 	}
-
-	  private void selectMenuItem(MenuItem item) {
+	private String getFirstOption(String options) {
+	    if (options != null && !options.isEmpty()) {
+	        String[] optionArray = options.split(",");
+	        return optionArray[0].trim();
+	    }
+	    return "";
+	}
+	private void selectMenuItem(MenuItem item) {
 		    selectedItem = item;
 		    foodnameField.setText(item.getFoodName());
 		    priceField.setText(String.valueOf(item.getPrice()));
@@ -303,60 +333,43 @@ public class AdStockController implements Initializable{
 		    categoryComboBox.setValue(item.getCategory());
 		    optionField.setText(item.getOptions());
 		}
-
-	  private void addMenuItem() {
+	private void addMenuItem() {
 		    try {
 		    	 String foodName = foodnameField.getText();
 		         String option = optionField.getText();
 		         String priceText = priceField.getText();
 		         String stockText = stockField.getText();
 		         String category = categoryComboBox.getValue();
-
 		        // Check if the number of options for the food item exceeds 2
 		        int optionCount = DatabaseHelper.getOptionCountForFoodName(foodName, category);
-		        
-		        if (optionCount >= 2) {
+		        if (DatabaseHelper.isItemExists(foodName, option)) {
+		            // Display an alert to inform the user that the item already exists
+		            showAlert("An item with the same name and option already exists.", AlertType.ERROR);
+		            return; // Exit the method
+		        }
+		        else if (optionCount >= 2) {
 		            // Display an alert to the user
-		            Alert alert = new Alert(Alert.AlertType.WARNING);
-		            alert.setTitle("Warning");
-		            alert.setHeaderText(null);
-		            alert.setContentText("You can only add up to 2 options for each food item.");
-		            alert.showAndWait();
+		        	showAlert("You can only add up to 2 options for each food item.", AlertType.ERROR);
 		            return; // Exit the method
 		        }
 		        else if (foodName.isEmpty() || option.isEmpty() || priceField.getText().isEmpty() || stockField.getText().isEmpty() || category == null) {
 		            // Display an alert to inform the user to fill in all fields
-		            Alert alert = new Alert(Alert.AlertType.WARNING);
-		            alert.setTitle("Warning");
-		            alert.setHeaderText(null);
-		            alert.setContentText("Please fill in all required fields.");
-		            alert.showAndWait();
+		            showAlert("Please fill in all required fields.", AlertType.ERROR);
 		            return; // Exit the method
 		        }
 		        else if (!priceText.matches("\\d+") || !stockText.matches("\\d+")) {
 		            // Display an alert to inform the user that price and stock must be integers
-		            Alert alert = new Alert(Alert.AlertType.ERROR);
-		            alert.setTitle("Error");
-		            alert.setHeaderText(null);
-		            alert.setContentText("Price and stock must be integers.");
-		            alert.showAndWait();
+		        	showAlert("Price and stock must be integers.", AlertType.ERROR);
 		            return; // Exit the method
 		        }
+		        
 		        int price = Integer.parseInt(priceText);
 		        int stock = Integer.parseInt(stockText);
 
-		        /*if (DatabaseHelper.checkExistingFoodName(foodName)) {
-		            // Display an alert to inform the user that the food name already exists
-		            Alert alert = new Alert(Alert.AlertType.ERROR);
-		            alert.setTitle("Error");
-		            alert.setHeaderText(null);
-		            alert.setContentText("Food name already exists. Please enter a unique name.");
-		            alert.showAndWait();
-		            return; // Exit the method
-		        }*/
 		        
 		        MenuItem item = new MenuItem(0, foodName, stock, price, option, category);
-		        DatabaseHelper.addMenuItem(item, category);
+		     
+		        DatabaseHelper.addMenuItem(item);
 
 		        clearFields();
 		        loadMenuItems();
@@ -364,8 +377,7 @@ public class AdStockController implements Initializable{
 		        e.printStackTrace();
 		    }
 		}
-
-	 private void updateMenuItem() {
+	private void updateMenuItem() {
 	        try {
 	            if (selectedItem != null) {
 	                String foodname = foodnameField.getText();
@@ -375,7 +387,7 @@ public class AdStockController implements Initializable{
 	                String category = categoryComboBox.getValue();
 
 	                MenuItem updatedItem = new MenuItem(selectedItem.getId(), foodname, stock, price, option, category);
-	                DatabaseHelper.updateMenuItem(updatedItem, category);
+	                DatabaseHelper.updateMenuItem(updatedItem);
 
 	                clearFields();
 	                loadMenuItems();
@@ -384,19 +396,16 @@ public class AdStockController implements Initializable{
 	            e.printStackTrace();
 	        }
 	    }
-	 private void deleteMenuItem() {
+	public void deleteMenuItem(MenuItem item) {
 	        try {
-	            if (selectedItem != null) {
-	                DatabaseHelper.deleteMenuItem(selectedItem.getId());
-
-	                clearFields();
-	                loadMenuItems();
-	            }
+	            DatabaseHelper.deleteMenuItem(item.getId()); // Add method to delete from database
+	            loadMenuItems(); // Reload items after deletion
+	            clearFields();
 	        } catch (SQLException e) {
 	            e.printStackTrace();
 	        }
-	    }
-	 private void clearFields() {
+	 }
+	private void clearFields() {
 	        foodnameField.clear();
 	        optionField.clear();
 	        priceField.clear();
@@ -404,6 +413,24 @@ public class AdStockController implements Initializable{
 	        categoryComboBox.setValue(null);
 	        selectedItem = null;
 	    }
+	
+	//SETTER METHODS
+	public void setUserDetails(String role, boolean hasAccount, String dbName, int id) {
+		 this.role = role;
+		 this.hasAccount = hasAccount;
+		 this.dbName = dbName;
+		 this.id = id;
+	}
+	public void setFoodname(String foodName) {
+		this.foodname = foodName;
+	}
+	public void setOption(String option) {
+		this.option = option;
+	}
+	public void setOrderList(List<OrderData> orderList) {
+		this.orderList = orderList;
+	}
+	
 	//HELPER METHODS
 	public void Connect() {
 			try {
@@ -425,63 +452,33 @@ public class AdStockController implements Initializable{
 			stage.show();
 			
 			if(isHomeBtn) {
-				AdStockController homePage = loader.getController();
+				AdminController homePage = loader.getController();
 				homePage.setOrderList(orderList);
-				homePage.setHasAccount(hasAccount);
-				homePage.displayName(id);
-				homePage.setName(dbName);
-			}
-			else if(isOrderBtn) {
-				AdOrderController orderPage = loader.getController();
+				homePage.setUserDetails(role, hasAccount, dbName, id);
+				homePage.displayName();
+			}else if(isOrderBtn) {
+				AdOrderController adOrderPage = loader.getController();
+				adOrderPage.setUserDetails(role, hasAccount, dbName, id);
+				
 			}else if(isTableBtn) {
 				TableReservationController tablePage = loader.getController();
 				tablePage.setHasAccount(hasAccount);
 				tablePage.setName(dbName);
-				tablePage.displayName();
 			}else if(isAccBtn) {
 				AccountDetailsController accPage = loader.getController();
 				accPage.setOrders(orderList);
-				accPage.setId(id);
-				accPage.setName(dbName);
+				accPage.setUserDetails(role, hasAccount, dbName, id);
 				accPage.displayName();
-				accPage.setHasAccount(hasAccount);
-			}else if(isRewardBtn) {
-				RewardsController rewardPage = loader.getController();
-				rewardPage.setOrderList(orderList);
-				rewardPage.setHasAccount(hasAccount);
-				rewardPage.setName(dbName);
-				rewardPage.displayName();
+				
+			}else if(isEmploymentBtn) {
+				EmploymentController employmentPage = loader.getController();
 			}else {
 				AdStockController stockPage = loader.getController();
-				stockPage.setHasAccount(hasAccount);
-				stockPage.setName(dbName);
+				stockPage.setUserDetails(role, hasAccount, dbName, id);
+				stockPage.displayName();
 			}	
 	}
-	
-	//SETTER METHODS
-	public void setHasAccount(boolean hasAccount) {
-			this.hasAccount = hasAccount;
-	}
-	public void setPrice(int price) {
-		this.price = price;
-	}
-	public void setName(String dbName) {
-		this.dbName = dbName;
-	}
-	public void setFoodname(String foodName) {
-		this.foodname = foodName;
-	}
-	public void setOption(String option) {
-		this.option = option;
-	}
-	public void setId(int id) {
-		this.id = id;
-	}
-	public void setOrderList(List<OrderData> orderList) {
-		this.orderList = orderList;
-	}
 	private void showAlert(String contentText, AlertType alertType) {
-
         Alert alert = new Alert(alertType);
         alert.setTitle("Notice");
         alert.setHeaderText(null);
@@ -572,22 +569,32 @@ public class AdStockController implements Initializable{
             });
         });
 	}
-
-	@Override
-	public void initialize(URL arg0, ResourceBundle arg1) {
-		
-		
+	private void initializeComboBox() {
 		categoryComboBox.setItems(FXCollections.observableArrayList(
 	            "Rice Meals", "Pasta", "Cakes", "Burger",
 	            "Coffee", "Frappe", "Tea", "Appetizers"
 	        ));
-		
-		 	loadMenuItems();
+			filterComboBox.setItems(FXCollections.observableArrayList(
+					"All", "Rice Meals", "Pasta", "Cakes", "Burger",
+		            "Coffee", "Frappe", "Tea", "Appetizers"
+		        ));
+			categoryComboBox.setValue("Choose Category");
+			filterComboBox.setValue("Filter");
+	        loadMenuItemsByCategory("All");
+	        
+			filterComboBox.setOnAction(event -> {
+	            String selectedCategory = filterComboBox.getValue();
+	            loadMenuItemsByCategory(selectedCategory);
+	        });
+	}
+	@Override
+	public void initialize(URL arg0, ResourceBundle arg1) {
+	        initializeComboBox();
 			Connect();
 			slideWindow();
 			addBtn.setOnAction(event -> addMenuItem());
 	        updateBtn.setOnAction(event -> updateMenuItem());
-	        deleteBtn.setOnAction(event -> deleteMenuItem());
+	        deleteBtn.setOnAction(event -> deleteMenuItem(selectedItem));
 		}
 	
 }

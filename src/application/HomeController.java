@@ -37,6 +37,8 @@ public class HomeController implements Initializable{
 	
 	@FXML
 	private Label nameLabel;
+	@FXML
+	private Label roleLabel;
     @FXML
     private AnchorPane slider;
     @FXML
@@ -57,13 +59,14 @@ public class HomeController implements Initializable{
 	
 	List<OrderData> orderList = new ArrayList<>();
 	
+	String role = "Customer";
 	String name;
 	String username = "";
 	String orderPage = "OrderPage.fxml";
     String homePage = "HomePage.fxml";
     String accPage = "AccountDetails.fxml";
     String cartPage = "MyCart.fxml";
-    String tablePage = "TablePage.fxml";
+    String tablePage = "TableReservationPage.fxml";
     String rewardsPage = "RewardsPage.fxml";
     
     String query = "SELECT name FROM user_tbl WHERE id = ?";
@@ -81,20 +84,23 @@ public class HomeController implements Initializable{
 	PreparedStatement pst;
 	ResultSet rs;
 	
-	//TOP BUTTONS
-	public void homeBtn(ActionEvent event) throws IOException, SQLException {
-			System.out.println("Home");
-			isHomeBtn = true;
-			changeScene(event, homePage);
+	//RIGHT PANEL
+	public void displayName() throws SQLException {
+		if(dbName.length() >= 12 && dbName.length() <= 15) {
+			nameLabel.setFont(new Font(18));
+		}
+		else if(dbName.length() > 15) {
+			nameLabel.setFont(new Font(15));
+		}
+		nameLabel.setText(dbName);
+		roleLabel.setText(role);
 	}
-	public void orderBtn(ActionEvent event) throws IOException, SQLException {
-			System.out.println("Order");
-			isOrderBtn = true;
-			changeScene(event, orderPage);
-	}
-	public void promoBtn() {
-			System.out.println("Promo");
-	}
+	public void showAccount(ActionEvent event) throws IOException, SQLException {
+		if(hasAccount) {
+			isAccBtn = true;
+			changeScene(event, accPage);}
+			else {showAlert("Login or register to edit your information.", AlertType.INFORMATION);}
+}
 	public void signIn(ActionEvent event) throws IOException, ClassNotFoundException, SQLException {
 			FXMLLoader loader = new FXMLLoader(getClass().getResource("Main.fxml"));
 		    root = loader.load();
@@ -146,44 +152,25 @@ public class HomeController implements Initializable{
 			stage.show();
 			}
 		}
-	public void showFAQ() {
-			Alert alert = new Alert(AlertType.INFORMATION);
-	        alert.setHeaderText("");
-	        alert.setContentText("FAQ");
-	        alert.show();
-		}
+
 		
-	//SIDE BUTTONS
-	public void displayName(int id) throws SQLException {
-			this.id = id;
-			pst = con.prepareStatement(query);
-			pst.setInt(1, id);
-			rs = pst.executeQuery();
-			while(rs.next()) {
-				dbName = rs.getString("name");
-			}
-			if(dbName.length() >= 12 && dbName.length() <= 15) {
-				nameLabel.setFont(new Font(18));
-			}
-			else if(dbName.length() > 15) {
-				nameLabel.setFont(new Font(15));
-			}
-			nameLabel.setText(dbName);
+	//LEFT PANEL
+	public void homeBtn(ActionEvent event) throws IOException, SQLException {
+		System.out.println("Home");
+		isHomeBtn = true;
+		changeScene(event, homePage);
 	}
-	public void showAccount(ActionEvent event) throws IOException, SQLException {
-		if(hasAccount) {
-			isAccBtn = true;
-			changeScene(event, accPage);}
-			else {showAlert("Login or register to edit your information.", AlertType.INFORMATION);}
+	public void orderBtn(ActionEvent event) throws IOException, SQLException {
+		System.out.println("Order");
+		isOrderBtn = true;
+		changeScene(event, orderPage);
 	}
 	public void showCart(ActionEvent event) throws IOException, SQLException {
-			
 			changeScene(event,cartPage);
 	}
 	public void showTable(ActionEvent event) throws IOException, SQLException {
 		isTableBtn = true;
 		changeScene(event, tablePage);
-			
 	}
 	public void showRewards(ActionEvent event) throws IOException, SQLException {
 			if(hasAccount) {
@@ -211,12 +198,12 @@ public class HomeController implements Initializable{
 			}
 		}
 		else {
-	    Scene1Controller loginPage = loader.getController();
-	    loginPage.Connect();
-	    stage = (Stage)((Node)event.getSource()).getScene().getWindow();
-		scene = new Scene(root);
-		stage.setScene(scene);
-		stage.show();
+		    Scene1Controller loginPage = loader.getController();
+		    loginPage.Connect();
+		    stage = (Stage)((Node)event.getSource()).getScene().getWindow();
+			scene = new Scene(root);
+			stage.setScene(scene);
+			stage.show();
 		}
 	}
 		
@@ -243,51 +230,39 @@ public class HomeController implements Initializable{
 			if(isHomeBtn) {
 				HomeController homePage = loader.getController();
 				homePage.setOrderList(orderList);
-				homePage.setHasAccount(hasAccount);
-				homePage.displayName(id);
-				homePage.setName(dbName);
+				homePage.setUserDetails(role, hasAccount, dbName, id);
 			}
 			else if(isOrderBtn) {
 				OrderController orderPage = loader.getController();
 				orderPage.setOrders(orderList);
-				orderPage.setName(dbName);
-				orderPage.setHasAccount(hasAccount);
+				orderPage.setUserDetails(role, hasAccount, dbName, id);
 			}else if(isTableBtn) {
 				TableReservationController tablePage = loader.getController();
-				tablePage.setHasAccount(hasAccount);
-				tablePage.setName(dbName);
-				tablePage.displayName();
+				tablePage.setUserDetails(role, hasAccount, dbName, id);
+				tablePage.initialize();
 			}else if(isAccBtn) {
 				AccountDetailsController accPage = loader.getController();
 				accPage.setOrders(orderList);
-				accPage.setId(id);
-				accPage.setName(dbName);
+				accPage.setUserDetails(role, hasAccount, dbName, id);
 				accPage.displayName();
-				accPage.setHasAccount(hasAccount);
 			}else if(isRewardBtn) {
 				RewardsController rewardPage = loader.getController();
 				rewardPage.setOrderList(orderList);
-				rewardPage.setHasAccount(hasAccount);
-				rewardPage.setName(dbName);
-				rewardPage.displayName();
+				rewardPage.setUserDetails(role, hasAccount, dbName, id);
 			}else {
 				CartController cartPage = loader.getController();
 				cartPage.setOrders(orderList);
-				cartPage.setHasAccount(hasAccount);
-				cartPage.setName(dbName);
+				cartPage.setUserDetails(role, hasAccount, dbName, id);
 				cartPage.displayName();
 			}	
 	}
 	
 	//SETTER METHODS
-	public void setHasAccount(boolean hasAccount) {
-			this.hasAccount = hasAccount;
-	}
-	public void setName(String dbName) {
-		this.dbName = dbName;
-	}
-	public void setId(int id) {
-		this.id = id;
+	public void setUserDetails(String role, boolean hasAccount, String dbName, int id) {
+	    this.role = role;
+	    this.hasAccount = hasAccount;
+	    this.dbName = dbName;
+	    this.id = id;
 	}
 	public void setOrderList(List<OrderData> orderList) {
 		this.orderList = orderList;
@@ -386,6 +361,12 @@ public class HomeController implements Initializable{
 	}
 	@Override
 	public void initialize(URL arg0, ResourceBundle arg1) {
+			try {
+				displayName();
+			} catch (SQLException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 			Connect();
 			slideWindow();
 	    }

@@ -2,16 +2,15 @@
 
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.control.Button?>
+<?import javafx.scene.control.DatePicker?>
 <?import javafx.scene.control.Label?>
-<?import javafx.scene.control.ScrollPane?>
 <?import javafx.scene.image.Image?>
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.AnchorPane?>
-<?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="720.0" prefWidth="1280.0" style="-fx-background-color: white;" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="application.CartController">
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="720.0" prefWidth="1280.0" style="-fx-background-color: white;" stylesheets="@application.css" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="application.TableReservationController">
    <children>
       <AnchorPane fx:id="slider" layoutX="4.0" layoutY="-4.0" prefHeight="729.0" prefWidth="89.0" style="-fx-border-width: 20;">
          <children>
@@ -96,74 +95,11 @@
             </VBox>
          </children>
       </AnchorPane>
-      <AnchorPane fx:id="slider2" layoutX="1065.0" layoutY="85.0" prefHeight="640.0" prefWidth="215.0" style="-fx-background-color: E8D8C4;">
-         <children>
-            <VBox prefHeight="640.0" prefWidth="215.0">
-               <children>
-                  <HBox prefHeight="0.0" prefWidth="215.0">
-                     <children>
-                        <Label fx:id="nameLabel" prefHeight="75.0" prefWidth="135.0" text="Guest" wrapText="true">
-                           <padding>
-                              <Insets left="15.0" />
-                           </padding>
-                           <font>
-                              <Font size="24.0" />
-                           </font>
-                        </Label>
-                        <Button alignment="CENTER" mnemonicParsing="false" onAction="#showAccount" prefHeight="60.0" prefWidth="73.0" style="-fx-background-color: E8D8C4;">
-                           <font>
-                              <Font name="Arial" size="22.0" />
-                           </font>
-                           <graphic>
-                              <ImageView fitHeight="43.0" fitWidth="44.0" pickOnBounds="true" preserveRatio="true">
-                                 <image>
-                                    <Image url="@../pictures/profile-user.png" />
-                                 </image>
-                              </ImageView>
-                           </graphic>
-                        </Button>
-                     </children>
-                     <VBox.margin>
-                        <Insets top="24.0" />
-                     </VBox.margin>
-                  </HBox>
-                  <HBox alignment="CENTER_LEFT" prefHeight="24.0" prefWidth="215.0">
-                     <children>
-                        <Label fx:id="roleLabel" prefHeight="21.0" prefWidth="111.0" text="Role">
-                           <font>
-                              <Font size="13.0" />
-                           </font>
-                           <padding>
-                              <Insets left="5.0" />
-                           </padding>
-                           <HBox.margin>
-                              <Insets left="8.0" />
-                           </HBox.margin>
-                        </Label>
-                        <Button mnemonicParsing="false" onAction="#showAccount" text="Edit Account" />
-                     </children>
-                     <VBox.margin>
-                        <Insets bottom="440.0" />
-                     </VBox.margin>
-                  </HBox>
-                  <HBox alignment="CENTER" prefHeight="29.0" prefWidth="215.0" spacing="32.0">
-                     <children>
-                        <Button mnemonicParsing="false" onAction="#signUp" style="-fx-background-color: white;" stylesheets="@application.css" text="Sign up">
-                           <font>
-                              <Font size="18.0" />
-                           </font>
-                        </Button>
-                        <Button mnemonicParsing="false" onAction="#signIn" style="-fx-background-color: white;" stylesheets="@application.css" text="Log in">
-                           <font>
-                              <Font size="18.0" />
-                           </font>
-                        </Button>
-                     </children>
-                  </HBox>
-               </children>
-            </VBox>
-         </children>
-      </AnchorPane>
+      <Label fx:id="headerLabel" alignment="CENTER" layoutX="342.0" layoutY="90.0" prefHeight="109.0" prefWidth="409.0" text="WELCOME" textAlignment="CENTER">
+         <font>
+            <Font size="41.0" />
+         </font>
+      </Label>
       <AnchorPane prefHeight="90.0" prefWidth="1280.0" style="-fx-background-color: C7B7A3;">
          <children>
             <ImageView fx:id="accountClose" fitHeight="38.0" fitWidth="38.0" layoutX="1217.0" layoutY="25.0" pickOnBounds="true" preserveRatio="true">
@@ -186,64 +122,75 @@
                   <Image url="@../pictures/theposher.png" />
                </image>
             </ImageView>
-         </children>
-      </AnchorPane>
-      <ScrollPane layoutX="141.0" layoutY="170.0" prefHeight="430.0" prefWidth="884.0">
-         <content>
-            <VBox fx:id="orderLayout" alignment="TOP_CENTER" fillWidth="false" prefHeight="428.0" prefWidth="882.0" spacing="10.0">
-               <padding>
-                  <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
-               </padding></VBox>
-         </content>
-      </ScrollPane>
-      <Label fx:id="headerLabel" alignment="CENTER" layoutX="360.0" layoutY="100.0" prefHeight="48.0" prefWidth="409.0" text="Your Cart" textAlignment="CENTER">
-         <font>
-            <Font size="41.0" />
-         </font>
-      </Label>
-      <HBox alignment="CENTER" layoutX="506.0" layoutY="610.0" prefHeight="59.0" prefWidth="506.0" spacing="15.0">
+         </children></AnchorPane>
+      <AnchorPane fx:id="slider2" layoutX="905.0" layoutY="90.0" prefHeight="633.0" prefWidth="375.0" style="-fx-background-color: #561C24;">
          <children>
-            <Label fx:id="totalPriceLabel" prefHeight="28.0" prefWidth="391.0" text="Subtotal: ">
-               <font>
-                  <Font size="19.0" />
-               </font>
-               <HBox.margin>
-                  <Insets />
-               </HBox.margin>
-               <padding>
-                  <Insets left="15.0" />
-               </padding></Label>
-            <Button fx:id="confirmBtn" contentDisplay="RIGHT" mnemonicParsing="false" prefHeight="56.0" prefWidth="420.0" text="Proceed to Checkout">
-               <font>
-                  <Font size="17.0" />
-               </font>
-               <padding>
-                  <Insets bottom="15.0" left="15.0" right="20.0" top="15.0" />
-               </padding>
-               <graphic>
-                  <ImageView fitHeight="26.0" fitWidth="27.0" pickOnBounds="true" preserveRatio="true" rotate="180.0">
-                     <image>
-                        <Image url="@../pictures/arrow.png" />
-                     </image>
-                  </ImageView>
-               </graphic>
-            </Button>
-         </children>
-      </HBox>
-      <Button fx:id="backBtn" layoutX="149.0" layoutY="611.0" mnemonicParsing="false" onAction="#backBtn" prefHeight="38.0" prefWidth="179.0" text="Back to Order">
-         <font>
-            <Font size="17.0" />
-         </font>
-         <graphic>
-            <ImageView fitHeight="26.0" fitWidth="27.0" pickOnBounds="true" preserveRatio="true">
+            <AnchorPane layoutX="25.0" layoutY="68.0" prefHeight="167.0" prefWidth="322.0" style="-fx-background-color: #E8D8C4; -fx-background-radius: 15;">
+               <children>
+                  <Label id="rightTitle" layoutX="19.0" layoutY="14.0" prefHeight="58.0" prefWidth="248.0" styleClass="rightAnchorText" text="Book your Table" textFill="#e8d8c4">
+                     <font>
+                        <Font size="1.0" />
+                     </font>
+                  </Label>
+                  <DatePicker id="datepicker" fx:id="datePicker" layoutX="13.0" layoutY="63.0" prefHeight="17.0" prefWidth="176.0" promptText="Pick a date.." styleClass="table-button" />
+                  <Button id="timePick" fx:id="timeButton" layoutX="199.0" layoutY="64.0" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" prefHeight="33.0" prefWidth="109.0" styleClass="table-button" text="Time" />
+                  <Label layoutX="74.0" layoutY="114.0" prefHeight="30.0" prefWidth="86.0" styleClass="rightAnchorText" text="Table for:" />
+                  <Label fx:id="tableNumberLabel" layoutX="157.0" layoutY="116.0" prefHeight="27.0" prefWidth="41.0" styleClass="rightAnchorText" text="0" />
+               </children>
+            </AnchorPane>
+            <ImageView fitHeight="386.0" fitWidth="371.0" layoutX="2.0" layoutY="234.0" pickOnBounds="true" preserveRatio="true">
                <image>
-                  <Image url="@../pictures/arrow.png" />
+                  <Image url="@../pictures/theposher2.png" />
                </image>
             </ImageView>
-         </graphic>
-         <padding>
-            <Insets bottom="15.0" left="20.0" right="15.0" top="15.0" />
-         </padding>
-      </Button>
+            <Button id="bookNow" fx:id="bookNow" layoutX="140.0" layoutY="251.0" mnemonicParsing="false" prefHeight="41.0" prefWidth="94.0" styleClass="table-button" text="Book Now" />
+            <Label fx:id="tryLabel" layoutX="44.0" layoutY="537.0" prefHeight="18.0" prefWidth="306.0" textFill="WHITE" />
+         </children>
+      </AnchorPane>
+      <ImageView fx:id="eightSeat" fitHeight="134.0" fitWidth="234.0" layoutX="137.0" layoutY="254.0" pickOnBounds="true" preserveRatio="true">
+         <image>
+            <Image url="@../pictures/8-seater.png" />
+         </image>
+      </ImageView>
+      <ImageView fx:id="twoSeat" fitHeight="150.0" fitWidth="200.0" layoutX="327.0" layoutY="198.0" pickOnBounds="true" preserveRatio="true">
+         <image>
+            <Image url="@../pictures/2-seater.png" />
+         </image>
+      </ImageView>
+      <ImageView fx:id="fourSeat" fitHeight="150.0" fitWidth="200.0" layoutX="309.0" layoutY="347.0" pickOnBounds="true" preserveRatio="true">
+         <image>
+            <Image url="@../pictures/4.1-seater.png" />
+         </image>
+      </ImageView>
+      <ImageView fx:id="eightSeat2" fitHeight="121.0" fitWidth="226.0" layoutX="503.0" layoutY="472.0" pickOnBounds="true" preserveRatio="true">
+         <image>
+            <Image url="@../pictures/8.2-seater.png" />
+         </image>
+      </ImageView>
+      <ImageView fx:id="fiveSeat" fitHeight="150.0" fitWidth="200.0" layoutX="447.0" layoutY="291.0" pickOnBounds="true" preserveRatio="true">
+         <image>
+            <Image url="@../pictures/5-seater.png" />
+         </image>
+      </ImageView>
+      <ImageView fx:id="tenSeat" fitHeight="253.0" fitWidth="208.0" layoutX="625.0" layoutY="184.0" pickOnBounds="true" preserveRatio="true">
+         <image>
+            <Image url="@../pictures/10-seater.png" />
+         </image>
+      </ImageView>
+      <ImageView fx:id="sixSeat" fitHeight="150.0" fitWidth="238.0" layoutX="254.0" layoutY="519.0" pickOnBounds="true" preserveRatio="true">
+         <image>
+            <Image url="@../pictures/6-seater.png" />
+         </image>
+      </ImageView>
+      <ImageView fx:id="fourSeat2" fitHeight="150.0" fitWidth="228.0" layoutX="126.0" layoutY="408.0" pickOnBounds="true" preserveRatio="true">
+         <image>
+            <Image url="@../pictures/4.2-seater.png" />
+         </image>
+      </ImageView>
+      <ImageView fx:id="oneSeat" fitHeight="79.0" fitWidth="138.0" layoutX="659.0" layoutY="598.0" pickOnBounds="true" preserveRatio="true">
+         <image>
+            <Image url="@../pictures/1-seater.png" />
+         </image>
+      </ImageView>
    </children>
 </AnchorPane>
