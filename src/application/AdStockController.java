@@ -1,7 +1,11 @@
 package application;
 
+import java.io.ByteArrayInputStream;
+import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
 import java.net.URL;
+
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
@@ -13,6 +17,8 @@ import java.util.List;
 import java.util.ResourceBundle;
 import java.util.Timer;
 import java.util.TimerTask;
+
+import javafx.animation.PauseTransition;
 import javafx.animation.TranslateTransition;
 import javafx.application.Platform;
 import javafx.collections.FXCollections;
@@ -30,6 +36,7 @@ import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.control.TextField;
+import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.Button;
@@ -37,10 +44,16 @@ import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Font;
+import javafx.stage.FileChooser;
 import javafx.stage.Stage;
+import javafx.stage.Window;
 import javafx.util.Duration;
 
 public class AdStockController implements Initializable{
+	@FXML
+	private Button employmentBtn;
+	@FXML
+	private Button uploadBtn;
 	@FXML
 	private Label roleLabel;
 	@FXML
@@ -230,12 +243,12 @@ public class AdStockController implements Initializable{
 			
 	}
 	public void showEmployment(ActionEvent event) throws IOException, SQLException {
-			if(hasAccount) {
-				isEmploymentBtn = true;
-				changeScene(event, employmentPage);
+			if(hasAccount && role.equals("Owner")) {
+			isEmploymentBtn = true;
+			changeScene(event, employmentPage);
 			}
 			else {
-				showAlert("Create an account to unlock exciting rewards!", AlertType.INFORMATION);
+			showAlert("This page is only for owner.", AlertType.INFORMATION);
 			}
 	}
 	public void logout(ActionEvent event) throws IOException, ClassNotFoundException, SQLException {
@@ -332,6 +345,7 @@ public class AdStockController implements Initializable{
 		    stockField.setText(String.valueOf(item.getStock()));
 		    categoryComboBox.setValue(item.getCategory());
 		    optionField.setText(item.getOptions());
+		    imageView.setImage(DatabaseHelper.getImageFromDatabase(item.getFoodName()));
 		}
 	private void addMenuItem() {
 		    try {
@@ -367,10 +381,11 @@ public class AdStockController implements Initializable{
 		        int stock = Integer.parseInt(stockText);
 
 		        
-		        MenuItem item = new MenuItem(0, foodName, stock, price, option, category);
-		     
+		        MenuItem item = new MenuItem(0, foodName, stock, price, option, category, imageBytes);
+		    
 		        DatabaseHelper.addMenuItem(item);
-
+		      
+			    
 		        clearFields();
 		        loadMenuItems();
 		    } catch (SQLException e) {
@@ -385,10 +400,13 @@ public class AdStockController implements Initializable{
 	                int price = Integer.parseInt(priceField.getText());
 	                int stock = Integer.parseInt(stockField.getText());
 	                String category = categoryComboBox.getValue();
+	                
 
 	                MenuItem updatedItem = new MenuItem(selectedItem.getId(), foodname, stock, price, option, category);
 	                DatabaseHelper.updateMenuItem(updatedItem);
-
+	                if (foodname != null && imageBytes != null) {
+				        DatabaseHelper.updateMenuItemImage(foodname, imageBytes);
+				    }
 	                clearFields();
 	                loadMenuItems();
 	            }
@@ -412,6 +430,7 @@ public class AdStockController implements Initializable{
 	        stockField.clear();
 	        categoryComboBox.setValue(null);
 	        selectedItem = null;
+	        imageView.setImage(null);
 	    }
 	
 	//SETTER METHODS
@@ -453,7 +472,6 @@ public class AdStockController implements Initializable{
 			
 			if(isHomeBtn) {
 				AdminController homePage = loader.getController();
-				homePage.setOrderList(orderList);
 				homePage.setUserDetails(role, hasAccount, dbName, id);
 				homePage.displayName();
 			}else if(isOrderBtn) {
@@ -466,12 +484,13 @@ public class AdStockController implements Initializable{
 				tablePage.setName(dbName);
 			}else if(isAccBtn) {
 				AccountDetailsController accPage = loader.getController();
-				accPage.setOrders(orderList);
 				accPage.setUserDetails(role, hasAccount, dbName, id);
 				accPage.displayName();
 				
 			}else if(isEmploymentBtn) {
 				EmploymentController employmentPage = loader.getController();
+				employmentPage.setUserDetails(role, hasAccount, dbName, id);
+				employmentPage.displayName();
 			}else {
 				AdStockController stockPage = loader.getController();
 				stockPage.setUserDetails(role, hasAccount, dbName, id);
@@ -587,8 +606,47 @@ public class AdStockController implements Initializable{
 	            loadMenuItemsByCategory(selectedCategory);
 	        });
 	}
+	
+	 
+	 private byte[] imageBytes;
+	@FXML
+	private ImageView imageView;
+	
+	private void handleUploadButtonAction(Window window) {
+        FileChooser fileChooser = new FileChooser();
+        fileChooser.getExtensionFilters().add(
+                new FileChooser.ExtensionFilter("Image Files", "*.png", "*.jpg", "*.jpeg"));
+        File selectedFile = fileChooser.showOpenDialog(window);
+
+        if (selectedFile != null) {
+            try {
+                FileInputStream fis = new FileInputStream(selectedFile);
+                imageBytes = fis.readAllBytes();
+                Image image = new Image(new ByteArrayInputStream(imageBytes));
+                imageView.setImage(image);
+            } catch (IOException ex) {
+                ex.printStackTrace();
+            }
+        } else {
+            // Set default image if no image is uploaded
+            imageBytes = getDefaultImageBytes();
+            Image defaultImage = new Image(new ByteArrayInputStream(imageBytes));
+            imageView.setImage(defaultImage);
+        }
+    }
+	public static byte[] getDefaultImageBytes() {
+        try (FileInputStream fis = new FileInputStream("src\\pictures\\fast-food.png")) {
+            return fis.readAllBytes();
+        } catch (IOException ex) {
+            ex.printStackTrace();
+            return new byte[0];
+        }
+    }
+	
 	@Override
 	public void initialize(URL arg0, ResourceBundle arg1) {
+			uploadBtn.setOnAction(e -> handleUploadButtonAction(uploadBtn.getScene().getWindow()));
+		
 	        initializeComboBox();
 			Connect();
 			slideWindow();

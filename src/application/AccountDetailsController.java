@@ -129,6 +129,7 @@ public class AccountDetailsController implements Initializable{
 	String adStockPage = "AdStockPage.fxml";
 	String adHomePage = "AdHomePage.fxml";
     String homePage = "HomePage.fxml";
+    String employmentPage = "EmploymentPage.fxml";
     String accPage = "AccountDetails.fxml";
     String cartPage = "MyCart.fxml";
     String tablePage = "TableReservationPage.fxml";
@@ -244,15 +245,15 @@ public class AccountDetailsController implements Initializable{
 	//LEFT PANEL
 	public void homeBtn(ActionEvent event) throws IOException, SQLException {
 		isHomeBtn = true;
-		changeScene(event, role.equals("Owner") ? adHomePage : homePage);
+		changeScene(event, (role.equals("Owner") || role.equals("Employee")) ? adHomePage : homePage);
 	}
 	public void orderBtn(ActionEvent event) throws IOException, SQLException {
 		isOrderBtn = true;
-		changeScene(event, role.equals("Owner") ? adOrderPage : orderPage);
+		changeScene(event, (role.equals("Owner") || role.equals("Employee")) ? adOrderPage : orderPage);
 	}
 	public void showCart(ActionEvent event) throws IOException, SQLException {
 		isCartBtn = true;
-		changeScene(event, role.equals("admin") ? adStockPage : cartPage);
+		changeScene(event, (role.equals("Owner") || role.equals("Employee")) ? adStockPage : cartPage);
 	}
 	public void showTable(ActionEvent event) throws IOException, SQLException {
 			isTableBtn = true;
@@ -261,7 +262,7 @@ public class AccountDetailsController implements Initializable{
 	public void showRewards(ActionEvent event) throws IOException, SQLException {
 			if(hasAccount) {
 				isRewardBtn = true;
-				changeScene(event, rewardsPage);}
+				changeScene(event, (role.equals("Owner") || role.equals("Employee")) ? employmentPage : rewardsPage);}
 			else {showAlert("Create an account to unlock exciting rewards!", AlertType.INFORMATION);}
 	}
 	public void logout(ActionEvent event) throws IOException, ClassNotFoundException, SQLException {
@@ -371,7 +372,6 @@ public class AccountDetailsController implements Initializable{
 		}
 	public void checkNameField() throws SQLException {
 		PreparedStatement pst;
-		ResultSet rs;
 		txtName = nameTextField.getText();
 		
 		if(txtName.isEmpty()) showAlert("Please enter a name", AlertType.ERROR); 
@@ -393,7 +393,6 @@ public class AccountDetailsController implements Initializable{
 	}
 	public void checkUsernameField() throws SQLException {
 		PreparedStatement pst;
-		ResultSet rs;
 		txtUName = usernameTextField.getText();
 		
 		if(txtUName.isEmpty()) showAlert("Please enter a username", AlertType.ERROR); 
@@ -414,7 +413,6 @@ public class AccountDetailsController implements Initializable{
 	}
 	public void checkPasswordField() throws SQLException {
 		PreparedStatement pst;
-		ResultSet rs;
 		txtPass = passwordField.getText();
 		
 		if(txtPass.isEmpty()) showAlert("Please enter a password", AlertType.ERROR); 
@@ -463,7 +461,6 @@ public class AccountDetailsController implements Initializable{
 	}
 	public void checkAddressField() throws SQLException {
 		PreparedStatement pst;
-		ResultSet rs;
 		txtAddress = addressTextField.getText();
 		
 		if(txtAddress.length() > 50) showAlert("Please enter a shorter address", AlertType.ERROR); 
@@ -504,7 +501,7 @@ public class AccountDetailsController implements Initializable{
 
 	    if (role.equals("Customer")) {
 	        handleCustomerControllers(loader);
-	    } else if (role.equals("Owner")) {
+	  } else if (role.equals("Owner") || role.equals("Employee")) {
 	        handleAdminControllers(loader);
 	    }
 	}
@@ -527,6 +524,7 @@ public class AccountDetailsController implements Initializable{
 	        rewardPage.setOrderList(orderList);
 	        rewardPage.setUserDetails(role, hasAccount, dbName, id);  
 	        rewardPage.displayName();
+	        rewardPage.showCoins();
 	    } else if (isAccBtn) {
 		    AccountDetailsController accPage = loader.getController();
 		    accPage.setOrders(orderList);
@@ -543,7 +541,6 @@ public class AccountDetailsController implements Initializable{
 	private void handleAdminControllers(FXMLLoader loader) throws SQLException {
 		if (isHomeBtn) {
 	        AdminController homePage = loader.getController();
-	        homePage.setOrderList(orderList);
 	        homePage.setUserDetails(role, hasAccount, dbName, id);   
 	        homePage.displayName();
 		}
@@ -556,12 +553,12 @@ public class AccountDetailsController implements Initializable{
 	        stockPage.displayName();
 	    } else if (isRewardBtn) {
 	        EmploymentController employmentPage = loader.getController();
+	        employmentPage.setUserDetails(role, hasAccount, dbName, id);
+	        employmentPage.displayName();
 	    }else if (isAccBtn) {
 	        AccountDetailsController accPage = loader.getController();
-	        accPage.setOrders(orderList);
 	        accPage.setUserDetails(role, hasAccount, dbName, id);
 	        accPage.displayName();
-	        
 	    }
 	}
 	private void showAlert(String contentText, AlertType alertType) {
@@ -703,13 +700,22 @@ public class AccountDetailsController implements Initializable{
 		showTooltip("email", emailField);
 		showTooltip("address", addressTextField);	
 	}
-	
+	 public void hideEmployment() {
+			PauseTransition pause = new PauseTransition(Duration.millis(500)); 
+			pause.setOnFinished(event -> {
+			    if (role.equals("Employee")) {
+			        btn2.setVisible(false);
+			    }
+			});
+			pause.play();
+	    }
 	@Override
 	public void initialize(URL arg0, ResourceBundle arg1) {
 		Connect();
 		slideWindow();
 		
 		try {
+			hideEmployment();
 			editDetails();
 			saveDetails();
 		} catch (SQLException e) {
@@ -719,6 +725,7 @@ public class AccountDetailsController implements Initializable{
 			 PauseTransition delay = new PauseTransition(Duration.millis(50));
 		        delay.setOnFinished(event -> {
 		        	try {
+		        		
 		        		displayIcon();
 		        		setField();
 						displayDetails();

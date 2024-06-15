@@ -9,12 +9,17 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.ResourceBundle;
 import java.util.Timer;
 import java.util.TimerTask;
 
 import javafx.animation.TranslateTransition;
 import javafx.application.Platform;
+import javafx.beans.property.ReadOnlyDoubleWrapper;
+import javafx.beans.property.ReadOnlyIntegerWrapper;
+import javafx.beans.property.ReadOnlyStringWrapper;
+import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -25,16 +30,55 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.ButtonType;
+import javafx.scene.control.Dialog;
 import javafx.scene.control.Label;
+import javafx.scene.control.TableColumn;
+import javafx.scene.control.TableView;
+import javafx.scene.control.TextField;
 import javafx.scene.image.ImageView;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.Button;
+import javafx.scene.control.ButtonBar.ButtonData;
 import javafx.scene.layout.AnchorPane;
+import javafx.scene.layout.GridPane;
 import javafx.scene.text.Font;
 import javafx.stage.Stage;
 import javafx.util.Duration;
+import javafx.util.Pair;
 
 public class EmploymentController implements Initializable{
+	@FXML
+	private Button updateBtn;
+	@FXML
+	private Button addBtn;
+	@FXML
+	private Button removeBtn;
+	@FXML
+	private Button removeAllBtn;
+	@FXML
+    private TableView<Employee> tableView;
+
+    @FXML
+    private TableColumn<Employee, Integer> idColumn;
+
+    @FXML
+    private TableColumn<Employee, String> nameColumn;
+
+    @FXML
+    private TableColumn<Employee, String> emailColumn;
+
+    @FXML
+    private TableColumn<Employee, Integer> ageColumn;
+
+    @FXML
+    private TableColumn<Employee, Double> salaryColumn;
+
+    @FXML
+    private TableColumn<Employee, String> roleColumn;
+
+    @FXML
+    private TableColumn<Employee, String> genderColumn;
+
 	
 	@FXML
 	private Label nameLabel;
@@ -79,6 +123,11 @@ public class EmploymentController implements Initializable{
 	boolean isEmploymentBtn = false;
 	
 	int id;
+	
+	
+	int employee_id;
+	String employee_name;
+	
 	
 	Connection con;
 	PreparedStatement pst;
@@ -182,14 +231,11 @@ public class EmploymentController implements Initializable{
 		changeScene(event, tablePage);		
 	}
 	public void showEmployment(ActionEvent event) throws IOException, SQLException {
-			if(hasAccount) {
 				isEmploymentBtn = true;
 				changeScene(event, employmentPage);
-			}
-			else {
-				showAlert("Create an account to unlock exciting rewards!", AlertType.INFORMATION);
-			}
 	}
+		
+
 	public void logout(ActionEvent event) throws IOException, ClassNotFoundException, SQLException {
 		FXMLLoader loader = new FXMLLoader(getClass().getResource("Main.fxml"));
 	    root = loader.load();
@@ -236,8 +282,7 @@ public class EmploymentController implements Initializable{
 			stage.show();
 			
 			if(isHomeBtn) {
-				EmploymentController homePage = loader.getController();
-				homePage.setOrderList(orderList);
+				AdminController homePage = loader.getController();
 				homePage.setUserDetails(role, hasAccount, dbName, id);
 				homePage.displayName();
 			}
@@ -248,21 +293,17 @@ public class EmploymentController implements Initializable{
 				TableReservationController tablePage = loader.getController();
 				tablePage.setHasAccount(hasAccount);
 				tablePage.setName(dbName);
-				tablePage.displayName();
 			}else if(isAccBtn) {
 				AccountDetailsController accPage = loader.getController();
-				accPage.setOrders(orderList);
 				accPage.setUserDetails(role, hasAccount, dbName, id);
 				accPage.displayName();
 			}else if(isEmploymentBtn) {
-				EmploymentController rewardPage = loader.getController();
-				rewardPage.setOrderList(orderList);
-				rewardPage.setUserDetails(role, hasAccount, dbName, id);
-				rewardPage.displayName();
+				EmploymentController employmentPage = loader.getController();
+				employmentPage.setUserDetails(role, hasAccount, dbName, id);
+				employmentPage.displayName();
 			}else {
 				AdStockController stockPage = loader.getController();
 				stockPage.setUserDetails(role, hasAccount, dbName, id);
-				System.out.println(id + "At stockpage");
 				stockPage.displayName();
 			}	
 	}
@@ -274,9 +315,7 @@ public class EmploymentController implements Initializable{
 	    this.dbName = dbName;
 	    this.id = id;
 	}
-	public void setOrderList(List<OrderData> orderList) {
-		this.orderList = orderList;
-	}
+	
 	private void showAlert(String contentText, AlertType alertType) {
 
         Alert alert = new Alert(alertType);
@@ -369,9 +408,180 @@ public class EmploymentController implements Initializable{
             });
         });
 	}
+	
+	
 	@Override
 	public void initialize(URL arg0, ResourceBundle arg1) {
+			try {
+
+				ObservableList<Employee> employees = DatabaseHelper.getAllEmployees();
+
+	            // Set data to the TableView
+	            tableView.setItems(employees);
+
+	            // Set cell value factory for each column
+	            idColumn.setCellValueFactory(cellData -> new ReadOnlyIntegerWrapper(cellData.getValue().getId()).asObject());
+	            nameColumn.setCellValueFactory(cellData -> new ReadOnlyStringWrapper(cellData.getValue().getName()));
+	            emailColumn.setCellValueFactory(cellData -> new ReadOnlyStringWrapper(cellData.getValue().getEmail()));
+	            ageColumn.setCellValueFactory(cellData -> new ReadOnlyIntegerWrapper(cellData.getValue().getAge()).asObject());
+	            salaryColumn.setCellValueFactory(cellData -> new ReadOnlyDoubleWrapper(cellData.getValue().getSalary()).asObject());
+	            roleColumn.setCellValueFactory(cellData -> new ReadOnlyStringWrapper(cellData.getValue().getRole()));
+	            genderColumn.setCellValueFactory(cellData -> new ReadOnlyStringWrapper(cellData.getValue().getGender()));
+			} catch (SQLException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			
+			updateBtn.setOnAction(event -> {
+				try {
+					handleUpdateButton();
+				} catch (SQLException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+			});
+			removeAllBtn.setOnAction(event -> handleRemoveAllButton());
+			addBtn.setOnAction(event -> handleAddButton());
+			removeBtn.setOnAction(event -> handleRemoveButton());
 			Connect();
 			slideWindow();
 	    }
+	
+	public void handleAddButton() {
+	    EmployeeInputDialog dialog = new EmployeeInputDialog();
+	    Employee emp = dialog.showAndWait();
+	    
+	    if (emp != null) {
+	        DatabaseHelper.insertEmployee(emp);
+	        tableView.getItems().add(emp);
+	    } 
+	}
+
+	 
+	 
+	private void handleUpdateButton() throws SQLException {
+		Employee selectedEmployee = tableView.getSelectionModel().getSelectedItem();
+        if (selectedEmployee != null) {
+            // Create a dialog for editing employee details
+            Dialog<Pair<String, Employee>> dialog = new Dialog<>();
+            dialog.setTitle("Edit Employee");
+            dialog.setHeaderText("Edit Employee Details");
+
+            // Set the button types
+            ButtonType updateButtonType = new ButtonType("Update", ButtonData.OK_DONE);
+            dialog.getDialogPane().getButtonTypes().addAll(updateButtonType, ButtonType.CANCEL);
+
+            // Create labels and text fields for each detail
+            GridPane grid = new GridPane();
+            grid.setHgap(10);
+            grid.setVgap(10);
+
+            TextField nameField = new TextField(selectedEmployee.getName());
+            TextField emailField = new TextField(selectedEmployee.getEmail());
+            TextField ageField = new TextField(Integer.toString(selectedEmployee.getAge()));
+            TextField salaryField = new TextField(Double.toString(selectedEmployee.getSalary()));
+            TextField roleField = new TextField(selectedEmployee.getRole());
+            TextField genderField = new TextField(selectedEmployee.getGender());
+
+            grid.add(new Label("Name:"), 0, 0);
+            grid.add(nameField, 1, 0);
+            grid.add(new Label("Email:"), 0, 1);
+            grid.add(emailField, 1, 1);
+            grid.add(new Label("Age:"), 0, 2);
+            grid.add(ageField, 1, 2);
+            grid.add(new Label("Salary:"), 0, 3);
+            grid.add(salaryField, 1, 3);
+            grid.add(new Label("Role:"), 0, 4);
+            grid.add(roleField, 1, 4);
+            grid.add(new Label("Gender:"), 0, 5);
+            grid.add(genderField, 1, 5);
+
+            dialog.getDialogPane().setContent(grid);
+
+            // Convert the result to a pair of button type and employee
+            dialog.setResultConverter(dialogButton -> {
+                if (dialogButton == updateButtonType) {
+                    selectedEmployee.setName(nameField.getText());
+                    selectedEmployee.setEmail(emailField.getText());
+                    selectedEmployee.setAge(Integer.parseInt(ageField.getText()));
+                    selectedEmployee.setSalary(Double.parseDouble(salaryField.getText()));
+                    selectedEmployee.setRole(roleField.getText());
+                    selectedEmployee.setGender(genderField.getText());
+                    return new Pair<>("Update", selectedEmployee);
+                }
+                return null;
+            });
+
+            // Show the dialog and wait for user input
+            dialog.showAndWait().ifPresent(result -> {
+                // Update employee in the database
+                try {
+                    DatabaseHelper.updateEmployee(result.getValue());
+                    // Refresh TableView or any other UI updates
+                    tableView.refresh();
+                } catch (SQLException e) {
+                    e.printStackTrace(); // Handle exception appropriately
+                }
+            });
+        } else {
+            // No employee selected, show an alert
+            Alert alert = new Alert(AlertType.WARNING);
+            alert.setTitle("No Employee Selected");
+            alert.setHeaderText("No Employee Selected");
+            alert.setContentText("Please select an employee to update.");
+            alert.showAndWait();
+        }
+    }
+    
+	
+	 private void handleRemoveButton() {
+        Employee selectedEmployee = tableView.getSelectionModel().getSelectedItem();
+        if (selectedEmployee != null) {
+            Alert alert = new Alert(AlertType.CONFIRMATION);
+            alert.setTitle("Confirm Delete");
+            alert.setHeaderText("Delete Employee");
+            alert.setContentText("Are you sure you want to delete the selected employee?");
+
+            // Show confirmation dialog and wait for user response
+            Optional<ButtonType> result = alert.showAndWait();
+            if (result.isPresent() && result.get() == ButtonType.OK) {
+                try {
+                    // Delete employee from database
+                    DatabaseHelper.deleteEmployee(selectedEmployee);
+                    // Remove employee from TableView
+                    tableView.getItems().remove(selectedEmployee);
+                } catch (SQLException e) {
+                    e.printStackTrace(); // Handle exception appropriately
+                }
+            }
+        } else {
+            // No employee selected, show an alert
+            Alert alert = new Alert(AlertType.WARNING);
+            alert.setTitle("No Employee Selected");
+            alert.setHeaderText("No Employee Selected");
+            alert.setContentText("Please select an employee to delete.");
+            alert.showAndWait();
+        }
+    }
+	 private void handleRemoveAllButton() {
+	        Alert alert = new Alert(AlertType.CONFIRMATION);
+	        alert.setTitle("Confirm Delete");
+	        alert.setHeaderText("Delete All Employees");
+	        alert.setContentText("Are you sure you want to delete all employees?");
+
+	        // Show confirmation dialog and wait for user response
+	        Optional<ButtonType> result = alert.showAndWait();
+	        if (result.isPresent() && result.get() == ButtonType.OK) {
+	            try {
+	                // Delete all employees from the database
+	                DatabaseHelper.deleteAllEmployees();
+	                // Clear TableView
+	                tableView.getItems().clear();
+	            } catch (SQLException e) {
+	                e.printStackTrace(); // Handle exception appropriately
+	            }
+	        }
+	    }
+	
+	
 }

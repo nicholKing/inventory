@@ -3,102 +3,105 @@
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.Label?>
-<?import javafx.scene.control.ProgressBar?>
 <?import javafx.scene.image.Image?>
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.AnchorPane?>
-<?import javafx.scene.layout.BorderPane?>
 <?import javafx.scene.layout.HBox?>
-<?import javafx.scene.layout.Pane?>
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="720.0" prefWidth="1280.0" style="-fx-background-color: E2F9B8;" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="application.RewardsController">
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="720.0" prefWidth="1280.0" style="-fx-background-color: white;" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="application.RewardsController">
    <children>
-      <BorderPane layoutX="420.0" layoutY="205.0" prefHeight="200.0" prefWidth="200.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
-         <top>
-            <AnchorPane prefHeight="80.0" prefWidth="200.0" style="-fx-background-color: WHITE;" BorderPane.alignment="CENTER">
+      <AnchorPane fx:id="slider" layoutX="4.0" layoutY="-4.0" prefHeight="729.0" prefWidth="89.0" style="-fx-border-width: 20;">
+         <children>
+            <VBox alignment="CENTER" layoutX="-11.0" layoutY="92.0" prefHeight="633.0" prefWidth="102.0" spacing="15.0" style="-fx-background-color: E8D8C4;">
                <children>
-                  <Pane layoutX="451.0" layoutY="28.0" prefHeight="51.0" prefWidth="1280.0" style="-fx-background-color: BBCE8A;" AnchorPane.bottomAnchor="64.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
-                     <children>
-                        <Button layoutX="1128.0" layoutY="13.0" mnemonicParsing="false" onAction="#showFAQ" text="FAQ" />
-                        <Button layoutX="1176.0" layoutY="13.0" mnemonicParsing="false" text="ABOUT US" />
-                        <Label layoutX="14.0" layoutY="11.0" prefHeight="30.0" prefWidth="287.0" text="Title ">
-                           <font>
-                              <Font size="25.0" />
-                           </font>
-                        </Label>
-                     </children>
-                  </Pane>
-                  <HBox layoutX="200.0" layoutY="49.0" prefHeight="66.0" prefWidth="1080.0" AnchorPane.leftAnchor="200.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="49.0">
-                     <children>
-                        <Button mnemonicParsing="false" onAction="#homeBtn" prefHeight="38.0" prefWidth="247.0" text="HOME" textAlignment="CENTER">
-                           <font>
-                              <Font size="18.0" />
-                           </font>
-                           <HBox.margin>
-                              <Insets left="15.0" top="15.0" />
-                           </HBox.margin>
-                        </Button>
-                        <Button mnemonicParsing="false" onAction="#orderBtn" prefHeight="38.0" prefWidth="247.0" text="ORDER" textAlignment="CENTER">
-                           <font>
-                              <Font size="18.0" />
-                           </font>
-                           <HBox.margin>
-                              <Insets left="15.0" top="15.0" />
-                           </HBox.margin>
-                        </Button>
-                        <Button mnemonicParsing="false" onAction="#signUp" prefHeight="39.0" prefWidth="103.0" text="SIGN UP" textAlignment="CENTER">
-                           <font>
-                              <Font size="18.0" />
-                           </font>
-                           <HBox.margin>
-                              <Insets left="300.0" top="15.0" />
-                           </HBox.margin>
-                        </Button>
-                        <Button mnemonicParsing="false" onAction="#signIn" prefHeight="39.0" prefWidth="103.0" text="SIGN IN" textAlignment="CENTER">
-                           <font>
-                              <Font size="18.0" />
-                           </font>
-                           <HBox.margin>
-                              <Insets left="15.0" top="15.0" />
-                           </HBox.margin>
-                        </Button>
-                     </children>
-                  </HBox>
-                     <Label fx:id="menuClose" layoutX="15.0" layoutY="65.0" prefHeight="34.0" prefWidth="101.0" text="MENU" textAlignment="CENTER">
+                  <Button contentDisplay="TOP" mnemonicParsing="false" onAction="#homeBtn" prefHeight="86.0" prefWidth="159.0" style="-fx-background-color: E8D8C4;" text="Home" textAlignment="CENTER">
                      <font>
-                        <Font size="18.0" />
+                        <Font size="14.0" />
                      </font>
                      <graphic>
-                        <ImageView fitHeight="34.0" fitWidth="41.0" pickOnBounds="true" preserveRatio="true">
+                        <ImageView fitHeight="43.0" fitWidth="44.0" pickOnBounds="true" preserveRatio="true">
                            <image>
-                              <Image url="@../pictures/menu.png" />
+                              <Image url="@../pictures/home%20-%20light.png" />
                            </image>
                         </ImageView>
                      </graphic>
-                  </Label>
-                   <Label fx:id="menu" layoutX="15.0" layoutY="65.0" prefHeight="34.0" prefWidth="101.0" text="MENU" textAlignment="CENTER">
+                  </Button>
+                  <Button contentDisplay="TOP" mnemonicParsing="false" onAction="#orderBtn" prefHeight="77.0" prefWidth="181.0" style="-fx-background-color: E8D8C4;" text="Order" textAlignment="CENTER">
                      <font>
-                        <Font size="18.0" />
+                        <Font size="14.0" />
                      </font>
                      <graphic>
-                        <ImageView fitHeight="34.0" fitWidth="41.0" pickOnBounds="true" preserveRatio="true">
+                        <ImageView fitHeight="43.0" fitWidth="84.0" pickOnBounds="true" preserveRatio="true">
                            <image>
-                              <Image url="@../pictures/menu.png" />
+                              <Image url="@../pictures/menu(2).png" />
                            </image>
                         </ImageView>
                      </graphic>
-                  </Label>
+                  </Button>
+                  <Button contentDisplay="TOP" mnemonicParsing="false" onAction="#showCart" prefHeight="74.0" prefWidth="180.0" style="-fx-background-color: E8D8C4;" text="Cart">
+                     <font>
+                        <Font name="Arial" size="14.0" />
+                     </font>
+                     <graphic>
+                        <ImageView fitHeight="43.0" fitWidth="44.0" pickOnBounds="true" preserveRatio="true">
+                           <image>
+                              <Image url="@../pictures/shopping-cart.png" />
+                           </image>
+                        </ImageView>
+                     </graphic>
+                  </Button>
+                  <Button alignment="CENTER" contentDisplay="TOP" mnemonicParsing="false" onAction="#showTable" prefHeight="87.0" prefWidth="175.0" style="-fx-background-color: E8D8C4;" text="Table" textAlignment="CENTER" wrapText="true">
+                     <font>
+                        <Font name="Arial" size="14.0" />
+                     </font>
+                     <graphic>
+                        <ImageView fitHeight="43.0" fitWidth="44.0" pickOnBounds="true" preserveRatio="true">
+                           <image>
+                              <Image url="@../pictures/dining-table.png" />
+                           </image>
+                        </ImageView>
+                     </graphic>
+                  </Button>
+                  <Button contentDisplay="TOP" mnemonicParsing="false" onAction="#showRewards" prefHeight="75.0" prefWidth="156.0" style="-fx-background-color: E8D8C4;" text="Rewards">
+                     <font>
+                        <Font name="Arial" size="14.0" />
+                     </font>
+                     <graphic>
+                        <ImageView fitHeight="43.0" fitWidth="44.0" pickOnBounds="true" preserveRatio="true">
+                           <image>
+                              <Image url="@../pictures/gift.png" />
+                           </image>
+                        </ImageView>
+                     </graphic>
+                  </Button>
+                  <Button fx:id="logoutBtn" contentDisplay="TOP" mnemonicParsing="false" onAction="#logout" prefHeight="76.0" prefWidth="171.0" style="-fx-background-color: E8D8C4;" text="Logout">
+                     <font>
+                        <Font name="Arial" size="14.0" />
+                     </font>
+                     <VBox.margin>
+                        <Insets />
+                     </VBox.margin>
+                     <graphic>
+                        <ImageView fitHeight="88.0" fitWidth="39.0" pickOnBounds="true" preserveRatio="true">
+                           <image>
+                              <Image url="@../pictures/enter.png" />
+                           </image>
+                        </ImageView>
+                     </graphic>
+                  </Button>
                </children>
-            </AnchorPane>
-         </top>
-         <left>
-            <AnchorPane fx:id="slider" prefHeight="200.0" prefWidth="200.0" style="-fx-background-color: BBCE8A;" BorderPane.alignment="CENTER">
+            </VBox>
+         </children>
+      </AnchorPane>
+      <AnchorPane fx:id="slider2" layoutX="1065.0" layoutY="85.0" prefHeight="640.0" prefWidth="215.0" style="-fx-background-color: E8D8C4;">
+         <children>
+            <VBox prefHeight="640.0" prefWidth="215.0">
                <children>
-                  <VBox layoutX="35.0" layoutY="183.0" prefHeight="609.0" prefWidth="200.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0">
+                  <HBox prefHeight="0.0" prefWidth="215.0">
                      <children>
-                        <Label fx:id="nameLabel" prefHeight="50.0" prefWidth="200.0" text="Guest">
+                        <Label fx:id="nameLabel" prefHeight="75.0" prefWidth="135.0" text="Guest" wrapText="true">
                            <padding>
                               <Insets left="15.0" />
                            </padding>
@@ -106,61 +109,270 @@
                               <Font size="24.0" />
                            </font>
                         </Label>
-                        <Button mnemonicParsing="false" onAction="#showAccount" prefHeight="77.0" prefWidth="200.0" style="-fx-background-color: BBCE8A;" text="Account">
+                        <Button alignment="CENTER" mnemonicParsing="false" onAction="#showAccount" prefHeight="60.0" prefWidth="73.0" style="-fx-background-color: E8D8C4;">
                            <font>
                               <Font name="Arial" size="22.0" />
                            </font>
-                        </Button>
-                        <Button mnemonicParsing="false" onAction="#showCart" prefHeight="77.0" prefWidth="200.0" style="-fx-background-color: BBCE8A;" text="My Cart">
-                           <font>
-                              <Font name="Arial" size="22.0" />
-                           </font>
-                        </Button>
-                        <Button alignment="CENTER" contentDisplay="CENTER" mnemonicParsing="false" onAction="#showTable" prefHeight="77.0" prefWidth="200.0" style="-fx-background-color: BBCE8A;" text="View Table" textAlignment="CENTER" wrapText="true">
-                           <font>
-                              <Font name="Arial" size="22.0" />
-                           </font>
-                        </Button>
-                        <Button mnemonicParsing="false" onAction="#showRewards" prefHeight="77.0" prefWidth="200.0" style="-fx-background-color: BBCE8A;" text="Rewards">
-                           <font>
-                              <Font name="Arial" size="22.0" />
-                           </font>
-                        </Button>
-                        <Button fx:id="logoutBtn" mnemonicParsing="false" onAction="#logout" prefHeight="77.0" prefWidth="200.0" style="-fx-background-color: BBCE8A;" text="Logout">
-                           <font>
-                              <Font name="Arial" size="22.0" />
-                           </font>
-                           <VBox.margin>
-                              <Insets top="115.0" />
-                           </VBox.margin>
+                           <graphic>
+                              <ImageView fitHeight="43.0" fitWidth="44.0" pickOnBounds="true" preserveRatio="true">
+                                 <image>
+                                    <Image url="@../pictures/profile-user.png" />
+                                 </image>
+                              </ImageView>
+                           </graphic>
                         </Button>
                      </children>
-                  </VBox>
+                     <VBox.margin>
+                        <Insets top="24.0" />
+                     </VBox.margin>
+                  </HBox>
+                  <HBox alignment="CENTER_LEFT" prefHeight="24.0" prefWidth="215.0">
+                     <children>
+                        <Label fx:id="roleLabel" prefHeight="21.0" prefWidth="111.0" text="Role">
+                           <font>
+                              <Font size="13.0" />
+                           </font>
+                           <padding>
+                              <Insets left="5.0" />
+                           </padding>
+                           <HBox.margin>
+                              <Insets left="8.0" />
+                           </HBox.margin>
+                        </Label>
+                        <Button mnemonicParsing="false" onAction="#showAccount" text="Edit Account" />
+                     </children>
+                     <VBox.margin>
+                        <Insets bottom="440.0" />
+                     </VBox.margin>
+                  </HBox>
+                  <HBox alignment="CENTER" prefHeight="29.0" prefWidth="215.0" spacing="32.0">
+                     <children>
+                        <Button mnemonicParsing="false" onAction="#signUp" style="-fx-background-color: white;" stylesheets="@application.css" text="Sign up">
+                           <font>
+                              <Font size="18.0" />
+                           </font>
+                        </Button>
+                        <Button mnemonicParsing="false" onAction="#signIn" style="-fx-background-color: white;" stylesheets="@application.css" text="Log in">
+                           <font>
+                              <Font size="18.0" />
+                           </font>
+                        </Button>
+                     </children>
+                  </HBox>
                </children>
-            </AnchorPane>
-         </left>
-         <center>
-            <AnchorPane prefHeight="605.0" prefWidth="850.0" style="-fx-background-color: E2F9B8;" BorderPane.alignment="CENTER">
+            </VBox>
+         </children>
+      </AnchorPane>
+      <AnchorPane prefHeight="90.0" prefWidth="1280.0" style="-fx-background-color: C7B7A3;">
+         <children>
+            <ImageView fx:id="accountClose" fitHeight="38.0" fitWidth="38.0" layoutX="1217.0" layoutY="25.0" pickOnBounds="true" preserveRatio="true">
+               <image>
+                  <Image url="@../pictures/menu.png" />
+               </image>
+            </ImageView>
+            <ImageView fx:id="menuClose" fitHeight="99.0" fitWidth="92.0" layoutX="2.0" layoutY="-2.0" pickOnBounds="true" preserveRatio="true">
+               <image>
+                  <Image url="@../pictures/theposher.png" />
+               </image>
+            </ImageView>
+            <ImageView fx:id="account" fitHeight="38.0" fitWidth="38.0" layoutX="1217.0" layoutY="25.0" pickOnBounds="true" preserveRatio="true">
+               <image>
+                  <Image url="@../pictures/menu.png" />
+               </image>
+            </ImageView>
+            <ImageView fx:id="menu" fitHeight="99.0" fitWidth="92.0" layoutX="2.0" layoutY="-2.0" pickOnBounds="true" preserveRatio="true">
+               <image>
+                  <Image url="@../pictures/theposher.png" />
+               </image>
+            </ImageView>
+         </children></AnchorPane>
+      <Button fx:id="infoBtn" layoutX="278.0" layoutY="132.0" mnemonicParsing="false" prefHeight="29.0" prefWidth="31.0" style="-fx-background-color: white;">
+         <graphic>
+            <ImageView fitHeight="36.0" fitWidth="30.0" pickOnBounds="true" preserveRatio="true">
+               <image>
+                  <Image url="@../pictures/question-mark%20(1).png" />
+               </image>
+            </ImageView>
+         </graphic>
+      </Button>
+      <Label fx:id="headerLabel" alignment="CENTER" layoutX="132.0" layoutY="125.0" prefHeight="47.0" prefWidth="162.0" text="Rewards" textAlignment="CENTER">
+         <font>
+            <Font size="33.0" />
+         </font>
+      </Label>
+      <ImageView fitHeight="44.0" fitWidth="47.0" layoutX="943.0" layoutY="123.0" pickOnBounds="true" preserveRatio="true">
+         <image>
+            <Image url="@../pictures/money.png" />
+         </image>
+      </ImageView>
+      <Label fx:id="coinsLabel" layoutX="993.0" layoutY="118.0" prefHeight="57.0" prefWidth="215.0" text="0" textAlignment="CENTER">
+         <font>
+            <Font size="25.0" />
+         </font>
+      </Label>
+      <HBox alignment="CENTER" layoutX="260.0" layoutY="262.0" prefHeight="286.0" prefWidth="760.0" spacing="32.0">
+         <children>
+            <VBox alignment="CENTER" prefHeight="258.0" prefWidth="162.0" spacing="8.0" style="-fx-background-color: #72B46A;">
                <children>
-                  <Label alignment="CENTER" contentDisplay="CENTER" layoutX="327.0" layoutY="24.0" prefHeight="53.0" prefWidth="426.0" text="Points and Rewards" textAlignment="CENTER">
+                  <Label alignment="CENTER" prefHeight="135.0" prefWidth="162.0" style="-fx-background-color: white;" text="Gift Certificate worth ₱200" textAlignment="CENTER" wrapText="true">
                      <font>
-                        <Font size="36.0" />
+                        <Font size="20.0" />
                      </font>
+                     <VBox.margin>
+                        <Insets left="8.0" right="8.0" />
+                     </VBox.margin>
                   </Label>
-                  <Label layoutX="115.0" layoutY="101.0" prefHeight="33.0" prefWidth="105.0" text="Points:">
+                  <HBox alignment="CENTER_LEFT" prefHeight="36.0" prefWidth="190.0">
+                     <children>
+                        <ImageView fitHeight="42.0" fitWidth="36.0" pickOnBounds="true" preserveRatio="true">
+                           <image>
+                              <Image url="@../pictures/money.png" />
+                           </image>
+                        </ImageView>
+                        <Label prefHeight="36.0" prefWidth="64.0" text="200" textAlignment="CENTER">
+                           <font>
+                              <Font size="22.0" />
+                           </font>
+                        </Label>
+                     </children>
+                     <VBox.margin>
+                        <Insets />
+                     </VBox.margin>
+                     <padding>
+                        <Insets left="8.0" />
+                     </padding>
+                  </HBox>
+                  <Button fx:id="claim1" mnemonicParsing="false" prefHeight="41.0" prefWidth="131.0" text="CLAIM">
                      <font>
-                        <Font size="26.0" />
+                        <Font size="16.0" />
                      </font>
-                  </Label>
-                  <Label layoutX="41.0" layoutY="152.0" prefHeight="47.0" prefWidth="197.0" text="Select Rewards">
+                     <padding>
+                        <Insets bottom="8.0" left="15.0" right="15.0" top="8.0" />
+                     </padding>
+                  </Button>
+               </children>
+            </VBox>
+            <VBox alignment="CENTER" prefHeight="258.0" prefWidth="162.0" spacing="8.0" style="-fx-background-color: #99B2DD;">
+               <children>
+                  <Label alignment="CENTER" prefHeight="135.0" prefWidth="162.0" style="-fx-background-color: white;" text="Gift Certificate worth ₱500" textAlignment="CENTER" wrapText="true">
                      <font>
-                        <Font size="26.0" />
+                        <Font size="20.0" />
                      </font>
+                     <VBox.margin>
+                        <Insets left="8.0" right="8.0" />
+                     </VBox.margin>
                   </Label>
-                  <ProgressBar layoutX="238.0" layoutY="96.0" prefHeight="48.0" prefWidth="552.0" progress="0.0" />
-                  <Button layoutX="105.0" layoutY="326.0" mnemonicParsing="false" prefHeight="37.0" prefWidth="188.0" text="CLAIM" />
-               </children></AnchorPane>
-         </center>
-      </BorderPane>
+                  <HBox alignment="CENTER_LEFT" prefHeight="36.0" prefWidth="190.0">
+                     <children>
+                        <ImageView fitHeight="42.0" fitWidth="36.0" pickOnBounds="true" preserveRatio="true">
+                           <image>
+                              <Image url="@../pictures/money.png" />
+                           </image>
+                        </ImageView>
+                        <Label prefHeight="36.0" prefWidth="64.0" text="500" textAlignment="CENTER">
+                           <font>
+                              <Font size="22.0" />
+                           </font>
+                           <padding>
+                              <Insets left="8.0" />
+                           </padding>
+                        </Label>
+                     </children>
+                     <VBox.margin>
+                        <Insets />
+                     </VBox.margin>
+                  </HBox>
+                  <Button fx:id="claim2" mnemonicParsing="false" prefHeight="41.0" prefWidth="131.0" text="CLAIM">
+                     <font>
+                        <Font size="16.0" />
+                     </font>
+                     <padding>
+                        <Insets bottom="8.0" left="15.0" right="15.0" top="8.0" />
+                     </padding>
+                  </Button>
+               </children>
+            </VBox>
+            <VBox alignment="CENTER" prefHeight="258.0" prefWidth="162.0" spacing="8.0" style="-fx-background-color: #FFB20F;">
+               <children>
+                  <Label alignment="CENTER" prefHeight="135.0" prefWidth="162.0" style="-fx-background-color: white;" text="Gift Certificate worth ₱1000" textAlignment="CENTER" wrapText="true">
+                     <font>
+                        <Font size="20.0" />
+                     </font>
+                     <VBox.margin>
+                        <Insets left="8.0" right="8.0" />
+                     </VBox.margin>
+                  </Label>
+                  <HBox alignment="CENTER_LEFT" prefHeight="36.0" prefWidth="190.0">
+                     <children>
+                        <ImageView fitHeight="42.0" fitWidth="36.0" pickOnBounds="true" preserveRatio="true">
+                           <image>
+                              <Image url="@../pictures/money.png" />
+                           </image>
+                        </ImageView>
+                        <Label prefHeight="36.0" prefWidth="64.0" text="1000" textAlignment="CENTER">
+                           <font>
+                              <Font size="22.0" />
+                           </font>
+                        </Label>
+                     </children>
+                     <VBox.margin>
+                        <Insets />
+                     </VBox.margin>
+                     <padding>
+                        <Insets left="8.0" />
+                     </padding>
+                  </HBox>
+                  <Button fx:id="claim3" mnemonicParsing="false" prefHeight="41.0" prefWidth="131.0" text="CLAIM">
+                     <font>
+                        <Font size="16.0" />
+                     </font>
+                     <padding>
+                        <Insets bottom="8.0" left="15.0" right="15.0" top="8.0" />
+                     </padding>
+                  </Button>
+               </children>
+            </VBox>
+            <VBox alignment="CENTER" prefHeight="258.0" prefWidth="162.0" spacing="8.0" style="-fx-background-color: #F66E3C;">
+               <children>
+                  <Label alignment="CENTER" prefHeight="135.0" prefWidth="162.0" style="-fx-background-color: white;" text="Gift Certificate worth ₱2000" textAlignment="CENTER" wrapText="true">
+                     <font>
+                        <Font size="20.0" />
+                     </font>
+                     <VBox.margin>
+                        <Insets left="8.0" right="8.0" />
+                     </VBox.margin>
+                  </Label>
+                  <HBox alignment="CENTER_LEFT" prefHeight="36.0" prefWidth="190.0">
+                     <children>
+                        <ImageView fitHeight="42.0" fitWidth="36.0" pickOnBounds="true" preserveRatio="true">
+                           <image>
+                              <Image url="@../pictures/money.png" />
+                           </image>
+                        </ImageView>
+                        <Label prefHeight="36.0" prefWidth="64.0" text="2000" textAlignment="CENTER">
+                           <font>
+                              <Font size="22.0" />
+                           </font>
+                        </Label>
+                     </children>
+                     <VBox.margin>
+                        <Insets />
+                     </VBox.margin>
+                     <padding>
+                        <Insets left="8.0" />
+                     </padding>
+                  </HBox>
+                  <Button fx:id="claim4" mnemonicParsing="false" prefHeight="41.0" prefWidth="131.0" text="CLAIM">
+                     <font>
+                        <Font size="16.0" />
+                     </font>
+                     <padding>
+                        <Insets bottom="8.0" left="15.0" right="15.0" top="8.0" />
+                     </padding>
+                  </Button>
+               </children>
+            </VBox>
+         </children>
+      </HBox>
    </children>
 </AnchorPane>

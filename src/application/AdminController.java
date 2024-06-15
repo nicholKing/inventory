@@ -13,6 +13,7 @@ import java.util.ResourceBundle;
 import java.util.Timer;
 import java.util.TimerTask;
 
+import javafx.animation.PauseTransition;
 import javafx.animation.TranslateTransition;
 import javafx.application.Platform;
 import javafx.event.ActionEvent;
@@ -52,7 +53,8 @@ public class AdminController implements Initializable{
     private ImageView accountClose;
     @FXML
     private AnchorPane slider2;
-    
+    @FXML
+	private Button employmentBtn;
 	private Stage stage;
 	private Scene scene;
 	private Parent root;
@@ -166,12 +168,10 @@ public class AdminController implements Initializable{
 	
 	//LEFT PANEL
 	public void homeBtn(ActionEvent event) throws IOException, SQLException {
-		System.out.println("Home");
 		isHomeBtn = true;
 		changeScene(event, homePage);
 }
 	public void orderBtn(ActionEvent event) throws IOException, SQLException {
-		System.out.println("Order");
 		isOrderBtn = true;
 		changeScene(event, orderPage);
 	}
@@ -183,13 +183,13 @@ public class AdminController implements Initializable{
 		changeScene(event, tablePage);		
 	}
 	public void showEmployment(ActionEvent event) throws IOException, SQLException {
-			if(hasAccount) {
-				isEmploymentBtn = true;
-				changeScene(event, employmentPage);
-			}
-			else {
-				showAlert("Create an account to unlock exciting rewards!", AlertType.INFORMATION);
-			}
+		if(hasAccount && role.equals("Owner")) {
+			isEmploymentBtn = true;
+			changeScene(event, employmentPage);
+		}
+		else {
+			showAlert("This page is only for owner.", AlertType.INFORMATION);
+		}
 	}
 	public void logout(ActionEvent event) throws IOException, ClassNotFoundException, SQLException {
 		FXMLLoader loader = new FXMLLoader(getClass().getResource("Main.fxml"));
@@ -238,7 +238,6 @@ public class AdminController implements Initializable{
 			
 			if(isHomeBtn) {
 				AdminController homePage = loader.getController();
-				homePage.setOrderList(orderList);
 				homePage.setUserDetails(role, hasAccount, dbName, id);
 				homePage.displayName();
 			}
@@ -247,22 +246,18 @@ public class AdminController implements Initializable{
 				orderPage.setUserDetails(role, hasAccount, dbName, id);
 			}else if(isTableBtn) {
 				TableReservationController tablePage = loader.getController();
-				tablePage.setHasAccount(hasAccount);
-				tablePage.setName(dbName);
+				tablePage.setUserDetails(role, hasAccount, dbName, id);
 			}else if(isAccBtn) {
 				AccountDetailsController accPage = loader.getController();
-				accPage.setOrders(orderList);
 				accPage.setUserDetails(role, hasAccount, dbName, id);
 				accPage.displayName();
 			}else if(isEmploymentBtn) {
 				EmploymentController rewardPage = loader.getController();
-				rewardPage.setOrderList(orderList);
 				rewardPage.setUserDetails(role, hasAccount, dbName, id);
 				rewardPage.displayName();
 			}else {
 				AdStockController stockPage = loader.getController();
 				stockPage.setUserDetails(role, hasAccount, dbName, id);
-				System.out.println(id + "At stockpage");
 				stockPage.displayName();
 			}	
 	}
@@ -273,9 +268,6 @@ public class AdminController implements Initializable{
 	    this.hasAccount = hasAccount;
 	    this.dbName = dbName;
 	    this.id = id;
-	}
-	public void setOrderList(List<OrderData> orderList) {
-		this.orderList = orderList;
 	}
 	private void showAlert(String contentText, AlertType alertType) {
 
@@ -369,9 +361,11 @@ public class AdminController implements Initializable{
             });
         });
 	}
+	
 	@Override
 	public void initialize(URL arg0, ResourceBundle arg1) {
+			
 			Connect();
 			slideWindow();
-	    }
+	}		
 }

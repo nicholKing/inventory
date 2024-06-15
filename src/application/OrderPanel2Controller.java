@@ -1,9 +1,6 @@
 package application;
 
-
 import java.sql.SQLException;
-import java.util.Map;
-
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
@@ -34,7 +31,7 @@ public class OrderPanel2Controller {
     public void setItemDetails(MenuItem item) throws SQLException {
         foodLabel.setText(item.getFoodName());
         priceLabel.setText(String.valueOf(item.getPrice()));
-        
+        img.setImage(DatabaseHelper.getImageFromDatabase(item.getFoodName()));
     }
    
     public Button getSelectBtn() {

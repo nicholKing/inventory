@@ -390,6 +390,7 @@ public class OrderController implements Initializable{
 	    priceSlidingLabel.setText(String.valueOf(selectedItem.getPrice()));
 	    if(!selected) {
 	    	slideWindow();
+	    	
 	    }
 	    recordButtonClick(foodName);
 	    selectOption(item);
@@ -519,6 +520,7 @@ public class OrderController implements Initializable{
 		else if (previousClickedBtn.equals(newClickedBtn)) {
 		  quantity++;
 		  qtyTextField.setText(String.valueOf(quantity));
+		  
 		}
 		else {
 			quantity = 1;
@@ -562,22 +564,21 @@ public class OrderController implements Initializable{
 			rewardPage.setOrderList(orderList);
 			rewardPage.setUserDetails(role, hasAccount, dbName, id);
 			rewardPage.displayName();
+			rewardPage.showCoins();
 		}else {
 			CartController cartPage = loader.getController();
 			cartPage.setOrders(orderList);
 			cartPage.setUserDetails(role, hasAccount, dbName, id);
 			cartPage.displayName();
-			
-			
 		}
 		
 	}
 	private void setSlides() {
 		menu.setVisible(true);
 		menuClose.setVisible(false);
-		
-		
+
 		menu.setOnMouseClicked(event -> {
+			
             TranslateTransition slide = new TranslateTransition();
             slide.setDuration(Duration.seconds(0.4));
             slide.setNode(slider);
@@ -588,12 +589,14 @@ public class OrderController implements Initializable{
             slider.setTranslateX(0);
 
             slide.setOnFinished((ActionEvent e)-> {
+            	
                 menu.setVisible(false);
                 menuClose.setVisible(true);
             });
         });
 
         menuClose.setOnMouseClicked(event -> {
+        	
             TranslateTransition slide = new TranslateTransition();
             slide.setDuration(Duration.seconds(0.4));
             slide.setNode(slider);
@@ -611,6 +614,7 @@ public class OrderController implements Initializable{
 
        	slider2.setTranslateX(225);
        	accountClose.setOnMouseClicked(event -> {
+       		
             TranslateTransition slide = new TranslateTransition();
             slide.setDuration(Duration.seconds(0.4));
             slide.setNode(slider2);
@@ -621,6 +625,7 @@ public class OrderController implements Initializable{
             slider2.setTranslateX(225);
 
             slide.setOnFinished((ActionEvent e)-> {
+            	
                 account.setVisible(false);
                 accountClose.setVisible(true);
             });
@@ -637,6 +642,7 @@ public class OrderController implements Initializable{
             slider2.setTranslateX(0);
 
             slide.setOnFinished((ActionEvent e)-> {
+            	selected = false;
             	clicked = false;
             	account.setVisible(true);
                 accountClose.setVisible(false);
@@ -654,7 +660,7 @@ public class OrderController implements Initializable{
             slide.play();
             
             slide.setOnFinished((ActionEvent e)-> {
-            	
+
             });
         
 	}

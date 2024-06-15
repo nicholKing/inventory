@@ -80,6 +80,7 @@ public class CartController implements Initializable{
 	List<OrderData> orderList = new ArrayList<>();
 	OrderData orderData = new OrderData();
 	int id;
+	int rewardCoins;
 	String role;
 	String name;
 	String username = "";
@@ -231,7 +232,6 @@ public class CartController implements Initializable{
             // Check if the current order has the same food name and size as an existing order in mergedList
             for (OrderData mergedOrder : mergedList) {
                 if (currentOrder.getFoodName().equals(mergedOrder.getFoodName()) && currentOrder.getOption().equals(mergedOrder.getOption())) {
-                	System.out.println("Salamin");
                     // If the same food item with the same size is found, update the quantity
                     int totalQuantity = Integer.parseInt(mergedOrder.getQty()) + Integer.parseInt(currentOrder.getQty());
                     mergedOrder.setQty(String.valueOf(totalQuantity));
@@ -260,6 +260,7 @@ public class CartController implements Initializable{
                 deleteBtn = orderDataController.getButton();
                 orderDataController.setData(order);
                 orderLayout.getChildren().add(hBox);
+                totalPriceLabel.setText("Total Price: " + String.valueOf(getTotalPrice()));
                 deleteBtn.setOnAction(e ->{
                 	orderLayout.getChildren().remove(hBox);
                 	orderList.remove(order);
@@ -283,9 +284,8 @@ public class CartController implements Initializable{
 		orderPage.setOrders(orderList);
 	}
 	
-	public void proceedToCheckout() {
-        DatabaseHelper databaseHelper = new DatabaseHelper();
-
+	public void proceedToCheckout() throws SQLException {
+ 
         // Iterate through each item in the cart
         for (OrderData order : orderList) {
             String itemName = order.getFoodName();
@@ -319,10 +319,12 @@ public class CartController implements Initializable{
                 showAlert("An error occurred while updating stock for " + itemName + " (" + option + ").", AlertType.ERROR);
             }
         }
+        
         if(successOrder) {
         		successOrder = false;
         		orderLayout.getChildren().clear();
         		showCartSummaryDialog();
+        		giveReward();
         		totalPriceLabel.setText("");
         		orderList.clear();
         }
@@ -351,6 +353,48 @@ public class CartController implements Initializable{
             showAlert("Unable to load the order summary dialog.", AlertType.ERROR);
         }
     }
+	
+	public void giveReward() throws SQLException {
+		if(hasAccount) {
+			DatabaseHelper.storeTotalPrice(id, getTotalPrice());
+			rewardCoins = DatabaseHelper.calculateRewardCoins(getTotalPrice());
+			DatabaseHelper.storeRewardCoins(id, rewardCoins);
+			String message;
+			if(rewardCoins == 0) {
+				  message = "Thank you for ordering! Kindly proceed to the counter for your payment!"; 
+				  return;
+			}
+			else if(rewardCoins == 1) {
+				 message = rewardCoins + " coin awarded to the user!";
+			}
+			else {
+				message = rewardCoins + " coins awarded to the user!";
+			}
+			showAlert(message, AlertType.INFORMATION);
+
+	        Alert alert = new Alert(AlertType.INFORMATION);
+	        alert.setTitle("Notice");
+	        alert.setHeaderText(null);
+	        alert.setContentText(message);
+	        Scene scene = alert.getDialogPane().getScene();
+	        scene.getStylesheets().add(getClass().getResource("alert.css").toExternalForm());
+
+	        // Handle the hidden event of the alert
+	        alert.setOnHidden(event -> {
+	            // Show the next alert or perform next actions here
+	            Platform.runLater(() -> {
+	            	showAlert("Thank you for ordering! Kindly proceed to the counter for your payment!", AlertType.INFORMATION);
+	            });
+	        });
+
+	        // Show the initial alert
+	        alert.showAndWait(); // Wait for the alert to be closed
+	    }
+		else {
+			showAlert("Thank you for ordering! Kindly proceed to the counter for your payment!", AlertType.INFORMATION);
+		}
+		
+	}
 	
 	
 	//HELPER METHODS
@@ -397,6 +441,7 @@ public class CartController implements Initializable{
 				rewardPage.setOrderList(orderList);
 				rewardPage.setUserDetails(role, hasAccount, dbName, id);  
 				rewardPage.displayName();
+				rewardPage.showCoins();
 			}else {
 				CartController cartPage = loader.getController();
 				cartPage.setOrders(orderList);
@@ -509,7 +554,12 @@ public class CartController implements Initializable{
 	}
 	public void setOrders(List<OrderData> orderList) {
 		this.orderList = orderList;
-		totalPriceLabel.setText("Total Price: " + String.valueOf(getTotalPrice()));
+		if (orderLayout.getChildren().isEmpty()) {
+			totalPriceLabel.setText("");
+		} else {
+			totalPriceLabel.setText("Total Price: " + String.valueOf(getTotalPrice()));
+		}
+		
 		displayOrders();
 	}
 	public void setOrderList(List<OrderData> orderList) {
@@ -525,7 +575,7 @@ public class CartController implements Initializable{
 	
 	@Override
 	public void initialize(URL arg0, ResourceBundle arg1) {
-			
+		
 			confirmBtn.setOnMouseClicked(event ->{
 				if(orderList.isEmpty()) {
 					showAlert("Please choose your order first.", AlertType.ERROR);
@@ -539,15 +589,17 @@ public class CartController implements Initializable{
 				    scenes.getStylesheets().add(getClass().getResource("alert.css").toExternalForm());
 					
 					if(alert.showAndWait().get() == ButtonType.OK) {
-						proceedToCheckout();
+						try {
+							proceedToCheckout();
+						} catch (SQLException e) {
+							// TODO Auto-generated catch block
+							e.printStackTrace();
+						}
 						
 					}
 				}
-					
-				
-			
+		
 			});
-	
         	Connect();
         	setSlides();
 	}

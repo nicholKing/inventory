@@ -128,7 +128,7 @@
             </VBox>
          </children>
       </AnchorPane>
-      <VBox alignment="TOP_CENTER" layoutX="50.0" layoutY="191.0" prefHeight="372.0" prefWidth="311.0" spacing="8.0" style="-fx-border-color: BLACK; -fx-border-radius: 10;">
+      <VBox alignment="TOP_CENTER" layoutX="60.0" layoutY="152.0" prefHeight="514.0" prefWidth="311.0" spacing="8.0" style="-fx-border-color: BLACK; -fx-border-radius: 10;">
          <children>
             <VBox alignment="CENTER" prefHeight="47.0" prefWidth="262.0">
                <children>
@@ -180,6 +180,12 @@
                   <Insets />
                </VBox.margin>
             </HBox>
+            <HBox alignment="CENTER" prefHeight="49.0" prefWidth="289.0" spacing="20.0">
+               <children>
+                  <Button fx:id="uploadBtn" mnemonicParsing="false" prefHeight="33.0" prefWidth="87.0" text="Insert Image" />
+               </children>
+            </HBox>
+            <ImageView fx:id="imageView" fitHeight="144.0" fitWidth="188.0" pickOnBounds="true" preserveRatio="true" />
             <HBox alignment="CENTER" prefHeight="16.0" prefWidth="262.0" spacing="16.0">
                <children>
                   <Button fx:id="addBtn" mnemonicParsing="false" prefHeight="24.0" prefWidth="56.0" text="Add" />
@@ -247,7 +253,7 @@
                         </ImageView>
                      </graphic>
                   </Button>
-                  <Button contentDisplay="TOP" mnemonicParsing="false" onAction="#showEmployment" prefHeight="75.0" prefWidth="156.0" style="-fx-background-color: E8D8C4;" text="Employment">
+                  <Button fx:id="employmentBtn" contentDisplay="TOP" mnemonicParsing="false" onAction="#showEmployment" prefHeight="75.0" prefWidth="156.0" style="-fx-background-color: E8D8C4;" text="Employment">
                      <font>
                         <Font name="Arial" size="14.0" />
                      </font>

@@ -51,25 +51,6 @@ public class OrderSummaryDialogController {
     @FXML
     private void handleOk() {
         dialogStage.close();
-        showAlert("Please proceed to counter for your payment", AlertType.INFORMATION);
-        
     }
-    private void showAlert(String contentText, AlertType alertType) {
-
-		 Alert alert = new Alert(alertType);
-	        alert.setTitle("Notice");
-	        alert.setHeaderText(null);
-	        alert.setContentText(contentText);
-	        Scene scenes = alert.getDialogPane().getScene();
-	        scenes.getStylesheets().add(getClass().getResource("alert.css").toExternalForm());
-	        alert.show();
-	  
-	        Timer timer = new Timer();
-	        timer.schedule(new TimerTask() {
-	            @Override
-	            public void run() {Platform.runLater(() -> {alert.close();});
-	                timer.cancel(); // Cancel the timer after closing the alert
-	            }
-	        }, 3 * 1000);
-	    }
+   
 }

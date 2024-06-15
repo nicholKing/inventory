@@ -8,7 +8,7 @@ public class MenuItem {
     private int stock;
     private String options;
     private String category;
-    private String imagePath;
+    private byte[] imageBytes;
 
     public MenuItem(int id, String foodName, int stock, int price, String options, String category) {
         this.id = id;
@@ -18,7 +18,22 @@ public class MenuItem {
         this.options = options;
         this.category = category;
     }
- 
+    public MenuItem(int id, String foodName, int stock, int price, String options, String category, byte[] imageBytes) {
+        this.id = id;
+        this.foodName = foodName;
+        this.price = price;
+        this.stock = stock;
+        this.options = options;
+        this.category = category;
+        this.imageBytes = imageBytes;
+    }
+    public byte[] getImageBytes() {
+        return imageBytes;
+    }
+
+    public void setimageBytes(byte[] imageBytes) {
+        this.imageBytes = imageBytes;
+    }
     public int getId() {
         return id;
     }

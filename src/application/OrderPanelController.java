@@ -74,9 +74,12 @@ public class OrderPanelController {
 				priceLabel.setText(String.valueOf(price));
             }
         });
+        
+        img.setImage(DatabaseHelper.getImageFromDatabase(item.getFoodName()));
+        
     }
 
-
+    
 
 
     

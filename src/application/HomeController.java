@@ -249,6 +249,7 @@ public class HomeController implements Initializable{
 				RewardsController rewardPage = loader.getController();
 				rewardPage.setOrderList(orderList);
 				rewardPage.setUserDetails(role, hasAccount, dbName, id);
+				rewardPage.showCoins();
 			}else {
 				CartController cartPage = loader.getController();
 				cartPage.setOrders(orderList);

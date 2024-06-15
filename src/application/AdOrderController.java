@@ -1,5 +1,6 @@
 package application;
 
+import javafx.animation.PauseTransition;
 import javafx.animation.TranslateTransition;
 import javafx.application.Platform;
 import javafx.event.ActionEvent;
@@ -49,7 +50,8 @@ public class AdOrderController implements Initializable{
 	private Label headerLabel;
 	@FXML
 	private Label nameLabel;
-
+	@FXML
+	private Button employmentBtn;
 	@FXML
 	private Button cat1;
 	@FXML
@@ -199,12 +201,12 @@ public class AdOrderController implements Initializable{
 		changeScene(event, "TablePage.fxml");
 		}
 	public void showEmployment(ActionEvent event) throws IOException, SQLException {
-		if(hasAccount) {
+		if(hasAccount && role.equals("Owner")) {
 			isEmploymentBtn = true;
 			changeScene(event, employmentPage);
 		}
 		else {
-			showAlert("Create an account to unlock exciting rewards!", AlertType.INFORMATION);
+			showAlert("This page is only for owner.", AlertType.INFORMATION);
 		}
 	}
 	public void logout(ActionEvent event) throws IOException {
@@ -305,7 +307,6 @@ public class AdOrderController implements Initializable{
 		stage.show();
 		if(isHomeBtn) {
 			AdminController homePage = loader.getController();
-			homePage.setOrderList(orderList);
 			homePage.setUserDetails(role, hasAccount, dbName, id);
 			homePage.displayName();
 		}
@@ -319,15 +320,13 @@ public class AdOrderController implements Initializable{
 			tablePage.setName(dbName);
 		}else if(isAccBtn) {
 			AccountDetailsController accPage = loader.getController();
-			accPage.setOrders(orderList);
 			accPage.setUserDetails(role, hasAccount, dbName, id);
 			accPage.displayName();
 			
 		}else if(isEmploymentBtn) {
-			RewardsController rewardPage = loader.getController();
-			rewardPage.setOrderList(orderList);
-			rewardPage.setUserDetails(role, hasAccount, dbName, id);
-			rewardPage.displayName();
+			EmploymentController employmentPage = loader.getController();
+			employmentPage.setUserDetails(role, hasAccount, dbName, id);
+			employmentPage.displayName();
 		}else {
 			AdStockController stockPage = loader.getController();
 			stockPage.setUserDetails(role, hasAccount, dbName, id);
@@ -395,7 +394,7 @@ public class AdOrderController implements Initializable{
 	            }
 	        }, 2 * 1000);
 	    }
-  
+
 	@Override
 	public void initialize(URL arg0, ResourceBundle arg1) {
 		cat1.setOnAction(event -> loadOrdersByCategory("Rice Meals"));
@@ -410,6 +409,6 @@ public class AdOrderController implements Initializable{
         loadOrdersByCategory("Rice Meals");
 		setSlides();
         rearrangeGridPane();
-    
+       
 	}
 }

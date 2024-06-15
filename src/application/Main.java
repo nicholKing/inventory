@@ -40,7 +40,7 @@ public class Main extends Application {
         HomeController homePage = loader.getController();
 
         primaryStage = new Stage();
-        primaryStage.setTitle("User Login");
+        primaryStage.setTitle("The Posher");
         primaryStage.setResizable(false);
         primaryStage.setScene(new Scene(loginLayout));
 

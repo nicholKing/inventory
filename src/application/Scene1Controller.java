@@ -169,11 +169,8 @@ public class Scene1Controller {
 		con = DriverManager.getConnection("jdbc:mysql://localhost/inventory", "root", "");
 		String page;
 		
-		if(username.equals("admin123")) {
+		if(username.equals("admin123") || (DatabaseHelper.verifyUser(username, password))) {
 			page = "AdHomePage.fxml";
-		}
-		else if(username.equals("staff123")) {
-			page = "StaffSide.fxml";
 		}
 		else {
 			page = "HomePage.fxml";
@@ -199,14 +196,18 @@ public class Scene1Controller {
 			adminPage.displayName();
 			
 		}
-		else if(username.equals("staff123")) {
-			CashierController cashierPage = loader.getController();
+		else if(DatabaseHelper.verifyUser(username, password)) {
+			
+			AdminController employeePage = loader.getController();
 			pst = con.prepareStatement(query);
 			pst.setString(1, username);
 			rs = pst.executeQuery();
-			while (rs.next()) {id = rs.getInt("id");}
-			cashierPage.setHasAccount(hasAccount);
-			cashierPage.displayName(id);
+			while (rs.next()) {
+				name = rs.getString("name");
+				id = rs.getInt("id");
+				}
+			employeePage.setUserDetails("Employee", hasAccount, name, id);
+			employeePage.displayName();
 		}
 		else {
 			HomeController homePage = loader.getController();
@@ -220,7 +221,7 @@ public class Scene1Controller {
 			
 			homePage.setUserDetails("Customer", hasAccount, name, id);
 			homePage.displayName();
-			
+
 		}
 		
 	}

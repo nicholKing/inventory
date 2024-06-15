@@ -10,7 +10,7 @@
 
 <VBox fx:id="foodBox" alignment="CENTER" prefHeight="227.0" prefWidth="146.0" spacing="4.0" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="application.OrderPanelController">
    <children>
-      <ImageView fx:id="img" fitHeight="134.0" fitWidth="120.0" pickOnBounds="true" preserveRatio="true">
+      <ImageView fx:id="img" fitHeight="134.0" fitWidth="120.0" pickOnBounds="true">
          <image>
             <Image url="@../pictures/fast-food.png" />
          </image>

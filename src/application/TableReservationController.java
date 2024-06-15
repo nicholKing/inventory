@@ -24,6 +24,7 @@ import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
+import javafx.geometry.Pos;
 import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
@@ -42,6 +43,7 @@ import javafx.scene.input.MouseEvent;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.VBox;
+import javafx.scene.text.Font;
 import javafx.stage.Popup;
 import javafx.stage.Stage;
 import javafx.util.Callback;
@@ -137,7 +139,8 @@ public class TableReservationController implements Initializable {
 	
 	private final Popup timePopup = new Popup();
     private final ListView<String> timeListView = new ListView<>();
-	
+
+
     public void initialize() {
         // Disable dates before today in the DatePicker
         datePicker.setDayCellFactory(getDayCellFactory());
@@ -460,13 +463,10 @@ public class TableReservationController implements Initializable {
 	
 	//TOP BUTTONS
 	public void homeBtn(ActionEvent event) throws IOException, SQLException {
-			System.out.println("Home");
 			isHomeBtn = true;
 			changeScene(event, homePage);
 	}
 	public void orderBtn(ActionEvent event) throws IOException, SQLException {
-			
-			System.out.println("Order");
 			isOrderBtn = true;
 			changeScene(event, orderPage);
 	}
