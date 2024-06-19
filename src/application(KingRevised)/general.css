@@ -1,0 +1,25 @@
+.comic-button {
+  -fx-padding: 5px 10px;
+  -fx-color: #fff;
+  -fx-background-color: #561C24;
+  -fx-background-radius: 30;
+  -fx-border-radius: 10px;
+  -fx-cursor: pointer;
+}
+
+.comic-button:hover {
+  -fx-background-color: #6D2932;
+  -fx-color: #6D2932;
+}
+
+.comic-button:active {
+  -fx-background-color: #fcf414;
+}
+
+.comic-button {
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.5), 10, 0.2, 5, 5);
+}
+
+.radio-button:selected .radio {
+    -fx-mark-color: #561C24; /* Change the radio button mark color to red */
+}
