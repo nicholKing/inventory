@@ -23,116 +23,11 @@
       </Label>
       <AnchorPane prefHeight="720.0" prefWidth="1280.0" style="-fx-background-color: WHITE;">
          <children>
-            <Label alignment="CENTER" layoutX="132.0" layoutY="15.0" prefHeight="40.0" prefWidth="208.0" text="Menu Category" textAlignment="CENTER">
-               <font>
-                  <Font size="28.0" />
-               </font>
-            </Label>
-            <HBox alignment="CENTER" layoutX="134.0" layoutY="71.0" prefHeight="150.0" prefWidth="891.0" spacing="12.0" style="-fx-border-color: black; -fx-border-radius: 15;">
-               <children>
-                  <Button fx:id="cat1" contentDisplay="TOP" mnemonicParsing="false" prefHeight="128.0" prefWidth="118.0" style="-fx-background-color: WHITE;" text="Rice Meals" textAlignment="CENTER" wrapText="true">
-                     <font>
-                        <Font size="15.0" />
-                     </font>
-                     <graphic>
-                        <ImageView fitHeight="84.0" fitWidth="55.0" pickOnBounds="true" preserveRatio="true">
-                           <image>
-                              <Image url="@../pictures/cooking.png" />
-                           </image>
-                        </ImageView>
-                     </graphic>
-                  </Button>
-                  <Button fx:id="cat2" contentDisplay="TOP" mnemonicParsing="false" prefHeight="136.0" prefWidth="125.0" style="-fx-background-color: WHITE;" text="Pasta" textAlignment="CENTER" wrapText="true">
-                     <font>
-                        <Font size="18.0" />
-                     </font>
-                     <graphic>
-                        <ImageView fitHeight="84.0" fitWidth="55.0" pickOnBounds="true" preserveRatio="true">
-                           <image>
-                              <Image url="@../pictures/spaghetti.png" />
-                           </image>
-                        </ImageView>
-                     </graphic>
-                  </Button>
-                  <Button fx:id="cat3" contentDisplay="TOP" mnemonicParsing="false" prefHeight="136.0" prefWidth="125.0" style="-fx-background-color: WHITE;" text="Cakes" textAlignment="CENTER" wrapText="true">
-                     <font>
-                        <Font size="18.0" />
-                     </font>
-                     <graphic>
-                        <ImageView fitHeight="84.0" fitWidth="55.0" pickOnBounds="true" preserveRatio="true">
-                           <image>
-                              <Image url="@../pictures/cake.png" />
-                           </image>
-                        </ImageView>
-                     </graphic>
-                  </Button>
-                  <Button fx:id="cat4" contentDisplay="TOP" mnemonicParsing="false" prefHeight="136.0" prefWidth="125.0" style="-fx-background-color: WHITE;" text="Burger" textAlignment="CENTER" wrapText="true">
-                     <font>
-                        <Font size="18.0" />
-                     </font>
-                     <graphic>
-                        <ImageView fitHeight="84.0" fitWidth="55.0" pickOnBounds="true" preserveRatio="true">
-                           <image>
-                              <Image url="@../pictures/burger%20(1).png" />
-                           </image>
-                        </ImageView>
-                     </graphic>
-                  </Button>
-                  <Button fx:id="cat5" contentDisplay="TOP" mnemonicParsing="false" prefHeight="136.0" prefWidth="125.0" style="-fx-background-color: WHITE;" text="Coffee" textAlignment="CENTER" wrapText="true">
-                     <font>
-                        <Font size="18.0" />
-                     </font>
-                     <graphic>
-                        <ImageView fitHeight="84.0" fitWidth="55.0" pickOnBounds="true" preserveRatio="true">
-                           <image>
-                              <Image url="@../pictures/cup-of-drink.png" />
-                           </image>
-                        </ImageView>
-                     </graphic>
-                  </Button>
-                  <Button fx:id="cat6" contentDisplay="TOP" mnemonicParsing="false" prefHeight="136.0" prefWidth="125.0" style="-fx-background-color: WHITE;" text="Frappe" textAlignment="CENTER" wrapText="true">
-                     <font>
-                        <Font size="18.0" />
-                     </font>
-                     <graphic>
-                        <ImageView fitHeight="84.0" fitWidth="55.0" pickOnBounds="true" preserveRatio="true">
-                           <image>
-                              <Image url="@../pictures/frappe.png" />
-                           </image>
-                        </ImageView>
-                     </graphic>
-                  </Button>
-                  <Button fx:id="cat7" contentDisplay="TOP" mnemonicParsing="false" prefHeight="136.0" prefWidth="125.0" style="-fx-background-color: WHITE;" text="Tea" textAlignment="CENTER" wrapText="true">
-                     <font>
-                        <Font size="18.0" />
-                     </font>
-                     <graphic>
-                        <ImageView fitHeight="84.0" fitWidth="55.0" pickOnBounds="true" preserveRatio="true">
-                           <image>
-                              <Image url="@../pictures/coffee.png" />
-                           </image>
-                        </ImageView>
-                     </graphic>
-                  </Button>
-                  <Button fx:id="cat8" contentDisplay="TOP" mnemonicParsing="false" prefHeight="115.0" prefWidth="117.0" style="-fx-background-color: WHITE;" text="Appetizers" textAlignment="CENTER" wrapText="true">
-                     <graphic>
-                        <ImageView fitHeight="84.0" fitWidth="55.0" pickOnBounds="true" preserveRatio="true">
-                           <image>
-                              <Image url="@../pictures/nachos.png" />
-                           </image>
-                        </ImageView>
-                     </graphic>
-                     <font>
-                        <Font size="15.0" />
-                     </font>
-                  </Button>
-               </children>
-            </HBox>
             <AnchorPane fx:id="slider2" layoutX="1056.0" layoutY="37.0" prefHeight="630.0" prefWidth="211.0" style="-fx-background-color: white; -fx-border-color: black; -fx-border-radius: 15;">
                <children>
                   <VBox alignment="TOP_CENTER" layoutY="48.0" prefHeight="603.0" prefWidth="209.0" spacing="15.0">
                      <children>
-                        <Label fx:id="foodNameLabel" prefHeight="60.0" prefWidth="210.0" text="Food Name" textAlignment="CENTER">
+                        <Label fx:id="foodNameLabel" prefHeight="60.0" prefWidth="210.0" style="-fx-font-family: Helvetica; -fx-font-weight: bold;" text="Food Name" textAlignment="CENTER">
                            <font>
                               <Font size="24.0" />
                            </font>
@@ -148,7 +43,7 @@
                               <Insets />
                            </VBox.margin>
                         </ImageView>
-                        <Label prefHeight="34.0" prefWidth="205.0" text="Select your preference:">
+                        <Label prefHeight="34.0" prefWidth="205.0" style="-fx-font-family: Helvetica;" text="Select your preference:">
                            <font>
                               <Font name="Arial" size="15.0" />
                            </font>
@@ -161,7 +56,7 @@
                               <Insets />
                            </VBox.margin>
                            <children>
-                              <RadioButton fx:id="opt1" mnemonicParsing="false" prefHeight="17.0" prefWidth="120.0" text="opt1" />
+                              <RadioButton fx:id="opt1" mnemonicParsing="false" prefHeight="17.0" prefWidth="120.0" style="-fx-font-family: Helvetica;" text="opt1" />
                            </children>
                            <padding>
                               <Insets left="16.0" />
@@ -169,13 +64,13 @@
                         </HBox>
                         <HBox alignment="CENTER_LEFT" prefHeight="27.0" prefWidth="209.0" spacing="15.0">
                            <children>
-                              <RadioButton fx:id="opt2" mnemonicParsing="false" prefHeight="17.0" prefWidth="139.0" text="opt2" />
+                              <RadioButton fx:id="opt2" mnemonicParsing="false" prefHeight="17.0" prefWidth="139.0" style="-fx-font-family: Helvetica;" text="opt2" />
                            </children>
                            <padding>
                               <Insets left="16.0" />
                            </padding>
                         </HBox>
-                        <Label fx:id="priceSlidingLabel" prefHeight="23.0" prefWidth="194.0" text="Price: ">
+                        <Label fx:id="priceSlidingLabel" prefHeight="23.0" prefWidth="194.0" style="-fx-font-family: Helvetica; -fx-font-weight: bold;" text="Price: ">
                            <VBox.margin>
                               <Insets bottom="35.0" />
                            </VBox.margin>
@@ -186,7 +81,7 @@
                               <Insets left="10.0" />
                            </padding>
                         </Label>
-                        <HBox alignment="CENTER" prefHeight="7.0" prefWidth="103.0" spacing="13.0">
+                        <HBox alignment="CENTER" prefHeight="7.0" prefWidth="103.0" spacing="13.0" stylesheets="@general.css">
                            <children>
                               <ImageView fx:id="minusBtn" fitHeight="34.0" fitWidth="27.0" pickOnBounds="true" preserveRatio="true">
                                  <image>
@@ -205,7 +100,7 @@
                               </ImageView>
                            </children>
                         </HBox>
-                        <Button fx:id="addToCartBtn" mnemonicParsing="false" prefHeight="39.0" prefWidth="148.0" style="-fx-background-color: F7F7F9;" text="Add to Cart">
+                        <Button id="addToCart" fx:id="addToCartBtn" mnemonicParsing="false" prefHeight="39.0" prefWidth="148.0" style="-fx-text-fill: #E8D8C4; -fx-border-radius: 30; -fx-background-radius: 30; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.5), 10, 0.2, 5, 5); -fx-font-weight: bold;" styleClass="comic-button" stylesheets="@general.css" text="Add to Cart">
                            <font>
                               <Font size="18.0" />
                            </font>
@@ -213,7 +108,7 @@
                               <Insets />
                            </VBox.margin>
                         </Button>
-                        <Button fx:id="viewCartBtn" mnemonicParsing="false" prefHeight="39.0" prefWidth="148.0" style="-fx-background-color: F95738;" text="View Cart" textFill="WHITE">
+                        <Button id="viewCart" fx:id="viewCartBtn" mnemonicParsing="false" prefHeight="39.0" prefWidth="148.0" style="-fx-font-family: Helvetica; -fx-text-fill: #561C24; -fx-font-weight: bold;" styleClass="comic-button" stylesheets="@general.css" text="View Cart" textFill="WHITE">
                            <font>
                               <Font size="18.0" />
                            </font>
@@ -232,18 +127,129 @@
                   </ImageView>
                </children>
             </AnchorPane>
-            <Label alignment="CENTER" layoutX="128.0" layoutY="236.0" prefHeight="40.0" prefWidth="208.0" text="Choose Order" textAlignment="CENTER">
-               <font>
-                  <Font size="28.0" />
-               </font>
-            </Label>
+            <ImageView fitHeight="233.0" fitWidth="477.0" layoutX="121.0" layoutY="-70.0" pickOnBounds="true" preserveRatio="true">
+               <image>
+                  <Image url="@../pictures/menu_category.png" />
+               </image>
+            </ImageView>
+            <ImageView fitHeight="150.0" fitWidth="200.0" layoutX="139.0" layoutY="188.0" pickOnBounds="true" preserveRatio="true">
+               <image>
+                  <Image url="@../pictures/choose_order.png" />
+               </image>
+            </ImageView>
+            <HBox alignment="CENTER" layoutX="127.0" layoutY="73.0" prefHeight="158.0" prefWidth="910.0" spacing="12.0" style="-fx-border-color: black; -fx-border-radius: 15; -fx-padding: 0; -fx-background-color: #E8D8C4; -fx-background-radius: 15;" stylesheets="@general.css">
+               <children>
+                  <Button fx:id="cat1" contentDisplay="TOP" mnemonicParsing="false" prefHeight="154.0" prefWidth="135.0" style="-fx-font-family: Helvetica; -fx-font-weight: bold;" styleClass="category-button" stylesheets="@general.css" text="Rice Meals" textAlignment="CENTER" wrapText="true">
+                     <font>
+                        <Font size="15.0" />
+                     </font>
+                     <graphic>
+                        <ImageView fitHeight="84.0" fitWidth="55.0" pickOnBounds="true" preserveRatio="true">
+                           <image>
+                              <Image url="@../pictures/cooking.png" />
+                           </image>
+                        </ImageView>
+                     </graphic>
+                     <HBox.margin>
+                        <Insets left="8.0" />
+                     </HBox.margin>
+                  </Button>
+                  <Button fx:id="cat2" contentDisplay="TOP" mnemonicParsing="false" prefHeight="154.0" prefWidth="132.0" style="-fx-font-family: Helvetica; -fx-font-weight: bold;" styleClass="category-button" stylesheets="@general.css" text="Pasta" textAlignment="CENTER" wrapText="true">
+                     <font>
+                        <Font size="15.0" />
+                     </font>
+                     <graphic>
+                        <ImageView fitHeight="84.0" fitWidth="55.0" pickOnBounds="true" preserveRatio="true">
+                           <image>
+                              <Image url="@../pictures/spaghetti.png" />
+                           </image>
+                        </ImageView>
+                     </graphic>
+                  </Button>
+                  <Button fx:id="cat3" contentDisplay="TOP" mnemonicParsing="false" prefHeight="154.0" prefWidth="132.0" style="-fx-font-family: Helvetica; -fx-font-weight: bold;" styleClass="category-button" text="Cakes" textAlignment="CENTER" wrapText="true">
+                     <font>
+                        <Font size="15.0" />
+                     </font>
+                     <graphic>
+                        <ImageView fitHeight="84.0" fitWidth="55.0" pickOnBounds="true" preserveRatio="true">
+                           <image>
+                              <Image url="@../pictures/cake.png" />
+                           </image>
+                        </ImageView>
+                     </graphic>
+                  </Button>
+                  <Button fx:id="cat4" contentDisplay="TOP" mnemonicParsing="false" prefHeight="154.0" prefWidth="132.0" style="-fx-font-family: Helvetica; -fx-font-weight: bold;" styleClass="category-button" text="Burger" textAlignment="CENTER" wrapText="true">
+                     <font>
+                        <Font size="15.0" />
+                     </font>
+                     <graphic>
+                        <ImageView fitHeight="84.0" fitWidth="55.0" pickOnBounds="true" preserveRatio="true">
+                           <image>
+                              <Image url="@../pictures/burger%20(1).png" />
+                           </image>
+                        </ImageView>
+                     </graphic>
+                  </Button>
+                  <Button fx:id="cat5" contentDisplay="TOP" mnemonicParsing="false" prefHeight="154.0" prefWidth="132.0" style="-fx-font-family: Helvetica; -fx-font-weight: bold;" styleClass="category-button" text="Coffee" textAlignment="CENTER" wrapText="true">
+                     <font>
+                        <Font size="15.0" />
+                     </font>
+                     <graphic>
+                        <ImageView fitHeight="84.0" fitWidth="55.0" pickOnBounds="true" preserveRatio="true">
+                           <image>
+                              <Image url="@../pictures/cup-of-drink.png" />
+                           </image>
+                        </ImageView>
+                     </graphic>
+                  </Button>
+                  <Button fx:id="cat6" contentDisplay="TOP" mnemonicParsing="false" prefHeight="154.0" prefWidth="132.0" style="-fx-font-family: Helvetica; -fx-font-weight: bold;" styleClass="category-button" text="Frappe" textAlignment="CENTER" wrapText="true">
+                     <font>
+                        <Font size="15.0" />
+                     </font>
+                     <graphic>
+                        <ImageView fitHeight="84.0" fitWidth="55.0" pickOnBounds="true" preserveRatio="true">
+                           <image>
+                              <Image url="@../pictures/frappe.png" />
+                           </image>
+                        </ImageView>
+                     </graphic>
+                  </Button>
+                  <Button fx:id="cat7" contentDisplay="TOP" mnemonicParsing="false" prefHeight="154.0" prefWidth="132.0" style="-fx-font-family: Helvetica; -fx-font-weight: bold;" styleClass="category-button" text="Tea" textAlignment="CENTER" wrapText="true">
+                     <font>
+                        <Font size="15.0" />
+                     </font>
+                     <graphic>
+                        <ImageView fitHeight="84.0" fitWidth="55.0" pickOnBounds="true" preserveRatio="true">
+                           <image>
+                              <Image url="@../pictures/coffee.png" />
+                           </image>
+                        </ImageView>
+                     </graphic>
+                  </Button>
+                  <Button fx:id="cat8" contentDisplay="TOP" mnemonicParsing="false" prefHeight="154.0" prefWidth="132.0" style="-fx-font-family: Helvetica; -fx-font-weight: bold;" styleClass="category-button" text="Appetizer" textAlignment="CENTER" wrapText="true">
+                     <graphic>
+                        <ImageView fitHeight="84.0" fitWidth="55.0" pickOnBounds="true" preserveRatio="true">
+                           <image>
+                              <Image url="@../pictures/nachos.png" />
+                           </image>
+                        </ImageView>
+                     </graphic>
+                     <font>
+                        <Font size="15.0" />
+                     </font>
+                     <HBox.margin>
+                        <Insets right="8.0" />
+                     </HBox.margin>
+                  </Button>
+               </children>
+            </HBox>
          </children>
       </AnchorPane>
       <AnchorPane fx:id="slider" layoutX="4.0" layoutY="-4.0" prefHeight="729.0" prefWidth="89.0" style="-fx-border-width: 20;">
          <children>
-            <VBox alignment="CENTER" layoutX="-11.0" layoutY="95.0" prefHeight="630.0" prefWidth="103.0" spacing="15.0" style="-fx-background-color: E8D8C4; -fx-border-color: black;">
+            <VBox alignment="CENTER" layoutX="-11.0" layoutY="95.0" prefHeight="630.0" prefWidth="103.0" spacing="15.0" style="-fx-background-color: E8D8C4; -fx-border-color: black;" styleClass="panel-button" stylesheets="@general.css">
                <children>
-                  <Button contentDisplay="TOP" mnemonicParsing="false" onAction="#homeBtn" prefHeight="86.0" prefWidth="159.0" style="-fx-background-color: E8D8C4;" text="Home" textAlignment="CENTER">
+                  <Button contentDisplay="TOP" mnemonicParsing="false" onAction="#homeBtn" prefHeight="86.0" prefWidth="159.0" style="-fx-font-family: Helvetica; -fx-font-weight: bold;" styleClass="left-panel-button" text="Home" textAlignment="CENTER">
                      <font>
                         <Font size="14.0" />
                      </font>
@@ -255,7 +261,7 @@
                         </ImageView>
                      </graphic>
                   </Button>
-                  <Button contentDisplay="TOP" mnemonicParsing="false" onAction="#orderBtn" prefHeight="77.0" prefWidth="181.0" style="-fx-background-color: E8D8C4;" text="Order" textAlignment="CENTER">
+                  <Button contentDisplay="TOP" mnemonicParsing="false" onAction="#orderBtn" prefHeight="77.0" prefWidth="181.0" style="-fx-font-family: Helvetica; -fx-font-weight: bold;" styleClass="left-panel-button" text="Order" textAlignment="CENTER">
                      <font>
                         <Font size="14.0" />
                      </font>
@@ -267,7 +273,7 @@
                         </ImageView>
                      </graphic>
                   </Button>
-                  <Button contentDisplay="TOP" mnemonicParsing="false" onAction="#showCart" prefHeight="74.0" prefWidth="180.0" style="-fx-background-color: E8D8C4;" text="Cart">
+                  <Button contentDisplay="TOP" mnemonicParsing="false" onAction="#showCart" prefHeight="74.0" prefWidth="180.0" style="-fx-font-family: Helvetica; -fx-font-weight: bold;" styleClass="left-panel-button" text="Cart">
                      <font>
                         <Font name="Arial" size="14.0" />
                      </font>
@@ -279,7 +285,7 @@
                         </ImageView>
                      </graphic>
                   </Button>
-                  <Button alignment="CENTER" contentDisplay="TOP" mnemonicParsing="false" onAction="#showTable" prefHeight="87.0" prefWidth="175.0" style="-fx-background-color: E8D8C4;" text="Table" textAlignment="CENTER" wrapText="true">
+                  <Button alignment="CENTER" contentDisplay="TOP" mnemonicParsing="false" onAction="#showTable" prefHeight="87.0" prefWidth="175.0" style="-fx-font-family: Helvetica; -fx-font-weight: bold;" styleClass="left-panel-button" text="Table" textAlignment="CENTER" wrapText="true">
                      <font>
                         <Font name="Arial" size="14.0" />
                      </font>
@@ -291,7 +297,7 @@
                         </ImageView>
                      </graphic>
                   </Button>
-                  <Button contentDisplay="TOP" mnemonicParsing="false" onAction="#showRewards" prefHeight="75.0" prefWidth="156.0" style="-fx-background-color: E8D8C4;" text="Rewards">
+                  <Button contentDisplay="TOP" mnemonicParsing="false" onAction="#showRewards" prefHeight="75.0" prefWidth="156.0" style="-fx-font-family: Helvetica; -fx-font-weight: bold;" styleClass="left-panel-button" text="Rewards">
                      <font>
                         <Font name="Arial" size="14.0" />
                      </font>
@@ -303,7 +309,7 @@
                         </ImageView>
                      </graphic>
                   </Button>
-                  <Button fx:id="logoutBtn1" contentDisplay="TOP" mnemonicParsing="false" onAction="#logout" prefHeight="76.0" prefWidth="171.0" style="-fx-background-color: E8D8C4;" text="Logout">
+                  <Button fx:id="logoutBtn1" contentDisplay="TOP" mnemonicParsing="false" onAction="#logout" prefHeight="76.0" prefWidth="171.0" style="-fx-font-family: Helvetica; -fx-font-weight: bold;" styleClass="left-panel-button" text="Logout">
                      <font>
                         <Font name="Arial" size="14.0" />
                      </font>
@@ -338,7 +344,7 @@
       </AnchorPane>
       <ScrollPane fx:id="scrollPane" layoutX="146.0" layoutY="286.0" prefHeight="420.0" prefWidth="876.0" style="-fx-background-color: WHITE;">
          <content>
-            <GridPane fx:id="rootGridPane" alignment="CENTER" hgap="25.0" style="-fx-border-color: black; -fx-background-color: WHITE;" />
+            <GridPane fx:id="rootGridPane" alignment="CENTER" hgap="25.0" vgap="16.0" />
          </content>
       </ScrollPane>
    </children>

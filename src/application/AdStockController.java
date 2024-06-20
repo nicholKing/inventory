@@ -5,7 +5,7 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.net.URL;
-
+import java.io.FileNotFoundException;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
@@ -18,7 +18,6 @@ import java.util.ResourceBundle;
 import java.util.Timer;
 import java.util.TimerTask;
 
-import javafx.animation.PauseTransition;
 import javafx.animation.TranslateTransition;
 import javafx.application.Platform;
 import javafx.collections.FXCollections;
@@ -115,7 +114,7 @@ public class AdStockController implements Initializable{
     String homePage = "AdHomePage.fxml";
     String accPage = "AccountDetails.fxml";
     String stockPage = "AdStockPage.fxml";
-    String tablePage = "TableReservationPage.fxml";
+    String tablePage = "AdTableReservationPage.fxml";
     String employmentPage = "EmploymentPage.fxml";
     String query = "SELECT name FROM user_tbl WHERE id = ?";
     String dbName = "Guest";
@@ -479,9 +478,9 @@ public class AdStockController implements Initializable{
 				adOrderPage.setUserDetails(role, hasAccount, dbName, id);
 				
 			}else if(isTableBtn) {
-				TableReservationController tablePage = loader.getController();
-				tablePage.setHasAccount(hasAccount);
-				tablePage.setName(dbName);
+				AdTableReservationController tablePage = loader.getController();
+				tablePage.setUserDetails(role, hasAccount, dbName, id);
+				tablePage.initialize();
 			}else if(isAccBtn) {
 				AccountDetailsController accPage = loader.getController();
 				accPage.setUserDetails(role, hasAccount, dbName, id);
@@ -612,7 +611,7 @@ public class AdStockController implements Initializable{
 	@FXML
 	private ImageView imageView;
 	
-	private void handleUploadButtonAction(Window window) {
+	private void handleUploadButtonAction(Window window) throws FileNotFoundException {
         FileChooser fileChooser = new FileChooser();
         fileChooser.getExtensionFilters().add(
                 new FileChooser.ExtensionFilter("Image Files", "*.png", "*.jpg", "*.jpeg"));
@@ -634,18 +633,25 @@ public class AdStockController implements Initializable{
             imageView.setImage(defaultImage);
         }
     }
-	public static byte[] getDefaultImageBytes() {
+	public static byte[] getDefaultImageBytes() throws FileNotFoundException {
         try (FileInputStream fis = new FileInputStream("src\\pictures\\fast-food.png")) {
             return fis.readAllBytes();
-        } catch (IOException ex) {
-            ex.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
             return new byte[0];
         }
     }
 	
 	@Override
 	public void initialize(URL arg0, ResourceBundle arg1) {
-			uploadBtn.setOnAction(e -> handleUploadButtonAction(uploadBtn.getScene().getWindow()));
+			uploadBtn.setOnAction(e -> {
+				try {
+					handleUploadButtonAction(uploadBtn.getScene().getWindow());
+				} catch (FileNotFoundException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				}
+			});
 		
 	        initializeComboBox();
 			Connect();
@@ -656,4 +662,3 @@ public class AdStockController implements Initializable{
 		}
 	
 }
-

@@ -319,6 +319,8 @@ public class RewardsController implements Initializable{
 				HomeController homePage = loader.getController();
 				homePage.setOrderList(orderList);
 				homePage.setUserDetails(role, hasAccount, dbName, id);
+				homePage.initializeAds();
+				homePage.displayName();
 			}
 			else if(isOrderBtn) {
 				OrderController orderPage = loader.getController();
@@ -338,6 +340,7 @@ public class RewardsController implements Initializable{
 				rewardPage.setOrderList(orderList);
 				rewardPage.setUserDetails(role, hasAccount, dbName, id);
 				rewardPage.showCoins();
+				rewardPage.displayName();
 			}else {
 				CartController cartPage = loader.getController();
 				cartPage.setOrders(orderList);

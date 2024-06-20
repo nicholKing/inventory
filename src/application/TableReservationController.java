@@ -13,18 +13,24 @@ import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.ResourceBundle;
 import java.util.Timer;
 import java.util.TimerTask;
 
 import javafx.animation.TranslateTransition;
 import javafx.application.Platform;
+import javafx.beans.binding.Bindings;
+import javafx.beans.binding.BooleanBinding;
+import javafx.beans.property.ObjectProperty;
+import javafx.beans.property.SimpleObjectProperty;
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
-import javafx.geometry.Pos;
 import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
@@ -36,14 +42,12 @@ import javafx.scene.control.DateCell;
 import javafx.scene.control.DatePicker;
 import javafx.scene.control.Label;
 import javafx.scene.control.ListView;
-import javafx.scene.control.MenuButton;
-import javafx.scene.control.MenuItem;
+import javafx.scene.control.TextInputDialog;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.VBox;
-import javafx.scene.text.Font;
 import javafx.stage.Popup;
 import javafx.stage.Stage;
 import javafx.util.Callback;
@@ -98,14 +102,14 @@ public class TableReservationController implements Initializable {
     @FXML
     private Button bookNow;
     @FXML
+    private Button editButton;
+    @FXML
     private Label tryLabel;
     
    
 	private Stage stage;
 	private Scene scene;
 	private Parent root;
-	private LocalDate selectedDate;
-    private LocalTime selectedTime;
 	
 	List<OrderData> orderList = new ArrayList<>();
 	OrderData orderData = new OrderData();
@@ -118,7 +122,7 @@ public class TableReservationController implements Initializable {
     String homePage = "HomePage.fxml";
     String accPage = "AccountDetails.fxml";
     String cartPage = "MyCart.fxml";
-    String tablePage = "TablePage.fxml";
+    String tablePage = "TableReservationPage.fxml";
     String rewardsPage = "RewardsPage.fxml";
     String query = "SELECT name FROM user_tbl WHERE id = ?";
     String dbName;
@@ -132,6 +136,12 @@ public class TableReservationController implements Initializable {
 	boolean isRewardBtn = false;
 	
 	boolean clicked = false;
+	boolean reserved = false;
+	
+	public String dateTimeString;  // To store the date and time as a string
+    public String email;  // To store the user's email
+    public String tableName;  // To store the user's name
+	
 	
 	Connection con;
 	PreparedStatement pst;
@@ -139,8 +149,11 @@ public class TableReservationController implements Initializable {
 	
 	private final Popup timePopup = new Popup();
     private final ListView<String> timeListView = new ListView<>();
-
-
+    
+    
+    private ObjectProperty<LocalDate> selectedDate = new SimpleObjectProperty<>();
+    private ObjectProperty<LocalTime> selectedTime = new SimpleObjectProperty<>();
+	
     public void initialize() {
         // Disable dates before today in the DatePicker
         datePicker.setDayCellFactory(getDayCellFactory());
@@ -175,7 +188,7 @@ public class TableReservationController implements Initializable {
             if (selectedTimeString != null) {
                 timeButton.setText(selectedTimeString);
                 DateTimeFormatter formatter = DateTimeFormatter.ofPattern("hh:mm a");
-                selectedTime = LocalTime.parse(selectedTimeString, formatter);
+                selectedTime.set(LocalTime.parse(selectedTimeString, formatter));
                 timePopup.hide();
             }
         });
@@ -186,7 +199,7 @@ public class TableReservationController implements Initializable {
         // Populate the time list when the date picker value changes
         datePicker.valueProperty().addListener((obs, oldDate, newDate) -> {
             if (newDate != null) {
-            	selectedDate = newDate;
+            	selectedDate.set(newDate);
                 populateTimeList(newDate);
             }
         });
@@ -207,8 +220,94 @@ public class TableReservationController implements Initializable {
                 timePopup.show(timeButton, popupX, popupY);
             }
         });
-       
+        
+        
+        
+        bookNow.disableProperty().bind(Bindings.createBooleanBinding(() -> !isDateTimeSelected(), selectedDate, selectedTime));
         tableNumber();
+        bookNow.setOnAction(event -> handleSaveButtonAction());
+        editButton.setOnAction(event -> enableEditing());
+        datePicker.setValue(LocalDate.now());
+        populateTimeList(LocalDate.now());
+        fetchAndHandleReservations(LocalDate.now());
+        enableAllTables();
+        disableTablesForDate(LocalDate.now());
+        
+        datePicker.valueProperty().addListener(new ChangeListener<LocalDate>() {
+            @Override
+            public void changed(ObservableValue<? extends LocalDate> observable, LocalDate oldValue, LocalDate newValue) {
+            	enableAllTables();
+                if (newValue != null) {
+                    // Check if any reservation matches the selected date
+                    boolean reservationExistsForDate = checkReservationExistsForDate(newValue);
+                 // Enable or disable tables based on reservationExistsForDate
+                    if (reservationExistsForDate) {
+                        disableTablesForDate(newValue);
+                    } else {
+                        enableAllTables();
+                    }
+                }
+            }
+        });
+        
+        
+    }
+    
+    private boolean checkReservationExistsForDate(LocalDate selectedDate) {
+        List<Reservation> reservations = DatabaseHelper.fetchAllReservations();
+        for (Reservation reservation : reservations) {
+        	String reservationDate = reservation.getDate(); // Adjust as per your Reservation class
+            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("MMM dd, yyyy");
+            String reservedDate = selectedDate.format(formatter);
+            if (reservationDate != null && reservationDate.equals(reservedDate)) {
+                return true;
+            }
+        }
+        return false;
+    }
+    
+    private void enableAllTables() {
+    	oneSeat.setEffect(null);
+    	oneSeat.setDisable(false);
+    	twoSeat.setEffect(null);
+    	twoSeat.setDisable(false);
+    	fourSeat.setEffect(null);
+    	fourSeat.setDisable(false);
+    	fourSeat2.setEffect(null);
+    	fourSeat2.setDisable(false);
+    	fiveSeat.setEffect(null);
+    	fiveSeat.setDisable(false);
+    	sixSeat.setEffect(null);
+    	sixSeat.setDisable(false);
+    	eightSeat.setEffect(null);
+    	eightSeat.setDisable(false);
+    	eightSeat2.setEffect(null);
+    	eightSeat2.setDisable(false);
+    	tenSeat.setEffect(null);
+    	tenSeat.setDisable(false);
+    }
+    
+    private void disableTablesForDate(LocalDate selectedDate) {
+
+        List<Reservation> reservations = DatabaseHelper.fetchAllReservations();
+        for (Reservation reservation : reservations) {
+            String reservationDate = reservation.getDate(); // Adjust as per your Reservation class
+            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("MMM dd, yyyy");
+            String reservedDate = selectedDate.format(formatter);
+            if (reservationDate != null && reservedDate.equals(reservationDate)) {
+                int tableNumber = reservation.getTableNumber();
+                disableTable(tableNumber);
+            }
+        }
+    }
+    
+    private void fetchAndHandleReservations(LocalDate date) {
+        List<Reservation> reservations = DatabaseHelper.fetchAllReservations();
+
+        for (Reservation reservation : reservations) {
+            // Handle each reservation (e.g., disable reserved tables)
+            disableTable(reservation.getTableNumber());
+        }
     }
    
     public void tableNumber() {
@@ -224,6 +323,7 @@ public class TableReservationController implements Initializable {
             eightSeat2.setStyle("");
             tenSeat.setStyle("");
         };
+        
     	
     	oneSeat.setOnMouseClicked(new EventHandler<MouseEvent>() {
             public void handle(MouseEvent event) {
@@ -352,51 +452,6 @@ public class TableReservationController implements Initializable {
                }
             }
         });
-    	
-    	ColorAdjust grayscale = new ColorAdjust();
-        grayscale.setSaturation(-1);
-    	
-		bookNow.setOnAction(event -> {
-				saveSelectedDateTime();
-                switch (reservedTable) {
-                case 1:
-                	oneSeat.setEffect(grayscale);
-                	oneSeat.setDisable(true);
-                	break;
-                case 2:
-                	twoSeat.setEffect(grayscale);
-                	twoSeat.setDisable(true);
-                	break;
-                case 40:
-                	fourSeat.setEffect(grayscale);
-                	fourSeat.setDisable(true);
-                	break;
-                case 41:
-                	fourSeat2.setEffect(grayscale);
-                	fourSeat2.setDisable(true);
-                	break;
-                case 5:
-                	fiveSeat.setEffect(grayscale);
-                	fiveSeat.setDisable(true);
-                	break;	
-                case 6:
-                	sixSeat.setEffect(grayscale);
-                	sixSeat.setDisable(true);
-                	break;
-                case 80:
-                	eightSeat.setEffect(grayscale);
-                	eightSeat.setDisable(true);
-                	break;
-                case 81:
-                	eightSeat2.setEffect(grayscale);
-                	eightSeat2.setDisable(true);
-                	break;
-                case 10:
-                	tenSeat.setEffect(grayscale);
-                	tenSeat.setDisable(true);
-                	break;
-                }
-        });
     }
     
     private void populateTimeList(LocalDate selectedDate) {
@@ -449,15 +504,221 @@ public class TableReservationController implements Initializable {
             }
         };
     }
+    private void disableTablesIfDateMatches(LocalDate selectedDate) {
+        List<Reservation> reservations = DatabaseHelper.fetchAllReservations();
+        for (Reservation reservation : reservations) {
+        	String reservationDate = reservation.getDate(); // Adjust as per your Reservation class
+            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("MMM dd, yyyy");
+            String reservedDate = selectedDate.format(formatter);
+            if (reservationDate != null && reservationDate.equals(reservedDate)) {
+                int tableNumber = reservation.getTableNumber();
+                disableTable(tableNumber);
+            }
+        }
+    }
+    
+    private void handleSaveButtonAction() {
+        if (isDateTimeValid()) {
+            Optional<String> nameInput = showNameInputDialog();
+            nameInput.ifPresent(tableName -> {
+                Optional<String> emailInput = showEmailInputDialog();
+                emailInput.ifPresent(email -> {
+                    Optional<ButtonType> confirmation = showConfirmationDialog(email, tableName);
+                    if (confirmation.isPresent() && confirmation.get() == ButtonType.OK) {
+                        saveSelectedDateTime();
+                        reserved = true;
+                        DatabaseHelper.insertReservation(email, dateTimeString, tableName, reservedTable, reserved);
+                     // Call method to disable tables if datePicker matches selectedDate
+                        LocalDate selection = selectedDate.get();
+                        disableTablesIfDateMatches(selection);
+                        disableControls();  // Disable DatePicker and timeButton
+                    }
+                });
+            });
+        }
+    }
+    
+    private Optional<String> showEmailInputDialog() {
+        TextInputDialog dialog = new TextInputDialog();
+        dialog.setTitle("Email Input");
+        dialog.setHeaderText("Please enter your contact information\nfor your booking updates\nWe'll contact you through this:");
+        dialog.setContentText("Email:");
+
+        Optional<String> result = dialog.showAndWait();
+        while (result.isPresent() && (result.get().trim().isEmpty() || !isValidGmail(result.get()))) {
+            Alert alert = new Alert(Alert.AlertType.ERROR);
+            alert.setTitle("Invalid Input");
+            alert.setHeaderText(null);
+            if (result.get().trim().isEmpty()) {
+                alert.setContentText("Email cannot be empty. Please enter your email.");
+            } else {
+                alert.setContentText("Email must end with @gmail.com. Please enter a valid email.");
+            }
+            alert.showAndWait();
+
+            result = dialog.showAndWait();
+        }
+        return result;
+    }
+
+    private boolean isValidGmail(String email) {
+        return email.trim().toLowerCase().endsWith("@gmail.com");
+    }
+    
+    private Optional<String> showNameInputDialog() {
+        TextInputDialog dialog = new TextInputDialog();
+        dialog.setTitle("Name Input");
+        dialog.setHeaderText("Enter your name:");
+        dialog.setContentText("Name:");
+
+        Optional<String> result = dialog.showAndWait();
+        while (result.isPresent() && result.get().trim().isEmpty()) {
+            Alert alert = new Alert(Alert.AlertType.ERROR);
+            alert.setTitle("Invalid Input");
+            alert.setHeaderText(null);
+            alert.setContentText("Name cannot be empty. Please enter your name.");
+            alert.showAndWait();
+
+            result = dialog.showAndWait();
+        }
+        return result;
+    }
+
+    private Optional<ButtonType> showConfirmationDialog(String email, String tableName) {
+        Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
+        alert.setTitle("Confirm Date and Time");
+        alert.setHeaderText("Please confirm your selection:");
+        LocalDateTime selectedDateTime = LocalDateTime.of(selectedDate.get(), selectedTime.get());
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("MMM dd, yyyy hh:mm a");
+        dateTimeString = selectedDateTime.format(formatter);
+        alert.setContentText("Name: " + tableName + "\nEmail: " + email + "\nDate and Time: " + dateTimeString);
+
+        return alert.showAndWait();
+    }
+    
+    private boolean isDateTimeSelected() {
+        return selectedDate.get() != null && selectedTime.get() != null;
+    }
+    
+    private boolean isDateTimeValid() {
+        if (selectedDate.get() == null) {
+        	showAlert("Please select date", AlertType.ERROR);
+            return false;
+        }
+        if (selectedTime.get() == null) {
+        	showAlert("Please select time", AlertType.ERROR);
+            return false;
+        }
+        return true;
+    }
     
     private void saveSelectedDateTime() {
-        if (selectedDate != null && selectedTime != null) {
-        	LocalDateTime selectedDateTime = LocalDateTime.of(selectedDate, selectedTime);
+        if (selectedDate.get() != null && selectedTime.get() != null) {
+            LocalDateTime selectedDateTime = LocalDateTime.of(selectedDate.get(), selectedTime.get());
             DateTimeFormatter formatter = DateTimeFormatter.ofPattern("MMM dd, yyyy hh:mm a");
             tryLabel.setText("Selected Date and Time: " + selectedDateTime.format(formatter));
         } else {
-            showAlert("Please select both date and time", AlertType.ERROR);
+        	showAlert("Please select both date and time", AlertType.ERROR);
         }
+    }
+    
+    private void disableControls() {
+        datePicker.setDisable(true);
+        timeButton.setDisable(true);
+    }
+    
+    private void enableControls() {
+        datePicker.setDisable(false);
+        timeButton.setDisable(false);
+    }
+
+    private void enableEditing() {
+        enableControls();
+        undoSelectedTable(reservedTable);
+    }
+    
+    private void disableTable(int n) {
+    	ColorAdjust grayscale = new ColorAdjust();
+        grayscale.setSaturation(-1);
+    	switch (n) {
+	        case 1:
+	        	oneSeat.setEffect(grayscale);
+	        	oneSeat.setDisable(true);
+	        	break;
+	        case 2:
+	        	twoSeat.setEffect(grayscale);
+	        	twoSeat.setDisable(true);
+	        	break;
+	        case 40:
+	        	fourSeat.setEffect(grayscale);
+	        	fourSeat.setDisable(true);
+	        	break;
+	        case 41:
+	        	fourSeat2.setEffect(grayscale);
+	        	fourSeat2.setDisable(true);
+	        	break;
+	        case 5:
+	        	fiveSeat.setEffect(grayscale);
+	        	fiveSeat.setDisable(true);
+	        	break;	
+	        case 6:
+	        	sixSeat.setEffect(grayscale);
+	        	sixSeat.setDisable(true);
+	        	break;
+	        case 80:
+	        	eightSeat.setEffect(grayscale);
+	        	eightSeat.setDisable(true);
+	        	break;
+	        case 81:
+	        	eightSeat2.setEffect(grayscale);
+	        	eightSeat2.setDisable(true);
+	        	break;
+	        case 10:
+	        	tenSeat.setEffect(grayscale);
+	        	tenSeat.setDisable(true);
+	        	break;
+        }
+    }
+    
+    private void undoSelectedTable(int n) {
+    	switch (n) {
+	        case 1:
+	        	oneSeat.setEffect(null);
+	        	oneSeat.setDisable(false);
+	        	break;
+	        case 2:
+	        	twoSeat.setEffect(null);
+	        	twoSeat.setDisable(false);
+	        	break;
+	        case 40:
+	        	fourSeat.setEffect(null);
+	        	fourSeat.setDisable(false);
+	        	break;
+	        case 41:
+	        	fourSeat2.setEffect(null);
+	        	fourSeat2.setDisable(false);
+	        	break;
+	        case 5:
+	        	fiveSeat.setEffect(null);
+	        	fiveSeat.setDisable(false);
+	        	break;	
+	        case 6:
+	        	sixSeat.setEffect(null);
+	        	sixSeat.setDisable(false);
+	        	break;
+	        case 80:
+	        	eightSeat.setEffect(null);
+	        	eightSeat.setDisable(false);
+	        	break;
+	        case 81:
+	        	eightSeat2.setEffect(null);
+	        	eightSeat2.setDisable(false);
+	        	break;
+	        case 10:
+	        	tenSeat.setEffect(null);
+	        	tenSeat.setDisable(false);
+	        	break;
+	    }
     }
 
 	
@@ -592,6 +853,7 @@ public class TableReservationController implements Initializable {
 			HomeController homePage = loader.getController();
 			homePage.setOrderList(orderList);
 			homePage.setUserDetails(role, hasAccount, dbName, reservedTable);
+			homePage.initializeAds();
 			homePage.displayName();
 		}
 		else if(isOrderBtn) {
@@ -601,8 +863,9 @@ public class TableReservationController implements Initializable {
 			
 		}else if(isTableBtn) {
 			TableReservationController tablePage = loader.getController();
+			tablePage.setOrderList(orderList);
 			tablePage.setUserDetails(role, hasAccount, dbName, reservedTable);
-			
+			tablePage.initialize();
 			
 		}else if(isAccBtn) {
 			AccountDetailsController accPage = loader.getController();
@@ -615,6 +878,7 @@ public class TableReservationController implements Initializable {
 			rewardPage.setOrderList(orderList);
 			rewardPage.setUserDetails(role, hasAccount, dbName, reservedTable);
 			rewardPage.displayName();
+			rewardPage.showCoins();
 		}else {
 			CartController cartPage = loader.getController();
 			cartPage.setOrders(orderList);
@@ -747,12 +1011,6 @@ public class TableReservationController implements Initializable {
 		// TODO Auto-generated method stub
 		setSlides();
 	}
-	public void setHasAccount(boolean hasAccount) {
-		this.hasAccount = hasAccount;
-}
-	public void setName(String dbName) {
-		this.dbName = dbName;
-}
 	public void setOrderList(List<OrderData> orderList) {
 		this.orderList = orderList;
 	}

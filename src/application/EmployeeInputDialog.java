@@ -1,16 +1,8 @@
 package application;
 
-import javafx.application.Platform;
 import javafx.scene.Node;
-import javafx.scene.Scene;
 import javafx.scene.control.*;
-import javafx.scene.control.Alert.AlertType;
 import javafx.scene.layout.GridPane;
-import javafx.util.Pair;
-
-import java.util.Optional;
-import java.util.Timer;
-import java.util.TimerTask;
 
 public class EmployeeInputDialog {
 
@@ -86,10 +78,11 @@ public class EmployeeInputDialog {
     private void updateButtonState(Node addButtonNode, TextField idField, TextField nameField, TextField emailField, TextField ageField, TextField salaryField, TextField roleField, TextField genderField) {
         // Enable the "Add" button if all fields are not empty and ID, Age, and Salary are numeric
         boolean isIdNumeric = isNumeric(idField.getText());
-        boolean isAgeNumeric = isNumeric(ageField.getText());
+        boolean isAgeNumeric = isNumeric(ageField.getText()) && isValidNumber(ageField.getText());
         boolean isSalaryNumeric = isNumeric(salaryField.getText());
+        boolean isGenderValid = isGenderValid(genderField.getText());
 
-        addButtonNode.setDisable(!fieldsNotEmpty(idField, nameField, emailField, ageField, salaryField, roleField, genderField) || !isIdNumeric || !isAgeNumeric || !isSalaryNumeric);
+        addButtonNode.setDisable(!fieldsNotEmpty(idField, nameField, emailField, ageField, salaryField, roleField, genderField) || !isIdNumeric || !isAgeNumeric || !isSalaryNumeric || !isGenderValid);
     }
 
     private boolean fieldsNotEmpty(TextField... fields) {
@@ -100,31 +93,17 @@ public class EmployeeInputDialog {
         }
         return true;
     }
+    private boolean isGenderValid(String gender) {
+        return gender != null && (gender.equalsIgnoreCase("male") || gender.equalsIgnoreCase("female"));
+    }
 
+    private boolean isValidNumber(String str) {
+    	int age = Integer.parseInt(str);
+        return age >= 0 && age < 100; // Return true if age is numeric and less than 100
+    }
     private boolean isNumeric(String str) {
         return str.matches("\\d+");
     }
+   
     
-    private void showAlert(String contentText, AlertType alertType) {
-
-        Alert alert = new Alert(alertType);
-        alert.setTitle("Notice");
-        alert.setHeaderText(null);
-        alert.setContentText(contentText);
-        Scene scenes = alert.getDialogPane().getScene();
-        scenes.getStylesheets().add(getClass().getResource("alert.css").toExternalForm());
-        alert.show();
-  
-        Timer timer = new Timer();
-        timer.schedule(new TimerTask() {
-            @Override
-            public void run() {
-            	Platform.runLater(() -> {
-                   alert.close();
-                });
-                
-                timer.cancel(); // Cancel the timer after closing the alert
-            }
-        }, 2 * 1000);
-    }
 }

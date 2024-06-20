@@ -138,12 +138,12 @@ public class CartController implements Initializable{
 			}
 		}
 		else {
-	    Scene1Controller loginPage = loader.getController();
-	    loginPage.Connect();
-	    stage = (Stage)((Node)event.getSource()).getScene().getWindow();
-		scene = new Scene(root);
-		stage.setScene(scene);
-		stage.show();
+		    Scene1Controller loginPage = loader.getController();
+		    loginPage.Connect();
+		    stage = (Stage)((Node)event.getSource()).getScene().getWindow();
+			scene = new Scene(root);
+			stage.setScene(scene);
+			stage.show();
 		}
 	}
 	public void signUp(ActionEvent event) throws IOException, ClassNotFoundException, SQLException {
@@ -163,12 +163,12 @@ public class CartController implements Initializable{
 			}
 		}
 		else {
-		SignUpController signUpPage = loader.getController();
-		signUpPage.Connect();
-		stage = (Stage)((Node)event.getSource()).getScene().getWindow();
-		scene = new Scene(root);
-		stage.setScene(scene);
-		stage.show();
+			SignUpController signUpPage = loader.getController();
+			signUpPage.Connect();
+			stage = (Stage)((Node)event.getSource()).getScene().getWindow();
+			scene = new Scene(root);
+			stage.setScene(scene);
+			stage.show();
 		}
 	}
 
@@ -199,23 +199,31 @@ public class CartController implements Initializable{
 				}
 			else {showAlert("Create an account to unlock exciting rewards!", AlertType.INFORMATION);}
 	}
-	public void logout(ActionEvent event) throws IOException {
-			FXMLLoader loader = new FXMLLoader(getClass().getResource("Main.fxml"));
-		    root = loader.load();
+	public void logout(ActionEvent event) throws IOException, ClassNotFoundException, SQLException {
+		FXMLLoader loader = new FXMLLoader(getClass().getResource("Main.fxml"));
+	    root = loader.load();
+		if(hasAccount) {
 			Alert alert = new Alert(AlertType.CONFIRMATION);
 			alert.setTitle("Logout");
 			alert.setHeaderText("You're about to logout");
 			alert.setContentText("Are you sure you want to logout?");
-			
 			if(alert.showAndWait().get() == ButtonType.OK) {
 				stage = (Stage)((Node)event.getSource()).getScene().getWindow();
 			    scene = new Scene(root);
 			    stage.setScene(scene);
 			    stage.show();
+			    hasAccount = false;
 			}
-		    Scene1Controller loginPage = loader.getController();
-		    
 		}
+		else {
+		    Scene1Controller loginPage = loader.getController();
+		    loginPage.Connect();
+		    stage = (Stage)((Node)event.getSource()).getScene().getWindow();
+			scene = new Scene(root);
+			stage.setScene(scene);
+			stage.show();
+		}
+	}
 	
 	//CART SYSTEM
 	public List<OrderData> mergeOrders(List<OrderData> orderList) {
@@ -419,7 +427,8 @@ public class CartController implements Initializable{
 			if(isHomeBtn) {
 				HomeController homePage = loader.getController();
 				homePage.setOrderList(orderList);
-				homePage.setUserDetails(role, hasAccount, dbName, id);  
+				homePage.setUserDetails(role, hasAccount, dbName, id);
+				homePage.initializeAds();
 				homePage.displayName();
 			}
 			else if(isOrderBtn) {
@@ -428,9 +437,9 @@ public class CartController implements Initializable{
 				orderPage.setUserDetails(role, hasAccount, dbName, id);  
 			}else if(isTableBtn) {
 				TableReservationController tablePage = loader.getController();
-				tablePage.setHasAccount(hasAccount);
-				tablePage.setName(dbName);
-				
+				tablePage.setOrderList(orderList);
+				tablePage.setUserDetails(role, hasAccount, dbName, id);
+				tablePage.initialize();
 			}else if(isAccBtn) {
 				AccountDetailsController accPage = loader.getController();
 				accPage.setOrders(orderList);

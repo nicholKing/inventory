@@ -7,44 +7,44 @@
 
 <HBox alignment="CENTER_LEFT" prefHeight="48.0" prefWidth="808.0" style="-fx-border-color: black;" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="application.AdStockPaneController">
    <children>
-      <Label fx:id="foodnameLabel" alignment="CENTER" text="Food Name">
+      <Label fx:id="foodnameLabel" prefHeight="21.0" prefWidth="239.0" text="Food Name">
          <font>
             <Font size="15.0" />
          </font>
          <HBox.margin>
-            <Insets right="98.0" />
+            <Insets />
          </HBox.margin>
       </Label>
-      <Label fx:id="categoryLabel" alignment="CENTER" text="Category">
+      <Label fx:id="categoryLabel" prefHeight="21.0" prefWidth="185.0" text="Category">
          <font>
             <Font size="15.0" />
          </font>
          <HBox.margin>
-            <Insets right="98.0" />
+            <Insets />
          </HBox.margin>
       </Label>
-      <Label fx:id="optionLabel" alignment="CENTER" prefHeight="30.0" prefWidth="104.0" text="Description">
+      <Label fx:id="optionLabel" prefHeight="30.0" prefWidth="212.0" text="Description">
          <font>
             <Font size="15.0" />
          </font>
          <HBox.margin>
-            <Insets right="98.0" />
+            <Insets />
          </HBox.margin>
       </Label>
-      <Label fx:id="priceLabel" alignment="CENTER_RIGHT" text="Price">
+      <Label fx:id="priceLabel" prefHeight="21.0" prefWidth="120.0" text="Price">
          <font>
             <Font size="15.0" />
          </font>
          <HBox.margin>
-            <Insets right="98.0" />
+            <Insets />
          </HBox.margin>
       </Label>
-      <Label fx:id="stocksLabel" alignment="CENTER" prefHeight="30.0" prefWidth="58.0" text="Stock">
+      <Label fx:id="stocksLabel" alignment="CENTER" prefHeight="30.0" prefWidth="119.0" text="Stock">
          <font>
             <Font size="15.0" />
          </font>
          <HBox.margin>
-            <Insets right="98.0" />
+            <Insets />
          </HBox.margin>
       </Label>
    </children>

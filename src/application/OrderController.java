@@ -544,6 +544,7 @@ public class OrderController implements Initializable{
 			HomeController homePage = loader.getController();
 			homePage.setOrderList(orderList);
 			homePage.setUserDetails(role, hasAccount, dbName, id);
+			homePage.initializeAds();
 			homePage.displayName();
 		}
 		else if(isOrderBtn) {
@@ -552,8 +553,9 @@ public class OrderController implements Initializable{
 			orderPage.setUserDetails(role, hasAccount, dbName, id);
 		}else if(isTableBtn) {
 			TableReservationController tablePage = loader.getController();
-			tablePage.setHasAccount(hasAccount);
-			tablePage.setName(dbName);
+			tablePage.setOrderList(orderList);
+			tablePage.setUserDetails(role, hasAccount, dbName, id);
+			tablePage.initialize();
 		}else if(isAccBtn) {
 			AccountDetailsController accPage = loader.getController();
 			accPage.setOrders(orderList);
@@ -685,7 +687,6 @@ public class OrderController implements Initializable{
 		plusBtn.setOnMouseClicked(event ->{
 			quantity++;
 			qtyTextField.setText(String.valueOf(quantity));
-			System.out.println(quantity);
 			selected = true;
 		});
 		

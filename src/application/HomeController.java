@@ -25,7 +25,9 @@ import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.ButtonType;
 import javafx.scene.control.Label;
+import javafx.scene.effect.DropShadow;
 import javafx.scene.image.ImageView;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.Button;
 import javafx.scene.layout.AnchorPane;
@@ -51,7 +53,14 @@ public class HomeController implements Initializable{
     private ImageView accountClose;
     @FXML
     private AnchorPane slider2;
-    
+    @FXML
+    private ImageView ad1;
+    @FXML
+    private ImageView ad2;
+    @FXML
+    private ImageView ad3;
+    @FXML
+    private ImageView ad4;
     
 	private Stage stage;
 	private Scene scene;
@@ -152,16 +161,40 @@ public class HomeController implements Initializable{
 			stage.show();
 			}
 		}
+	
+	public void initializeAds() {
+		
+		addHoverEffect(ad1);
+        addHoverEffect(ad2);
+        addHoverEffect(ad3);
+        addHoverEffect(ad4);
+
+	}
+	
+	private DropShadow dropShadow = new DropShadow(10, javafx.scene.paint.Color.GRAY);
+
+	
+	private void addHoverEffect(ImageView imageView) {
+        imageView.setOnMouseEntered(event -> {
+        	imageView.setEffect(dropShadow);
+            imageView.setScaleX(1.03); // Scale to 120% of original size
+            imageView.setScaleY(1.03);
+        });
+
+        imageView.setOnMouseExited(event -> {
+        	imageView.setEffect(null);
+            imageView.setScaleX(1.0); // Reset scale to original size
+            imageView.setScaleY(1.0);
+        });
+    }
 
 		
 	//LEFT PANEL
 	public void homeBtn(ActionEvent event) throws IOException, SQLException {
-		System.out.println("Home");
 		isHomeBtn = true;
 		changeScene(event, homePage);
 	}
 	public void orderBtn(ActionEvent event) throws IOException, SQLException {
-		System.out.println("Order");
 		isOrderBtn = true;
 		changeScene(event, orderPage);
 	}
@@ -250,6 +283,7 @@ public class HomeController implements Initializable{
 				rewardPage.setOrderList(orderList);
 				rewardPage.setUserDetails(role, hasAccount, dbName, id);
 				rewardPage.showCoins();
+				rewardPage.displayName();
 			}else {
 				CartController cartPage = loader.getController();
 				cartPage.setOrders(orderList);
@@ -258,16 +292,7 @@ public class HomeController implements Initializable{
 			}	
 	}
 	
-	//SETTER METHODS
-	public void setUserDetails(String role, boolean hasAccount, String dbName, int id) {
-	    this.role = role;
-	    this.hasAccount = hasAccount;
-	    this.dbName = dbName;
-	    this.id = id;
-	}
-	public void setOrderList(List<OrderData> orderList) {
-		this.orderList = orderList;
-	}
+	
 	private void showAlert(String contentText, AlertType alertType) {
 
         Alert alert = new Alert(alertType);
@@ -360,9 +385,109 @@ public class HomeController implements Initializable{
             });
         });
 	}
+	
+	private void changeScene2(MouseEvent event, String page) throws IOException, SQLException {
+		FXMLLoader loader = new FXMLLoader(getClass().getResource(page));
+		root = loader.load();
+
+		stage = (Stage)((Node)event.getSource()).getScene().getWindow();
+		scene = new Scene(root);
+		stage.setScene(scene);
+		stage.show();
+		
+		if(isHomeBtn) {
+			HomeController homePage = loader.getController();
+			homePage.setOrderList(orderList);
+			homePage.setUserDetails(role, hasAccount, dbName, id);
+			homePage.initializeAds();
+			homePage.displayName();
+		}
+		else if(isOrderBtn) {
+			OrderController orderPage = loader.getController();
+			orderPage.setOrders(orderList);
+			orderPage.setUserDetails(role, hasAccount, dbName, id);
+		}else if(isTableBtn) {
+			TableReservationController tablePage = loader.getController();
+			tablePage.setUserDetails(role, hasAccount, dbName, id);
+			tablePage.initialize();
+		}else if(isAccBtn) {
+			AccountDetailsController accPage = loader.getController();
+			accPage.setOrders(orderList);
+			accPage.setUserDetails(role, hasAccount, dbName, id);
+			accPage.displayName();
+		}else if(isRewardBtn) {
+			RewardsController rewardPage = loader.getController();
+			rewardPage.setOrderList(orderList);
+			rewardPage.setUserDetails(role, hasAccount, dbName, id);
+			rewardPage.showCoins();
+			rewardPage.displayName();
+		}	
+		else {
+			CartController cartPage = loader.getController();
+			cartPage.setOrders(orderList);
+			cartPage.setUserDetails(role, hasAccount, dbName, id);
+			cartPage.displayName();
+		}
+}
+	private void switchPage() {
+		
+		ad1.setOnMouseClicked(event -> {
+			try {
+				isOrderBtn = true;
+				changeScene2(event, orderPage);
+			} catch (IOException | SQLException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		});
+		ad2.setOnMouseClicked(event -> {
+			try {
+				if(hasAccount) {
+					isRewardBtn = true;
+					changeScene2(event, rewardsPage);
+				}
+				else {
+					showAlert("Create an account to unlock exciting rewards!", AlertType.INFORMATION);
+				}
+			} catch (IOException | SQLException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		});
+		ad3.setOnMouseClicked(event -> {
+			try {
+				isOrderBtn = true;
+				changeScene2(event, orderPage);
+			} catch (IOException | SQLException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		});
+		ad4.setOnMouseClicked(event -> {
+			try {
+				isTableBtn = true;
+				changeScene2(event, tablePage);
+			} catch (IOException | SQLException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		});
+	}
+	
+	//SETTER METHODS
+	public void setUserDetails(String role, boolean hasAccount, String dbName, int id) {
+		    this.role = role;
+		    this.hasAccount = hasAccount;
+		    this.dbName = dbName;
+		    this.id = id;
+		}
+	public void setOrderList(List<OrderData> orderList) {
+			this.orderList = orderList;
+		}
 	@Override
 	public void initialize(URL arg0, ResourceBundle arg1) {
 			try {
+				switchPage();
 				displayName();
 			} catch (SQLException e) {
 				// TODO Auto-generated catch block

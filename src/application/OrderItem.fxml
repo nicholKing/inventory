@@ -8,24 +8,24 @@
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.text.Font?>
 
-<HBox fx:id="vBox" alignment="CENTER_LEFT" prefHeight="60.0" prefWidth="870.0" spacing="100.0" style="-fx-border-color: black; -fx-background-color: white;" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="application.OrderDataController">
+<HBox fx:id="vBox" alignment="CENTER_LEFT" prefHeight="60.0" prefWidth="870.0" spacing="80.0" style="-fx-border-color: black; -fx-background-color: white;" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="application.OrderDataController">
    <children>
-      <Label fx:id="foodLabel" prefHeight="60.0" prefWidth="324.0" text="foodLabel" wrapText="true">
+      <Label fx:id="foodLabel" prefHeight="58.0" prefWidth="364.0" style="-fx-font-weight: bold;" text="foodLabel" wrapText="true">
          <font>
             <Font size="22.0" />
          </font>
       </Label>
-      <Label fx:id="sizeLabel" alignment="CENTER" prefHeight="60.0" prefWidth="267.0" text="sizeLabel" textAlignment="CENTER" wrapText="true">
+      <Label fx:id="sizeLabel" alignment="CENTER" prefHeight="58.0" prefWidth="371.0" style="-fx-font-weight: bold;" text="sizeLabel" textAlignment="CENTER" wrapText="true">
+         <font>
+            <Font size="19.0" />
+         </font>
+      </Label>
+      <Label fx:id="qtyLabel" alignment="CENTER" prefHeight="58.0" prefWidth="233.0" style="-fx-font-weight: bold;" text="qtyLabel">
          <font>
             <Font size="22.0" />
          </font>
       </Label>
-      <Label fx:id="qtyLabel" alignment="CENTER" prefHeight="60.0" prefWidth="202.0" text="qtyLabel">
-         <font>
-            <Font size="22.0" />
-         </font>
-      </Label>
-      <Label fx:id="priceLabel" alignment="CENTER" prefHeight="60.0" prefWidth="205.0" text="priceLabel">
+      <Label fx:id="priceLabel" alignment="CENTER" prefHeight="58.0" prefWidth="259.0" style="-fx-font-weight: bold;" text="priceLabel">
          <font>
             <Font size="22.0" />
          </font>

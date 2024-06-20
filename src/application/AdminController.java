@@ -68,7 +68,7 @@ public class AdminController implements Initializable{
     String homePage = "AdHomePage.fxml";
     String accPage = "AccountDetails.fxml";
     String stockPage = "AdStockPage.fxml";
-    String tablePage = "TablePage.fxml";
+    String tablePage = "AdTableReservationPage.fxml";
     String employmentPage = "EmploymentPage.fxml";
     
     String query = "SELECT name FROM user_tbl WHERE id = ?";
@@ -165,7 +165,7 @@ public class AdminController implements Initializable{
 				stage.show();
 			}
 		}
-	
+
 	//LEFT PANEL
 	public void homeBtn(ActionEvent event) throws IOException, SQLException {
 		isHomeBtn = true;
@@ -245,8 +245,9 @@ public class AdminController implements Initializable{
 				AdOrderController orderPage = loader.getController();
 				orderPage.setUserDetails(role, hasAccount, dbName, id);
 			}else if(isTableBtn) {
-				TableReservationController tablePage = loader.getController();
-				tablePage.setUserDetails(role, hasAccount, dbName, id);
+				AdTableReservationController adtablePage = loader.getController();
+				adtablePage.setUserDetails(role, hasAccount, dbName, id);
+				adtablePage.initialize();
 			}else if(isAccBtn) {
 				AccountDetailsController accPage = loader.getController();
 				accPage.setUserDetails(role, hasAccount, dbName, id);

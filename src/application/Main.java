@@ -38,6 +38,7 @@ public class Main extends Application {
         AnchorPane loginLayout = loader.load();
 
         HomeController homePage = loader.getController();
+        homePage.initializeAds();
 
         primaryStage = new Stage();
         primaryStage.setTitle("The Posher");

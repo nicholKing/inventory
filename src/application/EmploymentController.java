@@ -110,7 +110,7 @@ public class EmploymentController implements Initializable{
     String homePage = "AdHomePage.fxml";
     String accPage = "AccountDetails.fxml";
     String stockPage = "AdStockPage.fxml";
-    String tablePage = "TablePage.fxml";
+    String tablePage = "AdTableReservationPage.fxml";
     String employmentPage = "EmploymentPage.fxml";
     
     String query = "SELECT name FROM user_tbl WHERE id = ?";
@@ -231,8 +231,8 @@ public class EmploymentController implements Initializable{
 		changeScene(event, tablePage);		
 	}
 	public void showEmployment(ActionEvent event) throws IOException, SQLException {
-				isEmploymentBtn = true;
-				changeScene(event, employmentPage);
+		isEmploymentBtn = true;
+		changeScene(event, employmentPage);
 	}
 		
 
@@ -290,9 +290,9 @@ public class EmploymentController implements Initializable{
 				AdOrderController orderPage = loader.getController();
 				orderPage.setUserDetails(role, hasAccount, dbName, id);
 			}else if(isTableBtn) {
-				TableReservationController tablePage = loader.getController();
-				tablePage.setHasAccount(hasAccount);
-				tablePage.setName(dbName);
+				AdTableReservationController tablePage = loader.getController();
+				tablePage.setUserDetails(role, hasAccount, dbName, id);
+				tablePage.initialize();
 			}else if(isAccBtn) {
 				AccountDetailsController accPage = loader.getController();
 				accPage.setUserDetails(role, hasAccount, dbName, id);
@@ -448,90 +448,134 @@ public class EmploymentController implements Initializable{
 	    }
 	
 	public void handleAddButton() {
+		boolean validId = false;
 	    EmployeeInputDialog dialog = new EmployeeInputDialog();
 	    Employee emp = dialog.showAndWait();
 	    
 	    if (emp != null) {
-	        DatabaseHelper.insertEmployee(emp);
-	        tableView.getItems().add(emp);
+	        validId = DatabaseHelper.insertEmployee(emp);
+	        if(validId) {
+	        	tableView.getItems().add(emp);}
 	    } 
 	}
 
 	 
-	 
+	private boolean isValidNumber(String input) {
+	    try {
+	        int age = Integer.parseInt(input);
+	        // Check if age is a valid integer and does not exceed 100
+	        return age >= 0 && age <= 100;
+	    } catch (NumberFormatException e) {
+	        return false;
+	    }
+	}
+	 private boolean isGenderValid(String gender) {
+	        return gender != null && (gender.equalsIgnoreCase("male") || gender.equalsIgnoreCase("female"));
+	    }
+
+
+	private boolean isValidDouble(String input) {
+	    try {
+	        Double.parseDouble(input);
+	        return true;
+	    } catch (NumberFormatException e) {
+	        return false;
+	    }
+	}
+
 	private void handleUpdateButton() throws SQLException {
-		Employee selectedEmployee = tableView.getSelectionModel().getSelectedItem();
-        if (selectedEmployee != null) {
-            // Create a dialog for editing employee details
-            Dialog<Pair<String, Employee>> dialog = new Dialog<>();
-            dialog.setTitle("Edit Employee");
-            dialog.setHeaderText("Edit Employee Details");
+	    Employee selectedEmployee = tableView.getSelectionModel().getSelectedItem();
+	    if (selectedEmployee != null) {
+	        // Create a dialog for editing employee details
+	        Dialog<Pair<String, Employee>> dialog = new Dialog<>();
+	        dialog.setTitle("Edit Employee");
+	        dialog.setHeaderText("Edit Employee Details");
 
-            // Set the button types
-            ButtonType updateButtonType = new ButtonType("Update", ButtonData.OK_DONE);
-            dialog.getDialogPane().getButtonTypes().addAll(updateButtonType, ButtonType.CANCEL);
+	        // Set the button types
+	        ButtonType updateButtonType = new ButtonType("Update", ButtonData.OK_DONE);
+	        dialog.getDialogPane().getButtonTypes().addAll(updateButtonType, ButtonType.CANCEL);
 
-            // Create labels and text fields for each detail
-            GridPane grid = new GridPane();
-            grid.setHgap(10);
-            grid.setVgap(10);
+	        // Create labels and text fields for each detail
+	        GridPane grid = new GridPane();
+	        grid.setHgap(10);
+	        grid.setVgap(10);
 
-            TextField nameField = new TextField(selectedEmployee.getName());
-            TextField emailField = new TextField(selectedEmployee.getEmail());
-            TextField ageField = new TextField(Integer.toString(selectedEmployee.getAge()));
-            TextField salaryField = new TextField(Double.toString(selectedEmployee.getSalary()));
-            TextField roleField = new TextField(selectedEmployee.getRole());
-            TextField genderField = new TextField(selectedEmployee.getGender());
+	        TextField idField = new TextField(Integer.toString(selectedEmployee.getId())); // ID field (disabled)
+	        TextField nameField = new TextField(selectedEmployee.getName());
+	        TextField emailField = new TextField(selectedEmployee.getEmail());
+	        TextField ageField = new TextField(Integer.toString(selectedEmployee.getAge()));
+	        TextField salaryField = new TextField(Double.toString(selectedEmployee.getSalary()));
+	        TextField roleField = new TextField(selectedEmployee.getRole());
+	        TextField genderField = new TextField(selectedEmployee.getGender());
 
-            grid.add(new Label("Name:"), 0, 0);
-            grid.add(nameField, 1, 0);
-            grid.add(new Label("Email:"), 0, 1);
-            grid.add(emailField, 1, 1);
-            grid.add(new Label("Age:"), 0, 2);
-            grid.add(ageField, 1, 2);
-            grid.add(new Label("Salary:"), 0, 3);
-            grid.add(salaryField, 1, 3);
-            grid.add(new Label("Role:"), 0, 4);
-            grid.add(roleField, 1, 4);
-            grid.add(new Label("Gender:"), 0, 5);
-            grid.add(genderField, 1, 5);
+	        idField.setDisable(true); // Disable editing of ID field
 
-            dialog.getDialogPane().setContent(grid);
+	        grid.add(new Label("ID:"), 0, 0);
+	        grid.add(idField, 1, 0);
+	        grid.add(new Label("Name:"), 0, 1);
+	        grid.add(nameField, 1, 1);
+	        grid.add(new Label("Email:"), 0, 2);
+	        grid.add(emailField, 1, 2);
+	        grid.add(new Label("Age:"), 0, 3);
+	        grid.add(ageField, 1, 3);
+	        grid.add(new Label("Salary:"), 0, 4);
+	        grid.add(salaryField, 1, 4);
+	        grid.add(new Label("Role:"), 0, 5);
+	        grid.add(roleField, 1, 5);
+	        grid.add(new Label("Gender:"), 0, 6);
+	        grid.add(genderField, 1, 6);
 
-            // Convert the result to a pair of button type and employee
-            dialog.setResultConverter(dialogButton -> {
-                if (dialogButton == updateButtonType) {
-                    selectedEmployee.setName(nameField.getText());
-                    selectedEmployee.setEmail(emailField.getText());
-                    selectedEmployee.setAge(Integer.parseInt(ageField.getText()));
-                    selectedEmployee.setSalary(Double.parseDouble(salaryField.getText()));
-                    selectedEmployee.setRole(roleField.getText());
-                    selectedEmployee.setGender(genderField.getText());
-                    return new Pair<>("Update", selectedEmployee);
-                }
-                return null;
-            });
+	        dialog.getDialogPane().setContent(grid);
 
-            // Show the dialog and wait for user input
-            dialog.showAndWait().ifPresent(result -> {
-                // Update employee in the database
-                try {
-                    DatabaseHelper.updateEmployee(result.getValue());
-                    // Refresh TableView or any other UI updates
-                    tableView.refresh();
-                } catch (SQLException e) {
-                    e.printStackTrace(); // Handle exception appropriately
-                }
-            });
-        } else {
-            // No employee selected, show an alert
-            Alert alert = new Alert(AlertType.WARNING);
-            alert.setTitle("No Employee Selected");
-            alert.setHeaderText("No Employee Selected");
-            alert.setContentText("Please select an employee to update.");
-            alert.showAndWait();
-        }
-    }
+	        // Convert the result to a pair of button type and employee
+	        dialog.setResultConverter(dialogButton -> {
+	            if (dialogButton == updateButtonType) {
+	                // Validate age, salary, and gender fields
+	                if (!isValidNumber(ageField.getText())) {
+	                    showAlert("Age must be a valid integer.", AlertType.ERROR);
+	                    return null; // Return null to not update employee
+	                }
+	                if (!isValidDouble(salaryField.getText())) {
+	                    showAlert("Salary must be a valid number.", AlertType.ERROR);
+	                    return null; // Return null to not update employee
+	                }
+	                if (!isGenderValid(genderField.getText())) {
+	                    showAlert("Gender should be either 'male' or 'female'.", AlertType.ERROR);
+	                    return null; // Return null to not update employee
+	                }
+
+	                // Update employee details
+	                selectedEmployee.setName(nameField.getText());
+	                selectedEmployee.setEmail(emailField.getText());
+	                selectedEmployee.setAge(Integer.parseInt(ageField.getText()));
+	                selectedEmployee.setSalary(Double.parseDouble(salaryField.getText()));
+	                selectedEmployee.setRole(roleField.getText());
+	                selectedEmployee.setGender(genderField.getText());
+	                return new Pair<>("Update", selectedEmployee);
+	            }
+	            return null;
+	        });
+
+	        // Show the dialog and wait for user input
+	        dialog.showAndWait().ifPresent(result -> {
+	            if (result != null) {
+	                // Update employee in the database
+	                try {
+	                    DatabaseHelper.updateEmployee(result.getValue());
+	                    // Refresh TableView or any other UI updates
+	                    tableView.refresh();
+	                } catch (SQLException e) {
+	                    e.printStackTrace(); // Handle exception appropriately
+	                }
+	            }
+	        });
+	    } else {
+	        // No employee selected, show an alert
+	        showAlert("Please select an employee to update.", AlertType.ERROR);
+	    }
+	}
+
+
     
 	
 	 private void handleRemoveButton() {

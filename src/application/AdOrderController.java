@@ -1,6 +1,5 @@
 package application;
 
-import javafx.animation.PauseTransition;
 import javafx.animation.TranslateTransition;
 import javafx.application.Platform;
 import javafx.event.ActionEvent;
@@ -17,7 +16,6 @@ import javafx.scene.control.Label;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.control.TextField;
 import javafx.scene.control.Alert.AlertType;
-import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.GridPane;
@@ -35,7 +33,6 @@ import java.util.ResourceBundle;
 import java.util.Set;
 import java.util.Timer;
 import java.util.TimerTask;
-import java.util.stream.Collectors;
 
 public class AdOrderController implements Initializable{
 	@FXML
@@ -93,7 +90,7 @@ public class AdOrderController implements Initializable{
 	String orderPage = "AdOrderPage.fxml";
     String homePage = "AdHomePage.fxml";
     String accPage = "AccountDetails.fxml";
-    String tablePage = "TablePage.fxml";
+    String tablePage = "AdTableReservationPage.fxml";
     String employmentPage = "EmploymentPage.fxml";
     String previousClickedBtn = ""; 
     
@@ -198,7 +195,7 @@ public class AdOrderController implements Initializable{
 	}
 	public void showTable(ActionEvent event) throws IOException, SQLException {
 		isTableBtn = true;
-		changeScene(event, "TablePage.fxml");
+		changeScene(event, tablePage);
 		}
 	public void showEmployment(ActionEvent event) throws IOException, SQLException {
 		if(hasAccount && role.equals("Owner")) {
@@ -315,9 +312,9 @@ public class AdOrderController implements Initializable{
 			orderPage.setUserDetails(role, hasAccount, dbName, id);
 			
 		}else if(isTableBtn) {
-			TableReservationController tablePage = loader.getController();
-			tablePage.setHasAccount(hasAccount);
-			tablePage.setName(dbName);
+			AdTableReservationController tablePage = loader.getController();
+			tablePage.setUserDetails(role, hasAccount, dbName, id);
+			tablePage.initialize();
 		}else if(isAccBtn) {
 			AccountDetailsController accPage = loader.getController();
 			accPage.setUserDetails(role, hasAccount, dbName, id);

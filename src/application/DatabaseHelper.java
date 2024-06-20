@@ -1,18 +1,27 @@
 package application;
 
 import java.sql.*;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Timer;
+import java.util.TimerTask;
 import java.io.ByteArrayInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileInputStream;
 
 import com.mysql.jdbc.Connection;
 
+import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.scene.Scene;
+import javafx.scene.control.Alert;
+import javafx.scene.control.Alert.AlertType;
 import javafx.scene.image.Image;
 
 public class DatabaseHelper {
@@ -20,7 +29,7 @@ public class DatabaseHelper {
     private static final String USER = "root";
     private static final String PASSWORD = "";
     
-	@SuppressWarnings("exports")
+	
 	public static Connection connect() throws SQLException {
         return (Connection) DriverManager.getConnection(URL, USER, PASSWORD);
     }
@@ -127,6 +136,133 @@ public class DatabaseHelper {
             }
         }
         return optionCount;
+    }
+    
+    public static void insertReservation(String email, String dateTimeString, String name, int table_number, boolean reserved) {
+        String query = "INSERT INTO appointments (email, appointment_date_time, name, table_number, reserved) VALUES (?, ?, ?, ?, ?)";
+
+        try (Connection conn = connect();
+             PreparedStatement pstmt = conn.prepareStatement(query)) {
+
+            pstmt.setString(1, email);
+            pstmt.setString(2, dateTimeString);
+            pstmt.setString(3, name);
+            pstmt.setInt(4, table_number);
+            pstmt.setBoolean(5, reserved);
+            pstmt.executeUpdate();
+
+            System.out.println("Date, Time, Email, and Name saved to the database successfully.");
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+    
+    
+    public static List<Reservation> fetchAllReservations() {
+        List<Reservation> reservations = new ArrayList<>();
+        String sql = "SELECT email, appointment_date_time, name, table_number, reserved FROM appointments";
+
+        try (Connection conn = connect();
+             PreparedStatement pstmt = conn.prepareStatement(sql);
+             ResultSet rs = pstmt.executeQuery()) {
+
+            while (rs.next()) {
+                String email = rs.getString("email");
+                String dateTimeString = rs.getString("appointment_date_time");
+                String name = rs.getString("name");
+                int table_number = rs.getInt("table_number");
+                boolean reserved = rs.getBoolean("reserved");
+
+
+                DateTimeFormatter formatter = DateTimeFormatter.ofPattern("MMM dd, yyyy h:mm a");
+                LocalDateTime dateTime = LocalDateTime.parse(dateTimeString, formatter);
+                String date = dateTime.toLocalDate().format(DateTimeFormatter.ofPattern("MMM dd, yyyy"));
+                String time = dateTime.toLocalTime().format(DateTimeFormatter.ofPattern("hh:mm a"));
+
+                Reservation reservation = new Reservation(email, name, date, time, table_number, reserved);
+                reservations.add(reservation);
+                
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return reservations;
+    }
+    
+
+    // Method to fetch all reservations for a given date
+    public static List<Reservation> fetchExistingReservations(LocalDate ldate) {
+        List<Reservation> reservations = new ArrayList<>();
+
+        String query = "SELECT email, appointment_date_time, name, table_number, reserved FROM appointments";
+
+        try (Connection conn = connect();
+             PreparedStatement pstmt = conn.prepareStatement(query)) {
+
+            ResultSet rs = pstmt.executeQuery();
+
+            while (rs.next()) {
+            	String email = rs.getString("email");
+                String dateTimeString = rs.getString("appointment_date_time");
+                String name = rs.getString("name");
+                int table_number = rs.getInt("table_number");
+                boolean reserved = rs.getBoolean("reserved");
+                
+                System.out.println("dateTimeString");
+
+                DateTimeFormatter formatter = DateTimeFormatter.ofPattern("MMM dd, yyyy hh:mm a");
+                LocalDateTime dateTime = LocalDateTime.parse(dateTimeString, formatter);
+                String date = dateTime.toLocalDate().format(DateTimeFormatter.ofPattern("MMM dd, yyyy"));
+                String time = dateTime.toLocalTime().format(DateTimeFormatter.ofPattern("hh:mm a"));
+
+                Reservation reservation = new Reservation(email, name, date, time, table_number, reserved);
+                reservations.add(reservation);
+
+                // Debug print statement
+                System.out.println("Fetched: " + reservation);
+            }
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return reservations;
+    }
+    
+    public static void updateReservation(String email, String name, String date, String time, int table_number, boolean reserved) {
+        
+    	String query = "UPDATE `appointments` SET `email`= ?,`appointment_date_time`= ?,`name`= ?,`reserved`= ? WHERE `table_number`  = ?";
+        try (Connection conn = connect();
+            PreparedStatement pstmt = conn.prepareStatement(query)) {
+        	
+            String dateTimeString = date + " " + time;
+            pstmt.setString(1, email);
+            pstmt.setString(2, dateTimeString);
+            pstmt.setString(3, name);
+            pstmt.setBoolean(4, reserved);
+            pstmt.setInt(5, table_number);
+            
+            System.out.println(email + "\n" + name + "\n" + dateTimeString + "\n" + table_number + "\n" + reserved);
+            
+            pstmt.executeUpdate();
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
+    
+    public static void deleteReservation(String email) {
+        String sql = "DELETE FROM appointments WHERE email = ?";
+        try (Connection conn = connect();
+             PreparedStatement pstmt = conn.prepareStatement(sql)) {
+            
+            pstmt.setString(1, email);
+            pstmt.executeUpdate();
+           
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
     }
     
     public static boolean checkExistingFoodName(String foodName) throws SQLException {
@@ -244,8 +380,7 @@ public class DatabaseHelper {
                 if (attempt >= maxRetries) {
                     throw e;
                 }
-                // Log retry attempt
-                System.err.println("Retry attempt " + attempt + " after failure: " + e.getMessage());
+             
             }
         }
     }
@@ -314,25 +449,42 @@ public class DatabaseHelper {
     }
     
     //EMPLOYMENT PAGE
-    public static void insertEmployee(Employee employee) {
-        String query = "INSERT INTO employee_list (id, name, email, age, gender, salary, role) VALUES (?, ?, ?, ?, ?, ?, ?)";
+    public static boolean insertEmployee(Employee employee) {
+        String checkQuery = "SELECT COUNT(*) FROM employee_list WHERE id = ?";
+        String insertQuery = "INSERT INTO employee_list (id, name, email, age, gender, salary, role) VALUES (?, ?, ?, ?, ?, ?, ?)";
 
         try (Connection conn = connect();
-             PreparedStatement pstmt = conn.prepareStatement(query)) {
+             PreparedStatement checkStmt = conn.prepareStatement(checkQuery);
+             PreparedStatement insertStmt = conn.prepareStatement(insertQuery)) {
 
-            pstmt.setInt(1, employee.getId());
-            pstmt.setString(2, employee.getName());
-            pstmt.setString(3, employee.getEmail());
-            pstmt.setInt(4, employee.getAge());
-            pstmt.setString(5, employee.getGender());
-            pstmt.setDouble(6, employee.getSalary());
-            pstmt.setString(7, employee.getRole());
+            // Check if the ID already exists
+            checkStmt.setInt(1, employee.getId());
+            ResultSet rs = checkStmt.executeQuery();
+            rs.next();
+            if (rs.getInt(1) > 0) {
+            	showAlert("ID already exists.", AlertType.ERROR);
+                return false; // Indicate failure
+            }
+            else {
+            	insertStmt.setInt(1, employee.getId());
+                insertStmt.setString(2, employee.getName());
+                insertStmt.setString(3, employee.getEmail());
+                insertStmt.setInt(4, employee.getAge());
+                insertStmt.setString(5, employee.getGender());
+                insertStmt.setDouble(6, employee.getSalary());
+                insertStmt.setString(7, employee.getRole());
 
-            pstmt.executeUpdate();
+                insertStmt.executeUpdate();
+                return true; // Indicate success
+            }
+
+
         } catch (SQLException ex) {
             ex.printStackTrace();
+            return false; // Indicate failure
         }
     }
+
     public static ObservableList<Employee> getAllEmployees() throws SQLException {
         ObservableList<Employee> employees = FXCollections.observableArrayList();
         // Assuming you have a connection object named "connection"
@@ -519,7 +671,26 @@ public class DatabaseHelper {
             throw e; // Re-throw the exception for handling at a higher level
         }
     }
+    private static void showAlert(String contentText, AlertType alertType) {
 
+        Alert alert = new Alert(alertType);
+        alert.setTitle("Notice");
+        alert.setHeaderText(null);
+        alert.setContentText(contentText);
+        alert.show();
+  
+        Timer timer = new Timer();
+        timer.schedule(new TimerTask() {
+            @Override
+            public void run() {
+            	Platform.runLater(() -> {
+                   alert.close();
+                });
+                
+                timer.cancel(); // Cancel the timer after closing the alert
+            }
+        }, 2 * 1000);
+    }
 }
 
     

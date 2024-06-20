@@ -13,51 +13,51 @@
 
 <AnchorPane id="paneSignup" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="720.0" prefWidth="1280.0" stylesheets="@application.css" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="application.SignUpController">
    <children>
-      <ImageView fitHeight="390.0" fitWidth="370.0" layoutX="327.0" layoutY="128.0" pickOnBounds="true" preserveRatio="true">
+      <ImageView fitHeight="315.0" fitWidth="302.0" layoutX="289.0" layoutY="243.0" pickOnBounds="true" preserveRatio="true">
          <image>
             <Image url="@../pictures/theposher2.png" />
          </image>
       </ImageView>
-      <Label id="create" alignment="CENTER" contentDisplay="CENTER" layoutX="583.0" layoutY="181.0" prefHeight="64.0" prefWidth="370.0" styleClass="text2" text="Welcome" textAlignment="CENTER">
+      <Label id="create" alignment="CENTER" contentDisplay="CENTER" layoutX="503.0" layoutY="143.0" prefHeight="131.0" prefWidth="535.0" styleClass="text2" text="Welcome" textAlignment="CENTER">
          <font>
             <Font size="17.0" />
          </font>
       </Label>
-      <TextField fx:id="usernameField" layoutX="673.0" layoutY="297.0" promptText="Username">
+      <TextField fx:id="usernameField" layoutX="670.0" layoutY="343.0" promptText="Username">
          <styleClass>
             <String fx:value="textField" />
             <String fx:value="tf2" />
          </styleClass></TextField>
-      <TextField fx:id="pass_text" layoutX="673.0" layoutY="333.0" promptText="Password">
+      <TextField fx:id="pass_text" layoutX="670.0" layoutY="384.0" promptText="Password">
          <styleClass>
             <String fx:value="textField" />
             <String fx:value="tf2" />
          </styleClass></TextField>
-      <PasswordField fx:id="pass_hidden" layoutX="673.0" layoutY="333.0" promptText="Password">
+      <PasswordField fx:id="pass_hidden" layoutX="670.0" layoutY="384.0" promptText="Password">
          <styleClass>
             <String fx:value="textField" />
             <String fx:value="tf2" />
          </styleClass></PasswordField>
-      <Button fx:id="signInBtn" layoutX="806.0" layoutY="396.0" mnemonicParsing="false" onAction="#changeScene" prefHeight="18.0" prefWidth="60.0" text="Sign In" />
-      <Button layoutX="697.0" layoutY="432.0" mnemonicParsing="false" onAction="#signUp" prefHeight="43.0" prefWidth="139.0" text="Sign Up">
+      <Button fx:id="signInBtn" layoutX="801.0" layoutY="452.0" mnemonicParsing="false" onAction="#changeScene" prefHeight="18.0" prefWidth="60.0" text="Sign In" />
+      <Button layoutX="692.0" layoutY="488.0" mnemonicParsing="false" onAction="#signUp" prefHeight="43.0" prefWidth="139.0" text="Sign Up">
          <styleClass>
             <String fx:value="comic-button" />
             <String fx:value="cb2" />
          </styleClass></Button>
-      <TextField fx:id="nameField" layoutX="674.0" layoutY="261.0" promptText="Name">
+      <TextField fx:id="nameField" layoutX="671.0" layoutY="302.0" promptText="Name">
          <styleClass>
             <String fx:value="textField" />
             <String fx:value="tf2" />
          </styleClass></TextField>
-      <CheckBox fx:id="pass_toggle" layoutX="712.0" layoutY="374.0" mnemonicParsing="false" onAction="#togglevisiblePassword" styleClass="text2" text="Show Password" />
-      <Label layoutX="673.0" layoutY="401.0" style="-fx-font-style: italic;" styleClass="text2" text="Already have an account?">
+      <CheckBox fx:id="pass_toggle" layoutX="707.0" layoutY="430.0" mnemonicParsing="false" onAction="#togglevisiblePassword" styleClass="text2" text="Show Password" />
+      <Label layoutX="668.0" layoutY="457.0" style="-fx-font-style: italic;" styleClass="text2" text="Already have an account?">
          <font>
             <Font size="10.0" />
          </font>
       </Label>
-      <Label layoutX="709.0" layoutY="236.0" styleClass="text2" text="Create your account">
+      <Label layoutX="581.0" layoutY="234.0" style="-fx-text-fill: #E8D8C4; -fx-font-size: 40;" text="Create your account">
          <font>
-            <Font size="10.0" />
+            <Font size="45.0" />
          </font>
       </Label>
    </children>

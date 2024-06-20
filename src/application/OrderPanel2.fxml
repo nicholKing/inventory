@@ -15,16 +15,16 @@
             <Image url="@../pictures/fast-food.png" />
          </image>
       </ImageView>
-      <Label fx:id="priceLabel" prefHeight="7.0" prefWidth="130.0" text="Price">
+      <Label fx:id="priceLabel" prefHeight="7.0" prefWidth="130.0" style="-fx-font-weight: bold;" stylesheets="@general.css" text="Price">
          <font>
             <Font size="15.0" />
          </font></Label>
-      <Label fx:id="foodLabel" alignment="CENTER" prefHeight="62.0" prefWidth="130.0" text="Label" wrapText="true">
+      <Label fx:id="foodLabel" alignment="CENTER" prefHeight="62.0" prefWidth="130.0" style="-fx-font-weight: bold;" stylesheets="@general.css" text="Label" wrapText="true">
          <font>
             <Font size="16.0" />
          </font>
       </Label>
-      <Button fx:id="selectBtn" mnemonicParsing="false" prefHeight="63.0" prefWidth="124.0" text="SELECT" />
+      <Button fx:id="selectBtn" mnemonicParsing="false" prefHeight="63.0" prefWidth="124.0" style="-fx-text-fill: #561C24; -fx-font-weight: bold;" styleClass="select-button" stylesheets="@general.css" text="SELECT" />
    </children>
    <padding>
       <Insets bottom="8.0" left="8.0" right="8.0" top="8.0" />

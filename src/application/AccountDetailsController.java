@@ -126,6 +126,7 @@ public class AccountDetailsController implements Initializable{
 	String username = "";
 	String orderPage = "OrderPage.fxml";
 	String adOrderPage = "AdOrderPage.fxml";
+	String adTablePage = "AdTableReservationPage.fxml";
 	String adStockPage = "AdStockPage.fxml";
 	String adHomePage = "AdHomePage.fxml";
     String homePage = "HomePage.fxml";
@@ -256,13 +257,22 @@ public class AccountDetailsController implements Initializable{
 		changeScene(event, (role.equals("Owner") || role.equals("Employee")) ? adStockPage : cartPage);
 	}
 	public void showTable(ActionEvent event) throws IOException, SQLException {
-			isTableBtn = true;
-			changeScene(event, tablePage);
+		isTableBtn = true;
+		changeScene(event, (role.equals("Owner") || role.equals("Employee")) ? adTablePage : tablePage);
 	}
 	public void showRewards(ActionEvent event) throws IOException, SQLException {
 			if(hasAccount) {
 				isRewardBtn = true;
-				changeScene(event, (role.equals("Owner") || role.equals("Employee")) ? employmentPage : rewardsPage);}
+				if(role.equals("Owner")) {
+					changeScene(event, employmentPage);
+				}
+				else if(role.equals("Employee")){
+					showAlert("This page is only for owner", AlertType.INFORMATION);
+				}
+				else {
+					changeScene(event, rewardsPage);
+				}
+			}
 			else {showAlert("Create an account to unlock exciting rewards!", AlertType.INFORMATION);}
 	}
 	public void logout(ActionEvent event) throws IOException, ClassNotFoundException, SQLException {
@@ -434,6 +444,10 @@ public class AccountDetailsController implements Initializable{
 	public void checkEmailField() throws SQLException {
 		PreparedStatement pst;
 		txtEmail = emailField.getText();
+		if(txtEmail == null) {
+			isSuccessEdit = true;
+			return;
+		}
 		
 		if(txtEmail.length() <= 18) { 
 			emailField.setEditable(true);
@@ -462,7 +476,10 @@ public class AccountDetailsController implements Initializable{
 	public void checkAddressField() throws SQLException {
 		PreparedStatement pst;
 		txtAddress = addressTextField.getText();
-		
+		if(txtAddress == null) {
+			isSuccessEdit = true;
+			return;
+		}
 		if(txtAddress.length() > 50) showAlert("Please enter a shorter address", AlertType.ERROR); 
 		else {
 				pst = con.prepareStatement("UPDATE user_tbl SET address=? WHERE id = ?");
@@ -511,6 +528,7 @@ public class AccountDetailsController implements Initializable{
 	        homePage.setOrderList(orderList);
 	        homePage.setUserDetails(role, hasAccount, dbName, id);   
 	        homePage.displayName();
+	        homePage.initializeAds();
 	    } else if (isOrderBtn) {
 	        OrderController orderPage = loader.getController();
 	        orderPage.setOrders(orderList);
@@ -518,7 +536,8 @@ public class AccountDetailsController implements Initializable{
 	    } else if (isTableBtn) {
 	        TableReservationController tablePage = loader.getController();
 	        tablePage.setUserDetails(role, hasAccount, dbName, id);  
-	       
+	        tablePage.initialize();
+	        tablePage.setOrderList(orderList);
 	    } else if (isRewardBtn) {
 	        RewardsController rewardPage = loader.getController();
 	        rewardPage.setOrderList(orderList);
@@ -544,7 +563,7 @@ public class AccountDetailsController implements Initializable{
 	        homePage.setUserDetails(role, hasAccount, dbName, id);   
 	        homePage.displayName();
 		}
-	   else if (isOrderBtn) {
+		else if (isOrderBtn) {
 	        AdOrderController adOrderPage = loader.getController();
 	        adOrderPage.setUserDetails(role, hasAccount, dbName, id);  
 	    } else if (isCartBtn) {
@@ -552,13 +571,18 @@ public class AccountDetailsController implements Initializable{
 	        stockPage.setUserDetails(role, hasAccount, dbName, id);
 	        stockPage.displayName();
 	    } else if (isRewardBtn) {
-	        EmploymentController employmentPage = loader.getController();
-	        employmentPage.setUserDetails(role, hasAccount, dbName, id);
-	        employmentPage.displayName();
-	    }else if (isAccBtn) {
+	    		EmploymentController employmentPage = loader.getController();
+	 	        employmentPage.setUserDetails(role, hasAccount, dbName, id);
+	 	        employmentPage.displayName();
+	    } else if (isAccBtn) {
 	        AccountDetailsController accPage = loader.getController();
 	        accPage.setUserDetails(role, hasAccount, dbName, id);
 	        accPage.displayName();
+	    }
+	    else if (isTableBtn) {
+	        AdTableReservationController tablePage = loader.getController();
+	        tablePage.setUserDetails(role, hasAccount, dbName, id);
+	        tablePage.initialize();
 	    }
 	}
 	private void showAlert(String contentText, AlertType alertType) {
@@ -671,15 +695,7 @@ public class AccountDetailsController implements Initializable{
 		addressTextField.setEditable(toggle);
 		emailField.setEditable(toggle);
 	}
-	
-	public void displayIcon() {
-		if(role.equals("Owner")) {
-			img1.setImage(stockImg);
-			img2.setImage(employmentImg);
-			btn1.setText("Stocks");
-			btn2.setText("Employment");
-		}
-	}
+
 	
 	//SETTERS 
 	public void setUserDetails(String role, boolean hasAccount, String dbName, int id) {
@@ -700,22 +716,21 @@ public class AccountDetailsController implements Initializable{
 		showTooltip("email", emailField);
 		showTooltip("address", addressTextField);	
 	}
-	 public void hideEmployment() {
-			PauseTransition pause = new PauseTransition(Duration.millis(500)); 
-			pause.setOnFinished(event -> {
-			    if (role.equals("Employee")) {
-			        btn2.setVisible(false);
-			    }
-			});
-			pause.play();
-	    }
+	 
+	 public void displayIcon() {
+			if(role.equals("Owner") || role.equals("Employee")) {
+				img1.setImage(stockImg);
+				img2.setImage(employmentImg);
+				btn1.setText("Stocks");
+				btn2.setText("Employment");
+			}
+		}
 	@Override
 	public void initialize(URL arg0, ResourceBundle arg1) {
 		Connect();
 		slideWindow();
 		
 		try {
-			hideEmployment();
 			editDetails();
 			saveDetails();
 		} catch (SQLException e) {
@@ -725,7 +740,6 @@ public class AccountDetailsController implements Initializable{
 			 PauseTransition delay = new PauseTransition(Duration.millis(50));
 		        delay.setOnFinished(event -> {
 		        	try {
-		        		
 		        		displayIcon();
 		        		setField();
 						displayDetails();

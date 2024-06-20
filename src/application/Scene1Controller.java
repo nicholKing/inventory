@@ -8,8 +8,10 @@ import java.util.Timer;
 import java.util.TimerTask;
 import javafx.application.Platform;
 import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
+import javafx.fxml.Initializable;
 import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
@@ -19,9 +21,11 @@ import javafx.scene.control.Button;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
+import javafx.scene.input.KeyCode;
+import javafx.scene.input.KeyEvent;
 import javafx.stage.Stage;
 
-public class Scene1Controller {
+public class Scene1Controller implements Initializable{
 	
     String password;
     String username = "";
@@ -43,7 +47,8 @@ public class Scene1Controller {
     TextField pass_text;
     @FXML
     CheckBox pass_toggle;
-    
+    @FXML
+    Button signInBtn;
  
     private Stage stage;
     private Scene scene;
@@ -239,10 +244,7 @@ public class Scene1Controller {
 		stage.show();
 		HomeController homePage = loader.getController();
 		homePage.setUserDetails("Customer", hasAccount, "Guest", 0);
-		System.out.println("Test");
     }
-    //SETTER METHODS
-
     
     //SHOW PASSWORD METHODS
     public void togglevisiblePassword(ActionEvent event) throws IOException{
@@ -256,12 +258,39 @@ public class Scene1Controller {
 	    pass_hidden.setVisible(true);
 	    pass_text.setVisible(false);
 	}
-    public void initialize(URL location, ResourceBundle resources) throws IOException {
-	    this.togglevisiblePassword(null);
+    @Override
+    public void initialize(URL arg0, ResourceBundle arg1) {
+	    try {
+			this.togglevisiblePassword(null);
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	    enableEnterKeyLogin(usernameField, pass_hidden, signInBtn);
+	   
+	    signInBtn.setOnAction(event -> {
+			try {
+				login(event);
+			} catch (ClassNotFoundException | IOException | SQLException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		});
     }
+   
     private String passwordValue() {
 	    return pass_toggle.isSelected()?
 	       pass_text.getText(): pass_hidden.getText();
 	}
-	
+    
+    private void enableEnterKeyLogin(TextField usernameField, PasswordField passwordField, Button loginButton) {
+        EventHandler<KeyEvent> enterKeyHandler = event -> {
+            if (event.getCode() == KeyCode.ENTER) {
+                loginButton.fire();
+            }
+        };
+        
+        usernameField.setOnKeyPressed(enterKeyHandler);
+        passwordField.setOnKeyPressed(enterKeyHandler);
+    }
 }
